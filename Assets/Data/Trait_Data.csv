@@ -1,0 +1,9 @@
+,,,,
+Trait_ID,특성_이름,Trait_Name,특성_설명,Trait_Info
+,가벼움,Light,"장비가 전체적으로 가볍기에, 보다 편하게 움직일 수 있습니다.",Light weapons surely lifts your burden.
+,견고함,Sturdy,"강철을 단단하게 엮어 만든 장비로, 충격을 가하는 데에 특화되어 있습니다.",This weapon is great against rock-solid monsters.
+,끈적거림,Sticky,장비에서 새어나오는 슬라임이 적들의 움직임을 둔하게 만들어줍니다.,Slime oozing out of this weapon is slowing monsters down.
+,마법이 걸림,Enchanted,장비에 부여된 보호 마법이 사용자를 화염 피해에서 보호해 줍니다.,The enchantment casted on the weapon keeps its users safe from fire damage.
+,따뜻함,Warm,"장비가 지속적으로 열을 내뿜어, 추운 지역에서도 체온을 유지할 수 있습니다.",Weapon is consistantly emitting heat from its core. It will keep you warm.
+,얼어붙음,Frozen,장비에서 뿜어져나오는 냉기가 눈을 내리게 하고 날아다니는 존재들의 날개를 얼어붙게 만듭니다.,The cold air from the weapon will make snowdrops to fall and freeze the wings of those flying beings.
+,드래곤의 힘,Dragonmight,용의 힘이 이 장비들에게 아무리 강력한 존재라도 상처입힐 수 있는 권능을 부여했습니다.,"Dragon has granted these weapons with the might, making it possible to wound the strong beings."
