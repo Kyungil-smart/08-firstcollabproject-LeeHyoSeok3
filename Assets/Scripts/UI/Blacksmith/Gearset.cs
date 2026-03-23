@@ -1,5 +1,5 @@
 [System.Serializable]
-public class Gearset
+public class GearsetNameData
 {
-    public string GearsetName;
+    public string gearsetName;
 }

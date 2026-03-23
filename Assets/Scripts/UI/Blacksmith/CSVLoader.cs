@@ -1,13 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CSVLoader : MonoBehaviour
+public class GearsetNameCSVLoader : MonoBehaviour
 {
     [SerializeField] private TextAsset csvFile;
 
-    public List<Gearset> LoadGearset()
+    public List<GearsetNameData> LoadGearsetNames()
     {
-        List<Gearset> equipmentList = new List<Gearset>();
+        List<GearsetNameData> list = new List<GearsetNameData>();
+
+        if (csvFile == null)
+        {
+            Debug.LogError("GearsetNameCSVLoader: csvFile이 연결되지 않았습니다.");
+            return list;
+        }
 
         string[] lines = csvFile.text.Split('\n');
 
@@ -18,17 +24,17 @@ public class CSVLoader : MonoBehaviour
 
             string[] values = lines[i].Split(',');
 
-            if (values.Length < 4)
+            if (values.Length < 3)
                 continue;
 
-            Gearset data = new Gearset
+            GearsetNameData data = new GearsetNameData
             {
-                GearsetName = values[2].Trim()
+                gearsetName = values[2].Trim()
             };
 
-            equipmentList.Add(data);
+            list.Add(data);
         }
 
-        return equipmentList;
+        return list;
     }
 }
