@@ -87,3 +87,9 @@ Assets/Imports/**
 *.aab
 *.app
 *.unitypackage
+
+##################################################
+# Claude Code
+##################################################
+.claude/
+open-claude.bat
