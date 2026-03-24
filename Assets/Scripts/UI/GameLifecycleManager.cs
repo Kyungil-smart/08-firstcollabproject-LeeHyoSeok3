@@ -1,0 +1,108 @@
+using UnityEngine;
+using System;
+
+/// <summary>
+/// 게임 시작 / 종료 시 타이머 시스템과의 연계를 담당합니다.
+///
+/// 게임 시작:
+/// - 타이머 시스템 기획서 4p 자동생산 예외처리 2항,
+///   5p 퀘스트 예외처리 1항, 7~9p 오프라인 보상 처리 완료 후
+///   메인화면 UI 상호작용 활성화
+///
+/// 게임 종료:
+/// - 오프라인 시스템 모든 기능 정지
+/// - 자동 생산 시스템 예외처리 4p 2항 반영
+/// </summary>
+public class GameLifecycleManager : MonoBehaviour
+{
+    public static GameLifecycleManager Instance { get; private set; }
+
+    // 최소화 화면 전환 시각 저장 키 (오프라인 보상 연계)
+    private const string MINIMIZED_TIME_KEY = "MinimizedTimestamp";
+    private const string LAST_QUIT_TIME_KEY = "LastQuitTimestamp";
+
+    [Header("메인화면 UI 그룹 (시작 시 비활성화 → 처리 완료 후 활성화)")]
+    [SerializeField] private GameObject mainScreenUIGroup;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        OnGameStart();
+    }
+
+    private void OnApplicationQuit()
+    {
+        OnGameEnd();
+    }
+
+    // ─── 게임 시작 ────────────────────────────────────────────────────
+
+    private void OnGameStart()
+    {
+        // 메인화면 UI 비활성화 (오프라인 보상 처리 전)
+        if (mainScreenUIGroup) mainScreenUIGroup.SetActive(false);
+
+        // TODO: 타이머 시스템 담당자와 연계 필요
+        // 아래 순서대로 처리 후 OnOfflineRewardProcessComplete() 호출
+        // 1. 자동 생산 시스템 예외처리 (타이머 기획서 4p 2항)
+        // 2. 퀘스트 시스템 예외처리 (타이머 기획서 5p 1항)
+        // 3. 오프라인 보상 처리 (타이머 기획서 7~9p)
+
+        // 임시: 타이머 시스템 미구현 상태에서 바로 활성화
+        OnOfflineRewardProcessComplete();
+    }
+
+    /// <summary>오프라인 보상 처리 완료 후 호출 (타이머 시스템에서 호출)</summary>
+    public void OnOfflineRewardProcessComplete()
+    {
+        if (mainScreenUIGroup) mainScreenUIGroup.SetActive(true);
+    }
+
+    // ─── 최소화 화면 전환 시각 저장 ──────────────────────────────────
+
+    /// <summary>최소화 화면으로 전환 시 로컬 시각 저장 (오프라인 보상 연계)</summary>
+    public void SaveMinimizedTime()
+    {
+        PlayerPrefs.SetString(MINIMIZED_TIME_KEY, DateTime.Now.ToString("o"));
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>저장된 최소화 전환 시각 반환</summary>
+    public DateTime GetMinimizedTime()
+    {
+        string saved = PlayerPrefs.GetString(MINIMIZED_TIME_KEY, string.Empty);
+        if (string.IsNullOrEmpty(saved)) return DateTime.MinValue;
+        return DateTime.Parse(saved);
+    }
+
+    // ─── 게임 종료 ────────────────────────────────────────────────────
+
+    private void OnGameEnd()
+    {
+        // 종료 시각 저장
+        PlayerPrefs.SetString(LAST_QUIT_TIME_KEY, DateTime.Now.ToString("o"));
+        PlayerPrefs.Save();
+
+        // TODO: 타이머 시스템 담당자와 연계 필요
+        // 1. 오프라인 시스템 모든 기능 정지
+        // 2. 자동 생산 시스템 예외처리 (타이머 기획서 4p 2항) 반영
+    }
+
+    /// <summary>저장된 마지막 종료 시각 반환</summary>
+    public DateTime GetLastQuitTime()
+    {
+        string saved = PlayerPrefs.GetString(LAST_QUIT_TIME_KEY, string.Empty);
+        if (string.IsNullOrEmpty(saved)) return DateTime.MinValue;
+        return DateTime.Parse(saved);
+    }
+}
