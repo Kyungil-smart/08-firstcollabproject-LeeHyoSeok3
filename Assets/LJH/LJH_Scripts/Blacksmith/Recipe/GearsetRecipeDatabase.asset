@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4792ca06acf30304ea2191e8c3214992, type: 3}
+  m_Name: GearsetRecipeDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeDatabaseSO
+  recipes:
+  - {fileID: 11400000, guid: 2c2c768a6f19e8b4285ea7de569cd0e8, type: 2}
+  - {fileID: 11400000, guid: 86fb29f9d7c7a8c4caf74b5b37d222c9, type: 2}
+  - {fileID: 11400000, guid: 03def881c1815cb489d426da1860127f, type: 2}
+  - {fileID: 11400000, guid: 5d90b6d7deb7ca44f8b9426f14dd8c7f, type: 2}
+  - {fileID: 11400000, guid: 1e72662e4b86f6346a370b78f58d2985, type: 2}
+  - {fileID: 11400000, guid: de4d169145d201649a739c1447b40697, type: 2}
+  - {fileID: 11400000, guid: dcc9500209b636945aeebdc1e7f64f68, type: 2}
+  - {fileID: 11400000, guid: 5d72e0f549370254c9e0214dfd7ae23e, type: 2}

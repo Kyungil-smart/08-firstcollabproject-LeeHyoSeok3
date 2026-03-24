@@ -12,6 +12,7 @@ public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     {
         gearsetName = newGearsetName;
         recipe = newRecipe;
+        Debug.Log($"SetRecipe 호출됨: {(recipe != null ? recipe.gearsetName : "NULL")}");
     }
 
     public void ClearData()
@@ -22,6 +23,7 @@ public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log("마우스 진입");
         if (tooltipUI == null || recipe == null)
             return;
 
@@ -30,6 +32,7 @@ public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        Debug.Log("마우스 나감");
         if (tooltipUI == null)
             return;
 

@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca16b9334cdc804baf05ceff7d3f1fe, type: 3}
   m_Name: HardcoverRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
-  gearsetName: 
-  requiredMaterials: []
+  gearsetName: Hardcover
+  requiredMaterials:
+  - materialName: Book
+    materialIcon: {fileID: 21300000, guid: 13362245203034073abf21c82b25c091, type: 3}
+    requiredCount: 1
