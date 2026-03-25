@@ -75,6 +75,7 @@ public class SoundManager : MonoBehaviour
         _loopShot.Stop();
     }
 
+    // bgm 재생 종료시키는 함수
     public void BGMStop()
     {
         _bgmShot.Stop();
