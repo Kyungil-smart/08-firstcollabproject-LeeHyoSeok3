@@ -1,71 +1,60 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class AnvilGoldController : MonoBehaviour, IPointerClickHandler
+public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 {
+    [Header("Button")]
+    [SerializeField] private Button anvilButton;
+
     [Header("Upgrade Systems")]
     [SerializeField] private UpgradeSystem clickUpgradeSystem;
     [SerializeField] private UpgradeSystem autoUpgradeSystem;
-
-    [Header("Optional UI Refresh")]
-    [SerializeField] private UpgradeUI clickUpgradeUI;
-    [SerializeField] private UpgradeUI autoUpgradeUI;
-
-    [Header("Gold UI")]
-    [SerializeField] private TMP_Text goldText;
-
-    [Header("Auto Click")]
-    [SerializeField] private float autoGainInterval = 1f;
 
     [Header("Floating Text")]
     [SerializeField] private GameObject floatingTextPrefab;
     [SerializeField] private RectTransform floatingParent;
     [SerializeField] private int maxFloatingText = 10;
 
-    private int sharedGold = 0;
+    [Header("Auto Click")]
+    [SerializeField] private float autoGainInterval = 1f;
+
     private float autoTimer;
-    private Queue<GameObject> floatingQueue = new Queue<GameObject>();
-
-    private RectTransform anvilRect;
-
-    private void Awake()
-    {
-        anvilRect = GetComponent<RectTransform>();
-    }
+    private readonly Queue<GameObject> floatingQueue = new Queue<GameObject>();
 
     private void Start()
     {
-        sharedGold = 0;
-        ApplyGoldToSystems();
-        RefreshAllUI();
+        if (anvilButton != null)
+            anvilButton.onClick.AddListener(GainByClick);
     }
 
     private void Update()
     {
         HandleAutoGain();
-        DetectSpendFromUpgradeSystem();
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        GainByClick();
+        lastPointerScreenPosition = eventData.position;
     }
+
+    private Vector2 lastPointerScreenPosition;
 
     public void GainByClick()
     {
-        if (clickUpgradeSystem == null)
+        if (clickUpgradeSystem == null || GoldManager.Instance == null)
             return;
 
         int amount = clickUpgradeSystem.CurrentValue;
-        AddGold(amount);
-        SpawnFloatingText(amount);
+        GoldManager.Instance.AddGold(amount);
+
+        SpawnFloatingTextAtScreenPosition(amount, lastPointerScreenPosition);
     }
 
     private void HandleAutoGain()
     {
-        if (autoUpgradeSystem == null)
+        if (autoUpgradeSystem == null || GoldManager.Instance == null)
             return;
 
         autoTimer += Time.deltaTime;
@@ -76,73 +65,10 @@ public class AnvilGoldController : MonoBehaviour, IPointerClickHandler
         autoTimer -= autoGainInterval;
 
         int amount = autoUpgradeSystem.CurrentValue;
-
-        AddGold(amount); 
+        GoldManager.Instance.AddGold(amount);
     }
 
-    private void AddGold(int amount)
-    {
-        if (amount <= 0)
-            return;
-
-        sharedGold += amount;
-        ApplyGoldToSystems();
-        RefreshAllUI();
-    }
-
-    private void DetectSpendFromUpgradeSystem()
-    {
-        if (clickUpgradeSystem == null || autoUpgradeSystem == null)
-            return;
-
-        int clickGold = clickUpgradeSystem.CurrentGold;
-        int autoGold = autoUpgradeSystem.CurrentGold;
-
-        if (clickGold == sharedGold && autoGold == sharedGold)
-            return;
-
-        int newSharedGold = Mathf.Min(clickGold, autoGold);
-
-        if (newSharedGold != sharedGold)
-        {
-            sharedGold = Mathf.Max(0, newSharedGold);
-            ApplyGoldToSystems();
-            RefreshAllUI();
-        }
-        else
-        {
-            ApplyGoldToSystems();
-            RefreshAllUI();
-        }
-    }
-
-    private void ApplyGoldToSystems()
-    {
-        if (clickUpgradeSystem != null)
-            clickUpgradeSystem.SetGold(sharedGold);
-
-        if (autoUpgradeSystem != null)
-            autoUpgradeSystem.SetGold(sharedGold);
-    }
-
-    private void RefreshAllUI()
-    {
-        RefreshGoldText();
-
-        if (clickUpgradeUI != null)
-            clickUpgradeUI.RefreshUI();
-
-        if (autoUpgradeUI != null)
-            autoUpgradeUI.RefreshUI();
-    }
-
-    private void RefreshGoldText()
-    {
-        if (goldText != null)
-            goldText.text = sharedGold.ToString("N0");
-    }
-
-    private void SpawnFloatingText(int amount)
+    private void SpawnFloatingTextAtScreenPosition(int amount, Vector2 screenPosition)
     {
         if (floatingTextPrefab == null || floatingParent == null)
             return;
@@ -153,7 +79,26 @@ public class AnvilGoldController : MonoBehaviour, IPointerClickHandler
         RectTransform textRect = obj.GetComponent<RectTransform>();
         if (textRect != null)
         {
-            textRect.anchoredPosition = Vector2.zero;
+            Canvas canvas = floatingParent.GetComponentInParent<Canvas>();
+            Camera cam = null;
+
+            if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                cam = canvas.worldCamera;
+
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                floatingParent,
+                screenPosition,
+                cam,
+                out localPoint
+            );
+
+            Vector2 randomOffset = new Vector2(
+                Random.Range(-20f, 20f),
+                Random.Range(-10f, 10f)
+            );
+
+            textRect.anchoredPosition = localPoint + randomOffset;
             textRect.localScale = Vector3.one;
             textRect.localRotation = Quaternion.identity;
         }
