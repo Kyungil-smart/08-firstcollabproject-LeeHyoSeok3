@@ -9,11 +9,13 @@ public class QuestBoardPopupUI : MonoBehaviour
     public void OpenPopup()
     {
         _questBoardPopup.SetActive(true);
+        SoundManager.Instance.OneShot("mouseClick");
     }
 
     // 퀘스트 보드 팝업창에서 종료버튼
     public void ClosePopup()
     {
+        SoundManager.Instance.OneShot("mouseClick");
         _questBoardPopup.SetActive(false);
     }
 }
