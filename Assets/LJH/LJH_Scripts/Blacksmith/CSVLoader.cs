@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class GearsetNameCSVLoader : MonoBehaviour
@@ -29,15 +30,18 @@ public class GearsetNameCSVLoader : MonoBehaviour
             if (string.IsNullOrWhiteSpace(lines[i]))
                 continue;
 
-            string[] values = lines[i].Split(',');
+            string line = lines[i].Trim();
 
-            if (values.Length < 4)
+            // 따옴표 안의 쉼표는 무시하고 분리
+            string[] values = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
+            if (values.Length < 5)
                 continue;
 
             GearsetNameData data = new GearsetNameData
             {
-                gearsetName = values[2].Trim(),
-                description = values[4].Trim(),
+                gearsetName = values[2].Trim().Trim('"'),
+                description = values[4].Trim().Trim('"')
             };
 
             list.Add(data);
