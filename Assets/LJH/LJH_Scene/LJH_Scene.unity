@@ -640,6 +640,7 @@ RectTransform:
   - {fileID: 32764837}
   - {fileID: 1951381787}
   - {fileID: 61894390}
+  - {fileID: 870729954}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1525,6 +1526,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+--- !u!1 &191728426 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 240847157}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &212119954 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2630686984703953123, guid: d88c74a50bce5bf40af751900700ddb8, type: 3}
@@ -1540,6 +1546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 228656985}
   - component: {fileID: 228656984}
+  - component: {fileID: 228656986}
   m_Layer: 0
   m_Name: GoldManager
   m_TagString: Untagged
@@ -1576,6 +1583,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &228656986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 228656983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f75d265712448fc409f25748a45b2b36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMaterialInventory
+  startMaterials:
+  - material: {fileID: 11400000, guid: 953c276720e229744bfb78f321ffa7fa, type: 2}
+    count: 1
+  - material: {fileID: 11400000, guid: 8709f5a9f47a48a4daf97ab60ab191fc, type: 2}
+    count: 1
 --- !u!1 &234024490
 GameObject:
   m_ObjectHideFlags: 0
@@ -2543,9 +2567,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Dragon
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: 5d72e0f549370254c9e0214dfd7ae23e, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 444144601}
+  focusObject: {fileID: 1935036392}
 --- !u!114 &444144601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2736,9 +2762,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Metal
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: 03def881c1815cb489d426da1860127f, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 462464788}
+  focusObject: {fileID: 2093924634}
 --- !u!114 &462464788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3807,6 +3835,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 666083645}
   m_CullTransparentMesh: 0
+--- !u!1 &668391676 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 93973646}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &686385865
 GameObject:
   m_ObjectHideFlags: 0
@@ -4026,7 +4059,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 723109012}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1028955047}
+        m_TargetAssemblyTypeName: GearsetCraftPopupUI, Assembly-CSharp
+        m_MethodName: OnClickCraft
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &723109012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4328,9 +4373,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Slimy
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: 5d90b6d7deb7ca44f8b9426f14dd8c7f, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 867956963}
+  focusObject: {fileID: 1803855425}
 --- !u!114 &867956963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4425,6 +4472,158 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
   nameText: {fileID: 2123723113}
   hoverUI: {fileID: 867956964}
+--- !u!1 &870729953
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 870729954}
+  - component: {fileID: 870729957}
+  - component: {fileID: 870729956}
+  - component: {fileID: 870729958}
+  m_Layer: 5
+  m_Name: MaterialInventoryText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &870729954
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870729953}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 43898721}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 546, y: 314}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &870729956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870729953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: New Text
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &870729957
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870729953}
+  m_CullTransparentMesh: 1
+--- !u!114 &870729958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870729953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8319f2ae16ff2a45a7105603cc3f586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaterialInventoryUI
+  materialInventory: {fileID: 228656986}
+  inventoryText: {fileID: 870729956}
 --- !u!1001 &876344399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5280,6 +5479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearsetCraftPopupUI
   gearsetNameText: {fileID: 173736267}
   descriptionText: {fileID: 1283355209}
+  inventoryUI: {fileID: 870729958}
 --- !u!225 &1028955048
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -5915,9 +6115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Frozen
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: dcc9500209b636945aeebdc1e7f64f68, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 1145850028}
+  focusObject: {fileID: 668391676}
 --- !u!114 &1145850028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6212,6 +6414,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7386505283941892821, guid: e5d8076aaeb1b4f3780a8cffb1bb4816, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8093876180627934940, guid: e5d8076aaeb1b4f3780a8cffb1bb4816, type: 3}
       propertyPath: m_Name
       value: ListFrame_02_VerticalLayout_Demo (1)
@@ -6485,8 +6691,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1355.7012, y: 346.87888}
-  m_SizeDelta: {x: 584.13995, y: 131}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 131}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1236950060 stripped
 GameObject:
@@ -6548,9 +6754,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Rusty
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 0}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 1236950072}
+  focusObject: {fileID: 1244194701}
 --- !u!114 &1236950072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6607,6 +6815,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &1244194701 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7386505283941892821, guid: e5d8076aaeb1b4f3780a8cffb1bb4816, type: 3}
+  m_PrefabInstance: {fileID: 1150360930}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1281601656
 GameObject:
   m_ObjectHideFlags: 0
@@ -7083,6 +7296,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1301976510}
   m_CullTransparentMesh: 1
+--- !u!1 &1302480801 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 1031839560}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1355860515 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
@@ -7327,9 +7545,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Hotspa
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: de4d169145d201649a739c1447b40697, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 1437259206}
+  focusObject: {fileID: 1302480801}
 --- !u!114 &1437259206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7457,9 +7677,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Hardcover
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: 1e72662e4b86f6346a370b78f58d2985, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 1453811674}
+  focusObject: {fileID: 191728426}
 --- !u!114 &1453811674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7760,9 +7982,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee488017bb64ff48a4e643aca2928a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GearsetSlotUI
-  gearsetName: Wooden
-  csvLoader: {fileID: 951515717}
+  recipe: {fileID: 11400000, guid: 86fb29f9d7c7a8c4caf74b5b37d222c9, type: 2}
   popupUI: {fileID: 1028955047}
+  materialInventory: {fileID: 228656986}
+  slotButton: {fileID: 1499765137}
+  focusObject: {fileID: 500411222}
 --- !u!1 &1500315882
 GameObject:
   m_ObjectHideFlags: 0
@@ -8709,6 +8933,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 457791892}
   m_SourcePrefab: {fileID: 100100000, guid: 90b01d5ffe2f38b4d8911ea5ea538eaf, type: 3}
+--- !u!1 &1803855425 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 1943783510}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1840071574
 GameObject:
   m_ObjectHideFlags: 0
@@ -9061,6 +9290,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+--- !u!1 &1935036392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 3081605}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1943783510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9292,9 +9526,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 276, y: -116}
+  m_AnchoredPosition: {x: 226, y: -66}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &2024291481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9318,6 +9552,7 @@ MonoBehaviour:
   lineHeight: 30
   lineSpacing: 2
   bgPadding: 20
+  materialInventory: {fileID: 228656986}
 --- !u!225 &2024291482
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9397,6 +9632,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2093924634 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6172417396253231910, guid: 5b282cb4f00bbde40bafdf2117c4a6d5, type: 3}
+  m_PrefabInstance: {fileID: 963426111}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2104352423
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9515,11 +9755,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 110
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 55
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -9539,23 +9779,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 109.879395
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -32.79712
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6807172639996848132, guid: a04b0395e1991483eabd041c4182821a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

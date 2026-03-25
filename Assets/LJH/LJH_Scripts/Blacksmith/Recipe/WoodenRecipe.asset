@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: WoodenRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
   gearsetName: Wooden
-  requiredMaterials:
-  - materialName: Stick
-    materialIcon: {fileID: 21300000, guid: 13362245203034073abf21c82b25c091, type: 3}
+  description: Light, but hard enough.
+  requirements:
+  - material: {fileID: 11400000, guid: 953c276720e229744bfb78f321ffa7fa, type: 2}
     requiredCount: 1

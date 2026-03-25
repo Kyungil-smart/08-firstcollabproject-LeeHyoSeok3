@@ -19,6 +19,8 @@ public class GearsetTooltipUI : MonoBehaviour
     [SerializeField] private float lineSpacing = 2f;
     [SerializeField] private float bgPadding = 20f;
 
+    [SerializeField] private MaterialInventory materialInventory;
+
     private bool isShowing;
 
     private void Update()
@@ -40,26 +42,66 @@ public class GearsetTooltipUI : MonoBehaviour
         ClearMaterialLines();
         ResizeBgByRecipe(recipe);
 
-        for (int i = 0; i < recipe.requiredMaterials.Count; i++)
+        if (titleText != null)
+            titleText.text = recipe.gearsetName;
+
+        Debug.Log($"툴팁 열기: {recipe.gearsetName}");
+        Debug.Log($"requirements 개수: {recipe.requirements.Count}");
+
+        for (int i = 0; i < recipe.requirements.Count; i++)
         {
-            var materialData = recipe.requiredMaterials[i];
+            var requirement = recipe.requirements[i];
+
+            if (requirement == null)
+            {
+                Debug.LogError($"requirements[{i}]가 null");
+                continue;
+            }
+
+            if (requirement.material == null)
+            {
+                Debug.LogError($"requirements[{i}].material이 null");
+                continue;
+            }
+
+            if (materialLinePrefab == null)
+            {
+                Debug.LogError("materialLinePrefab이 연결되지 않음");
+                return;
+            }
+
+            if (materialContent == null)
+            {
+                Debug.LogError("materialContent가 연결되지 않음");
+                return;
+            }
 
             GameObject lineObj = Instantiate(materialLinePrefab, materialContent);
             MaterialLineUI lineUI = lineObj.GetComponent<MaterialLineUI>();
 
-            int ownedCount = GetOwnedMaterialCount(materialData.materialName);
+            if (lineUI == null)
+            {
+                Debug.LogError("materialLinePrefab에 MaterialLineUI가 없음");
+                continue;
+            }
+
+            int ownedCount = GetOwnedMaterialCount(requirement.material);
 
             lineUI.SetData(
-                materialData.materialName,
-                materialData.materialIcon,
+                requirement.material.materialName,
+                requirement.material.icon,
                 ownedCount,
-                materialData.requiredCount
+                requirement.requiredCount
             );
         }
 
         Canvas.ForceUpdateCanvases();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(materialContentRect);
-        LayoutRebuilder.ForceRebuildLayoutImmediate(bgRect);
+
+        if (materialContentRect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(materialContentRect);
+
+        if (bgRect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(bgRect);
 
         tooltipRect.position = position + offset;
         isShowing = true;
@@ -68,19 +110,10 @@ public class GearsetTooltipUI : MonoBehaviour
 
     public bool CanCraft(GearsetRecipeSO recipe)
     {
-        if (recipe == null)
+        if (recipe == null || materialInventory == null)
             return false;
 
-        for (int i = 0; i < recipe.requiredMaterials.Count; i++)
-        {
-            var materialData = recipe.requiredMaterials[i];
-            int ownedCount = GetOwnedMaterialCount(materialData.materialName);
-
-            if (ownedCount < materialData.requiredCount)
-                return false;
-        }
-
-        return true;
+        return materialInventory.CanCraft(recipe);
     }
 
     public void HideTooltip()
@@ -92,20 +125,32 @@ public class GearsetTooltipUI : MonoBehaviour
 
     private void ClearMaterialLines()
     {
+        if (materialContent == null)
+            return;
+
         for (int i = materialContent.childCount - 1; i >= 0; i--)
         {
             Destroy(materialContent.GetChild(i).gameObject);
         }
     }
 
-    private int GetOwnedMaterialCount(string materialName)
+    private int GetOwnedMaterialCount(MaterialDataSO material)
     {
-        return 1;
+        if (materialInventory == null)
+        {
+            Debug.LogError("materialInventory가 연결되지 않았습니다.");
+            return 0;
+        }
+
+        return materialInventory.GetCount(material);
     }
 
     private void ResizeBgByRecipe(GearsetRecipeSO recipe)
     {
-        int materialCount = recipe.requiredMaterials.Count;
+        if (bgRect == null || recipe == null)
+            return;
+
+        int materialCount = recipe.requirements.Count;
 
         float contentHeight = 0f;
 
@@ -120,6 +165,9 @@ public class GearsetTooltipUI : MonoBehaviour
 
     public void ResetBgHeight()
     {
+        if (bgRect == null)
+            return;
+
         bgRect.sizeDelta = new Vector2(bgRect.sizeDelta.x, defaultBgHeight);
     }
 }
