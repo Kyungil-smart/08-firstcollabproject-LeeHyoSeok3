@@ -25,7 +25,7 @@ public class GearsetNameCSVLoader : MonoBehaviour
 
         string[] lines = csvFile.text.Split('\n');
 
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 2; i < lines.Length; i++)
         {
             if (string.IsNullOrWhiteSpace(lines[i]))
                 continue;

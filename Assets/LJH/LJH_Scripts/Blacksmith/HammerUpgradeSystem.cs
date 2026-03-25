@@ -71,4 +71,10 @@ public class UpgradeSystem : MonoBehaviour
     {
         currentGold += amount;
     }
+    
+    public void SetGold(int amount)
+    {
+        currentGold = Mathf.Max(0, amount);
+    }
+    
 }
