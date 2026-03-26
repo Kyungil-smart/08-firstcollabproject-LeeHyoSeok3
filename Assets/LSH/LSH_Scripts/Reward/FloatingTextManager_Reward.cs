@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class FloatingTextManager : MonoBehaviour
+public class FloatingTextManager_Reward : MonoBehaviour
 {
-    public static FloatingTextManager Instance { get; private set; }
+    public static FloatingTextManager_Reward Instance { get; private set; }
 
     [Header("Settings")]
     [SerializeField] private FloatingText_Reward _textPrefab;
