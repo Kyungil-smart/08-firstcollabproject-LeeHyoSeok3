@@ -2,14 +2,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Pool;
 
-public class FloatingText : MonoBehaviour
+public class FloatingText_Reward : MonoBehaviour
 {
     [SerializeField] private TMP_Text _text;
 
     // 자신을 관리하는 풀의 참조를 가지고 있습니다.
-    private IObjectPool<FloatingText> _pool;
+    private IObjectPool<FloatingText_Reward> _pool;
 
-    public void SetPool(IObjectPool<FloatingText> pool)
+    public void SetPool(IObjectPool<FloatingText_Reward> pool)
     {
         _pool = pool;
     }
