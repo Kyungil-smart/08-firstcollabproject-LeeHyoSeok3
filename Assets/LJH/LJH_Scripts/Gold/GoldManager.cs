@@ -59,6 +59,6 @@ public class GoldManager : Singleton<GoldManager>
     private void RefreshUI()
     {
         if (goldText != null)
-            goldText.text = $"Gold: {currentGold.ToString("N0")}";
+            goldText.text = currentGold.ToString("N0");
     }
 }
