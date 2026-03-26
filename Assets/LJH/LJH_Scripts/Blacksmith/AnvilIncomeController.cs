@@ -16,11 +16,11 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     [SerializeField] private GameObject floatingTextPrefab;
     [SerializeField] private RectTransform floatingParent;
     [SerializeField] private int maxFloatingText = 10;
-
-    [Header("Auto Click")]
-    [SerializeField] private float autoGainInterval = 1f;
+    
+    [SerializeField] private TMPro.TextMeshProUGUI gpsText;
 
     private float autoTimer;
+    
     private readonly Queue<GameObject> floatingQueue = new Queue<GameObject>();
 
     private void Start()
@@ -32,6 +32,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     private void Update()
     {
         HandleAutoGain();
+        RefreshGPSUI();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -59,12 +60,12 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
         autoTimer += Time.deltaTime;
 
-        if (autoTimer < autoGainInterval)
+        if (autoTimer < 1f)
             return;
 
-        autoTimer -= autoGainInterval;
+        autoTimer -= 1f;
 
-        int amount = autoUpgradeSystem.CurrentValue;
+        int amount = autoUpgradeSystem.CurrentValue; // 초당 골드
         GoldManager.Instance.AddGold(amount);
     }
 
@@ -115,5 +116,15 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
             if (oldObj != null)
                 Destroy(oldObj);
         }
+    }
+    
+    private void RefreshGPSUI()
+    {
+        if (gpsText == null || autoUpgradeSystem == null)
+            return;
+
+        float goldPerSecond = autoUpgradeSystem.CurrentValue;
+
+        gpsText.text = $"{goldPerSecond:F0}/s";
     }
 }
