@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using DesignPattern;
 
 /// <summary>
 /// 팝업 UI 관리자.
@@ -12,10 +13,8 @@ using System.Collections.Generic;
 /// - 환경설정 팝업 (400×400, FHD 20.8%×37%)
 /// - 던전 보상재료 획득 팝업
 /// </summary>
-public class PopupManager : MonoBehaviour
+public class PopupManager : Singleton<PopupManager>
 {
-    public static PopupManager Instance { get; private set; }
-
     [Header("팝업 프리팹 또는 씬 내 오브젝트")]
     [SerializeField] private RectTransform questBoardPopup;
     [SerializeField] private RectTransform blacksmithPopup;
@@ -28,23 +27,23 @@ public class PopupManager : MonoBehaviour
 
     private readonly List<RectTransform> _activePopups = new List<RectTransform>();
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance != null && Instance != this)
+        base.OnAwake();
+        if (popupCanvas == null)
         {
-            Destroy(gameObject);
-            return;
+            Debug.LogError("[PopupManager] 팝업을 배치할 Canvas가 할당되지 않았습니다.");
         }
-        Instance = this;
+
     }
 
     // ─── 팝업 열기 ───────────────────────────────────────────────────
 
-    public void OpenQuestBoard()       => OpenPopup(questBoardPopup);
-    public void OpenBlacksmith()       => OpenPopup(blacksmithPopup);
-    public void OpenPartyEquip()       => OpenPopup(partyEquipPopup);
-    public void OpenSettings()         => OpenPopup(settingsPopup);
-    public void OpenRewardPopup()      => OpenPopup(rewardPopup);
+    public void OpenQuestBoard() => OpenPopup(questBoardPopup);
+    public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
+    public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
+    public void OpenSettings() => OpenPopup(settingsPopup);
+    public void OpenRewardPopup() => OpenPopup(rewardPopup);
 
     /// <summary>팝업을 모니터 중앙에 배치하고 활성화합니다.</summary>
     public void OpenPopup(RectTransform popup)
@@ -122,17 +121,17 @@ public class PopupManager : MonoBehaviour
     private void Start()
     {
         // 팝업 초기 크기 설정 (UI 설명서 FHD% 기준)
-        if (questBoardPopup)  ScalePopupToScreen(questBoardPopup,  0.38f,  0.46f);
-        if (blacksmithPopup)  ScalePopupToScreen(blacksmithPopup,  0.677f, 0.694f);
-        if (partyEquipPopup)  ScalePopupToScreen(partyEquipPopup,  0.401f, 0.2963f);
-        if (settingsPopup)    ScalePopupToScreen(settingsPopup,    0.208f, 0.37f);
+        if (questBoardPopup) ScalePopupToScreen(questBoardPopup, 0.38f, 0.46f);
+        if (blacksmithPopup) ScalePopupToScreen(blacksmithPopup, 0.677f, 0.694f);
+        if (partyEquipPopup) ScalePopupToScreen(partyEquipPopup, 0.401f, 0.2963f);
+        if (settingsPopup) ScalePopupToScreen(settingsPopup, 0.208f, 0.37f);
 
         // 모든 팝업 초기 비활성화
         CloseAllPopups();
-        if (questBoardPopup)  questBoardPopup.gameObject.SetActive(false);
-        if (blacksmithPopup)  blacksmithPopup.gameObject.SetActive(false);
-        if (partyEquipPopup)  partyEquipPopup.gameObject.SetActive(false);
-        if (settingsPopup)    settingsPopup.gameObject.SetActive(false);
-        if (rewardPopup)      rewardPopup.gameObject.SetActive(false);
+        if (questBoardPopup) questBoardPopup.gameObject.SetActive(false);
+        if (blacksmithPopup) blacksmithPopup.gameObject.SetActive(false);
+        if (partyEquipPopup) partyEquipPopup.gameObject.SetActive(false);
+        if (settingsPopup) settingsPopup.gameObject.SetActive(false);
+        if (rewardPopup) rewardPopup.gameObject.SetActive(false);
     }
 }
