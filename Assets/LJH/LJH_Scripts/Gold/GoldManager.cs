@@ -1,11 +1,10 @@
 using System;
 using TMPro;
 using UnityEngine;
+using DesignPattern;
 
-public class GoldManager : MonoBehaviour
+public class GoldManager : Singleton<GoldManager>
 {
-    public static GoldManager Instance { get; private set; }
-
     [SerializeField] private int currentGold = 0;
     [SerializeField] private TMP_Text goldText;
 
@@ -13,20 +12,13 @@ public class GoldManager : MonoBehaviour
 
     public event Action<int> OnGoldChanged;
 
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
+        RefreshUI();
     }
 
     private void Start()
     {
-        RefreshUI();
         OnGoldChanged?.Invoke(currentGold);
     }
 
@@ -67,6 +59,6 @@ public class GoldManager : MonoBehaviour
     private void RefreshUI()
     {
         if (goldText != null)
-            goldText.text = currentGold.ToString("N0");
+            goldText.text = $"Gold: {currentGold.ToString("N0")}";
     }
 }

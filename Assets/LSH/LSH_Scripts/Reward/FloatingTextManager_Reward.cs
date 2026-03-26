@@ -6,11 +6,11 @@ public class FloatingTextManager : MonoBehaviour
     public static FloatingTextManager Instance { get; private set; }
 
     [Header("Settings")]
-    [SerializeField] private FloatingText _textPrefab;
+    [SerializeField] private FloatingText_Reward _textPrefab;
     [SerializeField] private int _defaultCapacity = 20;
     [SerializeField] private int _maxSize = 100;
 
-    private IObjectPool<FloatingText> _textPool;
+    private IObjectPool<FloatingText_Reward> _textPool;
 
     private void Awake()
     {
@@ -23,7 +23,7 @@ public class FloatingTextManager : MonoBehaviour
 
     private void InitPool()
     {
-        _textPool = new ObjectPool<FloatingText>(
+        _textPool = new ObjectPool<FloatingText_Reward>(
             createFunc: () =>
             {
                 // 풀에 여분이 없을 때 새로 생성하는 로직
@@ -47,7 +47,7 @@ public class FloatingTextManager : MonoBehaviour
     public void SpawnText(string message, Vector3 position)
     {
         // 풀에서 오브젝트를 하나 꺼내서 Setup 함수를 실행합니다.
-        FloatingText floatingText = _textPool.Get();
+        FloatingText_Reward floatingText = _textPool.Get();
         floatingText.Setup(message, position);
     }
 }
