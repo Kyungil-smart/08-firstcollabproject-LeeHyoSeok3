@@ -57,6 +57,46 @@ public class MaterialInventory : Singleton<MaterialInventory>
             materialDict[req.material] -= req.requiredCount;
         }
     }
+    
+    public void AddMaterial(MaterialDataSO material, int amount)
+    {
+        if (material == null)
+        {
+            Debug.LogWarning("AddMaterial 실패: material이 null입니다.");
+            return;
+        }
+
+        if (amount <= 0)
+        {
+            Debug.LogWarning($"AddMaterial 실패: 잘못된 수량 {amount}");
+            return;
+        }
+
+        if (materialDict.ContainsKey(material))
+            materialDict[material] += amount;
+        else
+            materialDict.Add(material, amount);
+
+        Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[material]}");
+    }
+
+    public void AddMaterials(List<MaterialEntry> rewards)
+    {
+        if (rewards == null || rewards.Count == 0)
+        {
+            Debug.LogWarning("AddMaterials 실패: rewards가 비어있습니다.");
+            return;
+        }
+
+        foreach (var reward in rewards)
+        {
+            if (reward == null || reward.material == null)
+                continue;
+
+            AddMaterial(reward.material, reward.count);
+        }
+    }
+    
     public Dictionary<MaterialDataSO, int> GetAllMaterials()
     {
         return materialDict;

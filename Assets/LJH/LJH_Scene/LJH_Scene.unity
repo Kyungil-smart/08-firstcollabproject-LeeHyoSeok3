@@ -306,7 +306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 712, y: 32}
+  m_AnchoredPosition: {x: 655, y: -28}
   m_SizeDelta: {x: -1664, y: -824}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &32764838
@@ -781,7 +781,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 824, y: 314}
+  m_AnchoredPosition: {x: 850, y: 307}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &61894391
@@ -804,7 +804,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1677,6 +1677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93a0cf1e5a53a4b4689409071757e595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoldManager
+  isPersistent: 1
   currentGold: 0
   goldText: {fileID: 61894391}
 --- !u!4 &228656985
@@ -1706,6 +1707,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f75d265712448fc409f25748a45b2b36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMaterialInventory
+  isPersistent: 1
   startMaterials:
   - material: {fileID: 11400000, guid: 953c276720e229744bfb78f321ffa7fa, type: 2}
     count: 1
@@ -3840,6 +3842,10 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7359842295612707168, guid: 606952b55842e47d9acbebddf362d17d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 7359842295612707171, guid: 606952b55842e47d9acbebddf362d17d, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -4713,7 +4719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 546, y: 314}
+  m_AnchoredPosition: {x: 573, y: 307}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &870729956
@@ -4736,7 +4742,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: New Text
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6390,6 +6396,10 @@ PrefabInstance:
       propertyPath: m_HorizontalAlignment
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7359842295612707168, guid: 606952b55842e47d9acbebddf362d17d, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 7359842295612707171, guid: 606952b55842e47d9acbebddf362d17d, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -7760,7 +7770,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2630686984703953123, guid: d88c74a50bce5bf40af751900700ddb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -146
+      value: -170
       objectReference: {fileID: 0}
     - target: {fileID: 2630686984703953123, guid: d88c74a50bce5bf40af751900700ddb8, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -9280,7 +9290,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2630686984703953123, guid: d88c74a50bce5bf40af751900700ddb8, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -139
+      value: -163
       objectReference: {fileID: 0}
     - target: {fileID: 2630686984703953123, guid: d88c74a50bce5bf40af751900700ddb8, type: 3}
       propertyPath: m_AnchoredPosition.y
