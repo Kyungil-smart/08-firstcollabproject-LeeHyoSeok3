@@ -1279,11 +1279,6 @@ MonoBehaviour:
   stageText: {fileID: 666083647}
   goldText: {fileID: 1168589416}
   upgradeButton: {fileID: 139744002}
---- !u!1 &146936480 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8829991266328422106, guid: 2ec30a160a60f6546bdbcb783a486ac2, type: 3}
-  m_PrefabInstance: {fileID: 876344399}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &168861597
 GameObject:
   m_ObjectHideFlags: 0
@@ -11097,7 +11092,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2138322568}
-  - component: {fileID: 2138322567}
   - component: {fileID: 2138322569}
   m_Layer: 0
   m_Name: UIManager
@@ -11106,19 +11100,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2138322567
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2138322566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63c95bfffb0d5cf4dbbae5b37d8f19e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BlacksmithUI
-  popup: {fileID: 146936480}
 --- !u!4 &2138322568
 Transform:
   m_ObjectHideFlags: 0
