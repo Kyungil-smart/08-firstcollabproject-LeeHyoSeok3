@@ -188,4 +188,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FloatingText
   text: {fileID: 0}
   moveSpeed: 50
-  lifeTime: 10
+  lifeTime: 1
