@@ -2,17 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using DesignPattern;
 
-/// <summary>
-/// 팝업 UI 관리자.
-/// UI 설명서 2p 기준: 모든 팝업 UI는 사용자 모니터 중앙에 출력.
-///
-/// 지원 팝업 목록 (UI 설명서 기준):
-/// - 퀘스트 보드 팝업 (730×500, FHD 38%×46%)
-/// - 대장간(제작소) 팝업 (1300×750, FHD 67.7%×69.4%)
-/// - 파티 장비 장착 팝업 (770×320, FHD 40.1%×29.63%)
-/// - 환경설정 팝업 (400×400, FHD 20.8%×37%)
-/// - 던전 보상재료 획득 팝업
-/// </summary>
 public class PopupManager : Singleton<PopupManager>
 {
     [Header("팝업 프리팹 또는 씬 내 오브젝트")]
@@ -30,44 +19,38 @@ public class PopupManager : Singleton<PopupManager>
     protected override void OnAwake()
     {
         base.OnAwake();
+
         if (popupCanvas == null)
-        {
-            Debug.LogError("[PopupManager] 팝업을 배치할 Canvas가 할당되지 않았습니다.");
-        }
-
+            Debug.LogError("[PopupManager] popupCanvas가 할당되지 않았습니다.");
     }
 
-    // ─── 팝업 열기 ───────────────────────────────────────────────────
-
-    public void OpenQuestBoard()
-    {
-        OpenPopup(questBoardPopup);
-    } 
-    public void OpenBlacksmith() 
-    {
-        OpenPopup(blacksmithPopup);
-    }
-
+    public void OpenQuestBoard() => OpenPopup(questBoardPopup);
+    public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
     public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
     public void OpenSettings() => OpenPopup(settingsPopup);
     public void OpenRewardPopup() => OpenPopup(rewardPopup);
 
-    /// <summary>팝업을 모니터 중앙에 배치하고 활성화합니다.</summary>
     public void OpenPopup(RectTransform popup)
     {
-        if (popup == null) return;
+        if (popup == null || popupCanvas == null)
+            return;
 
         popup.gameObject.SetActive(true);
-        CenterOnMonitor(popup);
+
+        // 먼저 중앙 배치
+        CenterInCanvas(popup);
+
+        // 그 다음 화면 밖으로 안 나가게 보정
+        ClampToCanvas(popup);
 
         if (!_activePopups.Contains(popup))
             _activePopups.Add(popup);
     }
 
-    /// <summary>팝업을 닫습니다.</summary>
     public void ClosePopup(RectTransform popup)
     {
         if (popup == null) return;
+
         popup.gameObject.SetActive(false);
         _activePopups.Remove(popup);
     }
@@ -75,70 +58,92 @@ public class PopupManager : Singleton<PopupManager>
     public void CloseAllPopups()
     {
         foreach (var popup in _activePopups)
-            if (popup != null) popup.gameObject.SetActive(false);
+        {
+            if (popup != null)
+                popup.gameObject.SetActive(false);
+        }
+
         _activePopups.Clear();
     }
 
-    // ─── 모니터 중앙 배치 ─────────────────────────────────────────────
-
     /// <summary>
-    /// 팝업을 유저 모니터 화면의 중앙에 배치합니다.
-    /// 게임 창 위치와 무관하게 모니터 절대 중앙 기준입니다.
+    /// Canvas 중앙에 배치
     /// </summary>
-    private void CenterOnMonitor(RectTransform popup)
+    private void CenterInCanvas(RectTransform popup)
     {
-        if (popupCanvas == null) return;
-
-        Resolution screen = Screen.currentResolution;
-        Vector2 monitorCenter = new Vector2(screen.width * 0.5f, screen.height * 0.5f);
-
-        // 게임 창의 현재 위치를 고려하여 Canvas 로컬 좌표로 변환
-        Vector2 gameWindowPos = Vector2.zero;
-        if (WindowSystemManager.Instance != null)
-            gameWindowPos = WindowSystemManager.Instance.GetWindowPosition();
-
-        // 모니터 중앙을 게임 창 기준 스크린 좌표로 변환
-        Vector2 screenPosInWindow = monitorCenter - gameWindowPos;
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            popupCanvas.GetComponent<RectTransform>(),
-            screenPosInWindow,
-            popupCanvas.worldCamera,
-            out Vector2 localPoint
-        );
-
-        popup.anchoredPosition = localPoint;
+        popup.anchorMin = new Vector2(0.5f, 0.5f);
+        popup.anchorMax = new Vector2(0.5f, 0.5f);
+        popup.pivot = new Vector2(0.5f, 0.5f);
+        popup.anchoredPosition = Vector2.zero;
     }
 
-    // ─── 팝업 크기 반응형 스케일링 ────────────────────────────────────
+    /// <summary>
+    /// 팝업이 Canvas 바깥으로 나가지 않도록 보정
+    /// </summary>
+    private void ClampToCanvas(RectTransform popup)
+    {
+        RectTransform canvasRect = popupCanvas.GetComponent<RectTransform>();
+
+        Vector2 canvasSize = canvasRect.rect.size;
+        Vector2 popupSize = popup.rect.size;
+
+        // Canvas보다 팝업이 더 크면 일단 크기부터 줄임
+        float clampedWidth = Mathf.Min(popupSize.x, canvasSize.x);
+        float clampedHeight = Mathf.Min(popupSize.y, canvasSize.y);
+
+        popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, clampedWidth);
+        popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, clampedHeight);
+
+        popupSize = popup.rect.size;
+
+        float halfCanvasW = canvasSize.x * 0.5f;
+        float halfCanvasH = canvasSize.y * 0.5f;
+        float halfPopupW = popupSize.x * 0.5f;
+        float halfPopupH = popupSize.y * 0.5f;
+
+        Vector2 pos = popup.anchoredPosition;
+
+        pos.x = Mathf.Clamp(pos.x, -halfCanvasW + halfPopupW, halfCanvasW - halfPopupW);
+        pos.y = Mathf.Clamp(pos.y, -halfCanvasH + halfPopupH, halfCanvasH - halfPopupH);
+
+        popup.anchoredPosition = pos;
+    }
 
     /// <summary>
-    /// FHD 기준 비율로 팝업 크기를 현재 해상도에 맞게 조절합니다.
-    /// UI 설명서 각 팝업의 FHD% 수치 사용.
+    /// 현재 게임 화면 기준으로 팝업 크기 조절
     /// </summary>
     public void ScalePopupToScreen(RectTransform popup, float widthRatio, float heightRatio)
     {
-        Resolution screen = Screen.currentResolution;
-        float w = screen.width * widthRatio;
-        float h = screen.height * heightRatio;
+        if (popup == null || popupCanvas == null)
+            return;
+
+        float w = Screen.width * widthRatio;
+        float h = Screen.height * heightRatio;
+
+        RectTransform canvasRect = popupCanvas.GetComponent<RectTransform>();
+        float maxW = canvasRect.rect.width;
+        float maxH = canvasRect.rect.height;
+
+        w = Mathf.Min(w, maxW);
+        h = Mathf.Min(h, maxH);
+
         popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, w);
         popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, h);
     }
 
     private void Start()
     {
-        // 팝업 초기 크기 설정 (UI 설명서 FHD% 기준)
         if (questBoardPopup) ScalePopupToScreen(questBoardPopup, 0.38f, 0.46f);
         if (blacksmithPopup) ScalePopupToScreen(blacksmithPopup, 0.677f, 0.694f);
         if (partyEquipPopup) ScalePopupToScreen(partyEquipPopup, 0.401f, 0.2963f);
         if (settingsPopup) ScalePopupToScreen(settingsPopup, 0.208f, 0.37f);
 
-        // 모든 팝업 초기 비활성화
-        CloseAllPopups();
         if (questBoardPopup) questBoardPopup.gameObject.SetActive(false);
         if (blacksmithPopup) blacksmithPopup.gameObject.SetActive(false);
         if (partyEquipPopup) partyEquipPopup.gameObject.SetActive(false);
         if (settingsPopup) settingsPopup.gameObject.SetActive(false);
         if (rewardPopup) rewardPopup.gameObject.SetActive(false);
+
+        _activePopups.Clear();
     }
 }

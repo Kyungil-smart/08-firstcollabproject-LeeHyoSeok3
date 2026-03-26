@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UpgradeUI : MonoBehaviour
 {
@@ -18,24 +19,67 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private Button upgradeButton;
 
-    private void Start()
+    private bool isSubscribed;
+    private Coroutine bindCoroutine;
+
+    private void Awake()
     {
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnClickUpgrade);
-
-        RefreshUI();
     }
 
     private void OnEnable()
     {
+        RefreshUI();
+
         if (GoldManager.Instance != null)
-            GoldManager.Instance.OnGoldChanged += OnGoldChanged;
+        {
+            SubscribeGoldEvent();
+            RefreshUI();
+        }
+        else
+        {
+            bindCoroutine = StartCoroutine(BindGoldManager());
+        }
     }
 
     private void OnDisable()
     {
-        if (GoldManager.Instance != null)
-            GoldManager.Instance.OnGoldChanged -= OnGoldChanged;
+        if (bindCoroutine != null)
+        {
+            StopCoroutine(bindCoroutine);
+            bindCoroutine = null;
+        }
+
+        UnsubscribeGoldEvent();
+    }
+
+    private IEnumerator BindGoldManager()
+    {
+        while (GoldManager.Instance == null)
+            yield return null;
+
+        SubscribeGoldEvent();
+        bindCoroutine = null;
+        RefreshUI();
+    }
+
+    private void SubscribeGoldEvent()
+    {
+        if (isSubscribed || GoldManager.Instance == null)
+            return;
+
+        GoldManager.Instance.OnGoldChanged += OnGoldChanged;
+        isSubscribed = true;
+    }
+
+    private void UnsubscribeGoldEvent()
+    {
+        if (!isSubscribed || GoldManager.Instance == null)
+            return;
+
+        GoldManager.Instance.OnGoldChanged -= OnGoldChanged;
+        isSubscribed = false;
     }
 
     private void OnGoldChanged(int gold)
@@ -45,17 +89,32 @@ public class UpgradeUI : MonoBehaviour
 
     public void RefreshUI()
     {
+        if (upgradeSystem == null)
+            return;
+
         UpgradeRow current = upgradeSystem.CurrentRow;
+        UpgradeRow next = upgradeSystem.NextRow; 
 
         if (current == null)
-        {
-            Debug.LogError($"{gameObject.name} CurrentRow is null.");
             return;
-        }
 
-        levelText.text = $"{levelLabel} : {current.level}";
-        valueText.text = $"{valueLabel} : {current.value}";
-        stageText.text = $"{stageLabel} : {current.stageDisplay}";
+        // 레벨 표시
+        if (next != null)
+            levelText.text = $"{levelLabel} : {current.level} → {next.level}";
+        else
+            levelText.text = $"{levelLabel} : {current.level} (MAX)";
+
+        // 능력치 표시
+        if (next != null)
+            valueText.text = $"{valueLabel} : {current.value} → {next.value}";
+        else
+            valueText.text = $"{valueLabel} : {current.value} (MAX)";
+
+        // 스테이지도 동일하게 가능
+        if (next != null)
+            stageText.text = $"{stageLabel} : {current.stageDisplay} → {next.stageDisplay}";
+        else
+            stageText.text = $"{stageLabel} : {current.stageDisplay} (MAX)";
 
         int gold = GoldManager.Instance != null ? GoldManager.Instance.CurrentGold : 0;
         int cost = upgradeSystem.CurrentUpgradeCost;

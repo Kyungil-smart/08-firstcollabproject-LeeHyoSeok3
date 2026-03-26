@@ -27,6 +27,22 @@ public class UpgradeSystem : MonoBehaviour
             return rows[currentLevel];
         }
     }
+    
+    public UpgradeRow NextRow
+    {
+        get
+        {
+            if (rows == null || rows.Count == 0)
+                return null;
+
+            int nextIndex = currentLevel + 1;
+
+            if (nextIndex < 0 || nextIndex >= rows.Count)
+                return null;
+
+            return rows[nextIndex];
+        }
+    }
 
     private void Awake()
     {
