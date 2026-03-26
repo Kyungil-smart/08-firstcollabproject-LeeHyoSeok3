@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UpgradeUI : MonoBehaviour
 {
@@ -18,24 +19,35 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private Button upgradeButton;
 
+    private bool isSubscribed;
+
     private void Start()
     {
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnClickUpgrade);
 
+        StartCoroutine(BindGoldManager());
         RefreshUI();
-    }
-
-    private void OnEnable()
-    {
-        if (GoldManager.Instance != null)
-            GoldManager.Instance.OnGoldChanged += OnGoldChanged;
     }
 
     private void OnDisable()
     {
-        if (GoldManager.Instance != null)
+        if (isSubscribed && GoldManager.Instance != null)
+        {
             GoldManager.Instance.OnGoldChanged -= OnGoldChanged;
+            isSubscribed = false;
+        }
+    }
+
+    private IEnumerator BindGoldManager()
+    {
+        while (GoldManager.Instance == null)
+            yield return null;
+
+        GoldManager.Instance.OnGoldChanged += OnGoldChanged;
+        isSubscribed = true;
+
+        RefreshUI();
     }
 
     private void OnGoldChanged(int gold)
@@ -45,13 +57,12 @@ public class UpgradeUI : MonoBehaviour
 
     public void RefreshUI()
     {
-        UpgradeRow current = upgradeSystem.CurrentRow;
-
-        if (current == null)
-        {
-            Debug.LogError($"{gameObject.name} CurrentRow is null.");
+        if (upgradeSystem == null)
             return;
-        }
+
+        UpgradeRow current = upgradeSystem.CurrentRow;
+        if (current == null)
+            return;
 
         levelText.text = $"{levelLabel} : {current.level}";
         valueText.text = $"{valueLabel} : {current.value}";
