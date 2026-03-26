@@ -39,8 +39,15 @@ public class PopupManager : Singleton<PopupManager>
 
     // ─── 팝업 열기 ───────────────────────────────────────────────────
 
-    public void OpenQuestBoard() => OpenPopup(questBoardPopup);
-    public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
+    public void OpenQuestBoard()
+    {
+        OpenPopup(questBoardPopup);
+    } 
+    public void OpenBlacksmith() 
+    {
+        OpenPopup(blacksmithPopup);
+    }
+
     public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
     public void OpenSettings() => OpenPopup(settingsPopup);
     public void OpenRewardPopup() => OpenPopup(rewardPopup);
