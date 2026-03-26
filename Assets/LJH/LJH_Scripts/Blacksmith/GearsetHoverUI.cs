@@ -24,17 +24,32 @@ public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("마우스 진입");
-        if (tooltipUI == null || recipe == null)
-            return;
 
+        if (tooltipUI == null)
+        {
+            Debug.LogError("tooltipUI가 null");
+            return;
+        }
+
+        if (recipe == null)
+        {
+            Debug.LogError("recipe가 null");
+            return;
+        }
+
+        Debug.Log($"툴팁 표시 시도: {recipe.gearsetName}");
         tooltipUI.ShowTooltip(recipe, eventData.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("마우스 나감");
+
         if (tooltipUI == null)
+        {
+            Debug.LogError("tooltipUI가 null");
             return;
+        }
 
         tooltipUI.HideTooltip();
     }

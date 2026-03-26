@@ -1,9 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GearsetRecipe", menuName = "Blacksmith/Gearset Recipe")]
+[CreateAssetMenu(menuName = "Game/Gearset Recipe")]
 public class GearsetRecipeSO : ScriptableObject
 {
     public string gearsetName;
-    public List<GearsetMaterialData> requiredMaterials = new List<GearsetMaterialData>();
+    [TextArea] public string description;
+
+    public List<MaterialRequirement> requirements = new List<MaterialRequirement>();
 }
+
+[System.Serializable]
+public class MaterialRequirement
+{
+    public MaterialDataSO material;
+    public int requiredCount;
+}
+

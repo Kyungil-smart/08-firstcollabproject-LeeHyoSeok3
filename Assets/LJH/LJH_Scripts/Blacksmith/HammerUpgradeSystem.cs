@@ -9,12 +9,10 @@ public class UpgradeSystem : MonoBehaviour
 
     [Header("Runtime Data")]
     [SerializeField] private int currentLevel = 0;
-    [SerializeField] private int currentGold = 100000;
 
     private List<UpgradeRow> rows;
 
     public int CurrentLevel => currentLevel;
-    public int CurrentGold => currentGold;
 
     public UpgradeRow CurrentRow
     {
@@ -54,7 +52,10 @@ public class UpgradeSystem : MonoBehaviour
         if (IsMaxLevel())
             return false;
 
-        return currentGold >= CurrentUpgradeCost;
+        if (GoldManager.Instance == null)
+            return false;
+
+        return GoldManager.Instance.CurrentGold >= CurrentUpgradeCost;
     }
 
     public bool TryUpgrade()
@@ -62,13 +63,16 @@ public class UpgradeSystem : MonoBehaviour
         if (!CanUpgrade())
             return false;
 
-        currentGold -= CurrentUpgradeCost;
+        if (GoldManager.Instance == null)
+        {
+            Debug.LogError("GoldManager가 씬에 없습니다.");
+            return false;
+        }
+
+        if (!GoldManager.Instance.TrySpendGold(CurrentUpgradeCost))
+            return false;
+
         currentLevel++;
         return true;
-    }
-
-    public void AddGold(int amount)
-    {
-        currentGold += amount;
     }
 }

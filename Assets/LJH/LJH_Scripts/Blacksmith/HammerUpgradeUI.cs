@@ -26,6 +26,23 @@ public class UpgradeUI : MonoBehaviour
         RefreshUI();
     }
 
+    private void OnEnable()
+    {
+        if (GoldManager.Instance != null)
+            GoldManager.Instance.OnGoldChanged += OnGoldChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (GoldManager.Instance != null)
+            GoldManager.Instance.OnGoldChanged -= OnGoldChanged;
+    }
+
+    private void OnGoldChanged(int gold)
+    {
+        RefreshUI();
+    }
+
     public void RefreshUI()
     {
         UpgradeRow current = upgradeSystem.CurrentRow;
@@ -40,7 +57,7 @@ public class UpgradeUI : MonoBehaviour
         valueText.text = $"{valueLabel} : {current.value}";
         stageText.text = $"{stageLabel} : {current.stageDisplay}";
 
-        int gold = upgradeSystem.CurrentGold;
+        int gold = GoldManager.Instance != null ? GoldManager.Instance.CurrentGold : 0;
         int cost = upgradeSystem.CurrentUpgradeCost;
 
         if (upgradeSystem.IsMaxLevel())
@@ -59,7 +76,7 @@ public class UpgradeUI : MonoBehaviour
 
     private void OnClickUpgrade()
     {
-        upgradeSystem.TryUpgrade();
-        RefreshUI();
+        if (upgradeSystem.TryUpgrade())
+            RefreshUI();
     }
 }
