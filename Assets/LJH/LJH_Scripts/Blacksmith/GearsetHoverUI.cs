@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private GearsetTooltipUI tooltipUI;
+    [SerializeField] private GearsetInventory gearsetInventory;
 
     private string gearsetName;
     private GearsetRecipeSO recipe;
@@ -34,6 +35,13 @@ public class GearsetHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
         if (recipe == null)
         {
             Debug.LogError("recipe가 null");
+            return;
+        }
+
+        // ✅ 추가: 제작 완료면 툴팁 안띄움
+        if (gearsetInventory != null && gearsetInventory.IsCrafted(recipe))
+        {
+            Debug.Log("이미 제작된 장비 → 툴팁 표시 안함");
             return;
         }
 
