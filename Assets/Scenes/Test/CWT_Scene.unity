@@ -863,6 +863,7 @@ GameObject:
   - component: {fileID: 282426720}
   - component: {fileID: 282426722}
   - component: {fileID: 282426721}
+  - component: {fileID: 282426723}
   m_Layer: 5
   m_Name: ClickThrow
   m_TagString: Untagged
@@ -989,6 +990,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 282426719}
   m_CullTransparentMesh: 1
+--- !u!114 &282426723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 282426719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61273744ba37c84d8ee55258eed60ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  _key: "\uD074\uB9AD\uD1B5\uACFC ON/OFF"
 --- !u!1 &294650051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1734,6 +1748,8 @@ MonoBehaviour:
   sfxSlider: {fileID: 860091922}
   _minimizeInput: {fileID: 2133728385}
   _clickThroughInput: {fileID: 1546014402}
+  _koreanButton: {fileID: 1246544244}
+  _englishButton: {fileID: 2124169269}
 --- !u!1 &674680338
 GameObject:
   m_ObjectHideFlags: 0
@@ -3159,6 +3175,7 @@ GameObject:
   - component: {fileID: 1127113876}
   - component: {fileID: 1127113878}
   - component: {fileID: 1127113877}
+  - component: {fileID: 1127113879}
   m_Layer: 5
   m_Name: ShortCut
   m_TagString: Untagged
@@ -3285,6 +3302,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127113875}
   m_CullTransparentMesh: 1
+--- !u!114 &1127113879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127113875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61273744ba37c84d8ee55258eed60ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  _key: "\uB2E8\uCD95\uD0A4"
 --- !u!1 &1128161158
 GameObject:
   m_ObjectHideFlags: 0
@@ -3334,6 +3364,52 @@ MonoBehaviour:
   - soundName: blacksmith
     clip: {fileID: 8300000, guid: b31295c99ae26d9408461bdb07e9bfcf, type: 3}
     isLoop: 1
+--- !u!1 &1183603836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183603838}
+  - component: {fileID: 1183603837}
+  m_Layer: 0
+  m_Name: LocalizationManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1183603837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183603836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 496a42677a87f6548b599d277a8e0abc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
+  isPersistent: 1
+  csvFile: {fileID: 4900000, guid: 0ecbfa3ac5041fb41954d6acfc0daef7, type: 3}
+--- !u!4 &1183603838
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183603836}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1060.8978, y: 514.27893, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1188898678
 GameObject:
   m_ObjectHideFlags: 0
@@ -5216,6 +5292,7 @@ GameObject:
   - component: {fileID: 2024460637}
   - component: {fileID: 2024460639}
   - component: {fileID: 2024460638}
+  - component: {fileID: 2024460640}
   m_Layer: 5
   m_Name: Minimize
   m_TagString: Untagged
@@ -5342,6 +5419,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2024460636}
   m_CullTransparentMesh: 1
+--- !u!114 &2024460640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2024460636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61273744ba37c84d8ee55258eed60ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedText
+  _key: "\uCD5C\uC18C\uD654"
 --- !u!1 &2064435058
 GameObject:
   m_ObjectHideFlags: 0
@@ -5898,3 +5988,4 @@ SceneRoots:
   - {fileID: 1128161160}
   - {fileID: 163035754}
   - {fileID: 2010019878}
+  - {fileID: 1183603838}
