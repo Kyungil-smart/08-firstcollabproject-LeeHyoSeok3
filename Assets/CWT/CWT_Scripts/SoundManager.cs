@@ -1,26 +1,22 @@
+using DesignPattern;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
 {
     [SerializeField] List<SoundData> data = new List<SoundData>();
-
 
     AudioSource _oneShot; // 한번 재생할 변수
     AudioSource _loopShot; // 반복 재생할 변수
     AudioSource _bgmShot; // bgm 재생할 변수
 
-    public static SoundManager Instance { get; private set; }
+    // 현재 BGM 볼륨값을 외부에서 가져갈 수 있게 해주는 프로퍼티
+    public float BGMVolume => _bgmShot.volume;
+    // 현재 SFX 볼륨값을 외부에서 가져갈 수 있게 해주는 프로퍼티
+    public float SFXVolume => _oneShot.volume;
 
-    private void Awake()
-    {   // 싱글톤 설정
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
+    protected override void OnAwake()
+    {   
         // 오디오소스를 생성해서 붙여준다.
         _oneShot = gameObject.AddComponent<AudioSource>();
         _loopShot = gameObject.AddComponent<AudioSource>();
