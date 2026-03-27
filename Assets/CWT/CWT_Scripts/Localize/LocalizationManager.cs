@@ -1,7 +1,7 @@
 ﻿// ============================================
 // 파일명: LocalizationManager.cs
 // 붙일 오브젝트: 빈 오브젝트 (씬에 하나만 존재)
-// 역할: System_Data.csv를 읽어서 언어별 텍스트를 관리하고,
+// 역할: Localization_Data.csv를 읽어서 언어별 텍스트를 관리하고,
 //       언어 변경 시 모든 UI에 알려주는 중앙 관리자
 // ============================================
 
@@ -12,7 +12,7 @@ using DesignPattern;
 
 public class LocalizationManager : Singleton<LocalizationManager>
 {
-    // Resources/Data 폴더에 있는 System_Data CSV 파일
+    // Resources/Data 폴더에 있는 CSV 파일
     // Inspector에서 드래그해서 연결
     [SerializeField] private TextAsset csvFile;
 
@@ -36,7 +36,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
     }
 
     // CSV 파일을 읽어서 딕셔너리에 저장하는 메서드
-    // System_Data.csv 구조: (빈칸), KOREAN, ENGLISH, (빈칸)
     private void LoadCSV()
     {
         if (csvFile == null)
@@ -56,11 +55,11 @@ public class LocalizationManager : Singleton<LocalizationManager>
             // 빈 줄이면 건너뛰기
             if (string.IsNullOrEmpty(line)) continue;
 
-            // 쉼표로 분리
-            string[] values = line.Split(',');
+            // 큰따옴표 안의 쉼표를 무시하고 올바르게 파싱
+            List<string> values = ParseCSVLine(line);
 
             // 최소 3개 컬럼이 있어야 함 (빈칸, KOREAN, ENGLISH)
-            if (values.Length < 3) continue;
+            if (values.Count < 3) continue;
 
             // 컬럼 1 = 한국어 텍스트 (이게 키 역할도 함)
             string korean = values[1].Trim();
@@ -81,10 +80,43 @@ public class LocalizationManager : Singleton<LocalizationManager>
         Debug.Log($"LocalizationManager: {_textData.Count}개 텍스트 로드 완료");
     }
 
+    // 큰따옴표 안의 쉼표를 무시하고 올바르게 파싱하는 메서드
+    // CSV에서 "오르막길을 올라야 하니, 짐을..." 같은 텍스트를 정확히 분리
+    private List<string> ParseCSVLine(string line)
+    {
+        List<string> result = new List<string>();
+        string currentValue = "";
+        bool insideQuotes = false;
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (c == '"')
+            {
+                insideQuotes = !insideQuotes;
+            }
+            else if (c == ',')
+            {
+                if (insideQuotes)
+                {
+                    currentValue += c;
+                }
+                else
+                {
+                    result.Add(currentValue);
+                    currentValue = "";
+                }
+            }
+            else
+            {
+                currentValue += c;
+            }
+        }
+        result.Add(currentValue);
+        return result;
+    }
+
     // 한국어 키를 넣으면 현재 언어에 맞는 텍스트를 돌려주는 메서드
-    // 사용법: LocalizationManager.Instance.GetText("설정") 
-    //   → 한국어일 때: "설정"
-    //   → 영어일 때: "Settings"
     public string GetText(string koreanKey)
     {
         if (_textData.ContainsKey(koreanKey))
@@ -107,7 +139,6 @@ public class LocalizationManager : Singleton<LocalizationManager>
         _currentLanguage = newLanguage;
 
         // 등록된 모든 리스너에게 언어 변경 알림
-        // 이걸 받은 UI들이 자기 텍스트를 자동으로 갱신함
         OnLanguageChanged?.Invoke();
 
         Debug.Log($"언어 변경: {newLanguage}");
