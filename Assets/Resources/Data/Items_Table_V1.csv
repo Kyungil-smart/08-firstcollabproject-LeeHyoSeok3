@@ -1,0 +1,14 @@
+,재화 시스템0.0.2,,,,,,,,,,,,,,,,
+,재화 시스템0.0.2,,,,,,,,,,,,,,,,
+,골드 / 재료 테이블,,,,,,,,,장비 테이블,,,,,,,
+,id,Name_kor,Name_us,Stock_min,Stock_max,Icon,Popup_id,Type,,id,Name_kor,Name_us,Stock_min,Stock_max,Icon,Popup_id,Equip
+,Int,String,String,Double,Double,String,int,int,,Int,String,String,Int,Int,String,int,bool
+,,골드,gold,0,"999,999,999",,,0,,,녹슬어버린 세트,Rusty,0,1,,,1
+,,단단한 나뭇가지,Stick,0,99,,,1,,,나무 세트,Wooden,0,1,,,0
+,,철 원석,Iron ore,0,99,,,1,,,메탈 세트,Metal,0,1,,,0
+,,슬라임 핵,Slime core,0,99,,,1,,,끈적한 세트,Slimy,0,1,,,0
+,,불타는 핵,Fire core,0,99,,,1,,,하드커버 세트,Hardcover,0,1,,,0
+,,얼어붙은 핵,Frozen core,0,99,,,1,,,따끈따끈한 세트,Hotspa,0,1,,,0
+,,책,Book,0,99,,,1,,,얼어붙은 세트,Frozen,0,1,,,0
+,,드래곤의 유해,Dragon's remain,0,99,,,1,,,드래곤 세트,Dragon,0,1,,,0
+,,용사의 징표,The mark of the hero,0,1,,,1,,,,,,,,,
