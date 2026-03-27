@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 /// <summary>
 /// 게임 시작 / 종료 시 타이머 시스템과의 연계를 담당합니다.
@@ -16,6 +17,8 @@ using System;
 public class GameLifecycleManager : MonoBehaviour
 {
     public static GameLifecycleManager Instance { get; private set; }
+
+    [SerializeField] private Button quitButton; // 게임 종료 버튼 (UI에 배치된 버튼 연결)
 
     // 최소화 화면 전환 시각 저장 키 (오프라인 보상 연계)
     private const string MINIMIZED_TIME_KEY = "MinimizedTimestamp";
@@ -38,11 +41,13 @@ public class GameLifecycleManager : MonoBehaviour
     private void Start()
     {
         OnGameStart();
+        if (quitButton != null)quitButton.onClick.AddListener(OnApplicationQuit);
     }
 
     private void OnApplicationQuit()
     {
         OnGameEnd();
+        Application.Quit();
     }
 
     // ─── 게임 시작 ────────────────────────────────────────────────────
@@ -96,6 +101,8 @@ public class GameLifecycleManager : MonoBehaviour
         // TODO: 타이머 시스템 담당자와 연계 필요
         // 1. 오프라인 시스템 모든 기능 정지
         // 2. 자동 생산 시스템 예외처리 (타이머 기획서 4p 2항) 반영
+
+        
     }
 
     /// <summary>저장된 마지막 종료 시각 반환</summary>
