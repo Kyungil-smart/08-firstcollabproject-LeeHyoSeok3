@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using DesignPattern;
 
 public class HotkeyManager : Singleton<HotkeyManager>
