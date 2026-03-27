@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca16b9334cdc804baf05ceff7d3f1fe, type: 3}
   m_Name: FrozenRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
+  saveId: Frozen
   gearsetName: Frozen
   description: Frozen slime weapon it is. It surely is cold and cool, but always
     keep your tongue away from it.

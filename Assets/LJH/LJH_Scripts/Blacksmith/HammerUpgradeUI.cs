@@ -82,7 +82,7 @@ public class UpgradeUI : MonoBehaviour
         isSubscribed = false;
     }
 
-    private void OnGoldChanged(int gold)
+    private void OnGoldChanged(double gold)
     {
         RefreshUI();
     }
@@ -93,41 +93,38 @@ public class UpgradeUI : MonoBehaviour
             return;
 
         UpgradeRow current = upgradeSystem.CurrentRow;
-        UpgradeRow next = upgradeSystem.NextRow; 
+        UpgradeRow next = upgradeSystem.NextRow;
 
         if (current == null)
             return;
 
-        // 레벨 표시
         if (next != null)
             levelText.text = $"{levelLabel} : {current.level} → {next.level}";
         else
             levelText.text = $"{levelLabel} : {current.level} (MAX)";
 
-        // 능력치 표시
         if (next != null)
             valueText.text = $"{valueLabel} : {current.value} → {next.value}";
         else
             valueText.text = $"{valueLabel} : {current.value} (MAX)";
 
-        // 스테이지도 동일하게 가능
         if (next != null)
             stageText.text = $"{stageLabel} : {current.stageDisplay} → {next.stageDisplay}";
         else
             stageText.text = $"{stageLabel} : {current.stageDisplay} (MAX)";
 
-        int gold = GoldManager.Instance != null ? GoldManager.Instance.CurrentGold : 0;
-        int cost = upgradeSystem.CurrentUpgradeCost;
+        double gold = GoldManager.Instance != null ? GoldManager.Instance.CurrentGold : 0d;
+        double cost = upgradeSystem.CurrentUpgradeCost;
 
         if (upgradeSystem.IsMaxLevel())
         {
-            goldText.text = $"{gold:N0} / MAX";
+            goldText.text = $"{GoldManager.FormatGold(gold)} / MAX";
             goldText.color = Color.white;
             upgradeButton.interactable = false;
         }
         else
         {
-            goldText.text = $"{gold:N0} / {cost:N0}";
+            goldText.text = $"{GoldManager.FormatGold(gold)} / {GoldManager.FormatGold(cost)}";
             goldText.color = gold >= cost ? Color.white : Color.red;
             upgradeButton.interactable = gold >= cost;
         }
