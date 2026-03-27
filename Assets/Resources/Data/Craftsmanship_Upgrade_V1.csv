@@ -1,0 +1,38 @@
+,,,,,,,,,,,,,
+,강화 시스템 기획서 0.0.2 링크,,,,,,,,,,,,
+,강화 시스템0.0.2,,,,,,,,,,,,
+,,,,,,,,,,,,,
+,,,,,,,,,,망치 강화 공통 참조 테이블,,,
+,id,Name_kor,Name_us,Effect_level,Effect_count,Effect_point,Effect_Requirement,Effect_timer,,Effect_count_max,Effect_step,Popup_id,Effect_resources
+,Int,String,String,int,int,Double,Double,int,,int,int,int,String
+,,장인 정신,Craftsmanship,0,0,0,50,1,,5,0,,1단계
+,,장인 정신,Craftsmanship,1,0,3,100,1,,10,1,,2단계
+,,장인 정신,Craftsmanship,2,0,4,170,1,,10,2,,3단계
+,,장인 정신,Craftsmanship,3,0,6,289,1,,6,3,,4단계
+,,장인 정신,Craftsmanship,4,0,9,491,1,,,,,
+,,장인 정신,Craftsmanship,5,0,13,835,1,,,,,
+,,장인 정신,Craftsmanship,6,0,19,"1,419",1,,,,,
+,,장인 정신,Craftsmanship,7,0,27,"2,412",1,,,,,
+,,장인 정신,Craftsmanship,8,0,39,"4,100",1,,,,,
+,,장인 정신,Craftsmanship,9,0,57,"6,970",1,,,,,
+,,장인 정신,Craftsmanship,10,0,83,"11,800",1,,,,,
+,,장인 정신,Craftsmanship,11,0,120,"20,000",1,,,,,
+,,장인 정신,Craftsmanship,12,0,174,"34,000",1,,,,,
+,,장인 정신,Craftsmanship,13,0,252,"58,000",1,,,,,
+,,장인 정신,Craftsmanship,14,0,365,"98,000",1,,,,,
+,,장인 정신,Craftsmanship,15,0,529,"167,000",1,,,,,
+,,장인 정신,Craftsmanship,16,0,767,"284,000",1,,,,,
+,,장인 정신,Craftsmanship,17,0,"1,111","483,000",1,,,,,
+,,장인 정신,Craftsmanship,18,0,"1,609","820,000",1,,,,,
+,,장인 정신,Craftsmanship,19,0,"2,330","1,390,000",1,,,,,
+,,장인 정신,Craftsmanship,20,0,"3,373","2,360,000",1,,,,,
+,,장인 정신,Craftsmanship,21,0,"4,886","4,000,000",1,,,,,
+,,장인 정신,Craftsmanship,22,0,"7,081","6,800,000",1,,,,,
+,,장인 정신,Craftsmanship,23,0,"10,267","11,500,000",1,,,,,
+,,장인 정신,Craftsmanship,24,0,"14,887","19,500,000",1,,,,,
+,,장인 정신,Craftsmanship,25,0,"21,586","33,000,000",1,,,,,
+,,장인 정신,Craftsmanship,26,0,"31,300","56,000,000",1,,,,,
+,,장인 정신,Craftsmanship,27,0,"45,385","95,000,000",1,,,,,
+,,장인 정신,Craftsmanship,28,0,"65,809","161,000,000",1,,,,,
+,,장인 정신,Craftsmanship,29,0,"95,423","273,000,000",1,,,,,
+,,장인 정신,Craftsmanship,30,0,"138,363","464,000,000",1,,,,,

@@ -1,0 +1,25 @@
+,팝업 시스템 0.0.3,,,,,,,,,,,,,,,
+,팝업 시스템 0.0.3,,,,,,,,,,,,,,,
+,장비 팝업 테이블,,,,,,,,,,,,,,,
+,Popup_id,Name_kor,Name_us,Popup_text_positive_kor_1,Popup_text_positive_us_1,Popup_text_negative_kor_1,Popup_text_negative_us_1,Requirement_1,Requirement_text_1_kor,Requirement_text_1_us,Requirement_2,Requirement_text_2_kor,Requirement_text_2_us,Requirement_3,Requirement_text_3_kor,Requirement_text_3_us
+,Int,String,String,String,String,String,String,Double,string,string,Double,string,string,Double,string,string
+,,녹슬어버린 세트,Rusty,지금 가지고 갈 수 있는 건 이것뿐입니다.,This is all we have got right now.,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,나무 세트,Wooden,가볍지만 단단한 장비입니다.,"Light, but hard enough.",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,메탈 세트,Metal,강철을 엮어 만든 장비입니다. ,Wooden weapon upgraded with some stones.,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,끈적한 세트,Slimy,슬라임 핵을 끼운 나무 장비입니다. 끈적거리지만 나무보다는 강력합니다.,"Slime core attached to a wooden weapons. It surely is sticky, but is stronger than the wooden one.",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,하드커버 세트,Hardcover,나무 장비에 가져온 책들을 엮어 만든 장비입니다. 책에 부여된 방어 마법이 사용자를 보호해 줍니다.,Books are tied to a wooden weapons. Enchantment on the books keep the owner from the lethal damage.,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,따끈따끈한 세트,Hotspa,강철 장비에 화염 속성 강화를 더하여 탄생한 장비입니다. 모닥불을 피울 수고를 덜게 되었습니다.,Fire core is attached to a iron weapons. Saves time for litting some bonfires.,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,얼어붙은 세트,Frozen,끈적한 장비를 꽝꽝 얼려 만든 장비입니다. 가까이 있기만 해도 시원해집니다. 절대 혀를 가져다 대지 마세요.,"Frozen slime weapon it is. It surely is cold and cool, but always keep your tongue away from it.",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,드래곤 세트,Dragon,하드커버 장비에 추가적으로 용의 부위를 엮어 만든 최고의 장비입니다.,Upgraded iron weapons with the dragon's bodyparts. This is unutterly the best gears possible. ,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,
+,Popup_id,Popup_text,Icon,,,,,,,,,,,,,
+,Int,String,String,,,,,,,,,,,,,
+,,가벼움,,,,,,,,,,,,,,
+,,견고함,,,,,,,,,,,,,,
+,,끈적거림,,,,,,,,,,,,,,
+,,마법이 걸림,,,,,,,,,,,,,,
+,,따뜻함,,,,,,,,,,,,,,
+,,얼어붙음,,,,,,,,,,,,,,
+,,드래곤의 힘,,,,,,,,,,,,,,
