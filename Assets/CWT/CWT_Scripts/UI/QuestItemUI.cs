@@ -48,7 +48,9 @@ public class QuestItemUI : MonoBehaviour
         _description.text = LocalizationManager.Instance.GetText(_data.description);
         _requiredAttribute.text = LocalizationManager.Instance.GetText(_data.requiredAttribute);
         _rewardItem.text = LocalizationManager.Instance.GetText(_data.rewardItem);
-        _timeRequired.text = _data.timeRequired; // 시간은 번역 필요 없음
+        string minuteUnit = LocalizationManager.Instance.GetText("분");
+
+        _timeRequired.text = $"{_data.timeRequired}{minuteUnit}";
     }
 
     // 오브젝트가 파괴될 때 이벤트 등록 해제 (메모리 누수 방지)

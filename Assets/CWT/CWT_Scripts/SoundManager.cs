@@ -56,7 +56,7 @@ public class SoundManager : Singleton<SoundManager>
         _loopShot.clip = result.clip;
         _loopShot.Play();
     }
-
+    // BGM 재생하는 음원소스 호출용
     public void BGMShot(string name)
     {
         SoundData result = OpenClip(name);
