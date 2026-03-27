@@ -1060,6 +1060,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &228656983
 GameObject:
   m_ObjectHideFlags: 0
@@ -1384,6 +1385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &384376079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,6 +1656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &444144600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1974,6 +1977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &462464793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2311,6 +2315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &531279832
 GameObject:
   m_ObjectHideFlags: 0
@@ -3466,6 +3471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &867956968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4885,6 +4891,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &1145850033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5199,6 +5206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &1236950071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6154,6 +6162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &1437259211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6257,6 +6266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &1453811679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6331,6 +6341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 2024291481}
+  gearsetInventory: {fileID: 951515718}
 --- !u!114 &1499765133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6980,6 +6991,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &1732089380
 GameObject:
   m_ObjectHideFlags: 0
@@ -7315,6 +7327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &1851313953
 GameObject:
   m_ObjectHideFlags: 0
@@ -7659,6 +7672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &1950640652
 GameObject:
   m_ObjectHideFlags: 0
@@ -7704,6 +7718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1 &1951381786
 GameObject:
   m_ObjectHideFlags: 0
@@ -7858,6 +7873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentHoverUI
   tooltipUI: {fileID: 0}
+  gearsetInventory: {fileID: 0}
 --- !u!1001 &2104352423
 PrefabInstance:
   m_ObjectHideFlags: 0
