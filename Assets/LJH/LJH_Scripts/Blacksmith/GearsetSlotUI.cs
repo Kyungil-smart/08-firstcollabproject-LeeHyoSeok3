@@ -14,6 +14,15 @@ public class GearsetSlotUI : MonoBehaviour
     [SerializeField] private Color craftedColor = Color.white;
     [SerializeField] private Color notCraftedColor = new Color(0.4f, 0.4f, 0.4f, 1f);
 
+    private void Awake()
+    {
+        if (materialInventory == null)
+            materialInventory = MaterialInventory.Instance;
+
+        if (gearsetInventory == null)
+            gearsetInventory = GearsetInventory.Instance;
+    }
+    
     private void Start()
     {
         RefreshState();

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca16b9334cdc804baf05ceff7d3f1fe, type: 3}
   m_Name: HardcoverRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
+  saveId: Hardcover
   gearsetName: Hardcover
   description: Books are tied to a wooden weapons. Enchantment on the books keep
     the owner from the lethal damage.

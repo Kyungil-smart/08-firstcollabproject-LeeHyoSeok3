@@ -5,10 +5,43 @@ using DesignPattern;
 public class MaterialInventory : Singleton<MaterialInventory>
 {
     [SerializeField] private List<MaterialEntry> startMaterials = new();
+    [SerializeField] private List<MaterialDataSO> allMaterials = new();
 
     private Dictionary<MaterialDataSO, int> materialDict = new();
+    private Dictionary<string, MaterialDataSO> materialLookup = new();
 
     protected override void OnAwake()
+    {
+        BuildLookup();
+        InitDefaultMaterials();
+    }
+
+    private void BuildLookup()
+    {
+        materialLookup.Clear();
+
+        foreach (var material in allMaterials)
+        {
+            if (material == null)
+                continue;
+
+            if (string.IsNullOrEmpty(material.saveId))
+            {
+                Debug.LogWarning($"{material.name} : saveId가 비어있습니다.");
+                continue;
+            }
+
+            if (materialLookup.ContainsKey(material.saveId))
+            {
+                Debug.LogWarning($"중복된 Material saveId: {material.saveId}");
+                continue;
+            }
+
+            materialLookup.Add(material.saveId, material);
+        }
+    }
+
+    private void InitDefaultMaterials()
     {
         materialDict.Clear();
 
@@ -24,10 +57,51 @@ public class MaterialInventory : Singleton<MaterialInventory>
         }
     }
 
+    public void LoadFromSave(List<MaterialSaveData> savedMaterials)
+    {
+        materialDict.Clear();
+
+        if (savedMaterials == null)
+            return;
+
+        foreach (var saved in savedMaterials)
+        {
+            if (saved == null || string.IsNullOrEmpty(saved.materialId))
+                continue;
+
+            if (materialLookup.TryGetValue(saved.materialId, out var material))
+            {
+                materialDict[material] = saved.count;
+            }
+            else
+            {
+                Debug.LogWarning($"로드 실패: materialId {saved.materialId} 를 찾을 수 없습니다.");
+            }
+        }
+    }
+
+    public List<MaterialSaveData> GetSaveData()
+    {
+        List<MaterialSaveData> list = new();
+
+        foreach (var pair in materialDict)
+        {
+            if (pair.Key == null || string.IsNullOrEmpty(pair.Key.saveId))
+                continue;
+
+            list.Add(new MaterialSaveData
+            {
+                materialId = pair.Key.saveId,
+                count = pair.Value
+            });
+        }
+
+        return list;
+    }
+
     public int GetCount(MaterialDataSO material)
     {
         if (material == null) return 0;
-
         return materialDict.TryGetValue(material, out int count) ? count : 0;
     }
 
@@ -56,8 +130,10 @@ public class MaterialInventory : Singleton<MaterialInventory>
         {
             materialDict[req.material] -= req.requiredCount;
         }
+
+        GameDataController.Instance?.SaveGame();
     }
-    
+
     public void AddMaterial(MaterialDataSO material, int amount)
     {
         if (material == null)
@@ -78,6 +154,8 @@ public class MaterialInventory : Singleton<MaterialInventory>
             materialDict.Add(material, amount);
 
         Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[material]}");
+
+        GameDataController.Instance?.SaveGame();
     }
 
     public void AddMaterials(List<MaterialEntry> rewards)
@@ -96,13 +174,12 @@ public class MaterialInventory : Singleton<MaterialInventory>
             AddMaterial(reward.material, reward.count);
         }
     }
-    
+
     public Dictionary<MaterialDataSO, int> GetAllMaterials()
     {
         return materialDict;
     }
 }
-
 
 [System.Serializable]
 public class MaterialEntry

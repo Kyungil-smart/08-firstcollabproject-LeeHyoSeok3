@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class UpgradeSystem : MonoBehaviour
 {
+    [Header("Save")]
+    [SerializeField] private string saveId;
+
     [Header("CSV")]
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private int startColumnIndex = 0;
@@ -12,6 +15,7 @@ public class UpgradeSystem : MonoBehaviour
 
     private List<UpgradeRow> rows;
 
+    public string SaveId => saveId;
     public int CurrentLevel => currentLevel;
 
     public UpgradeRow CurrentRow
@@ -27,7 +31,7 @@ public class UpgradeSystem : MonoBehaviour
             return rows[currentLevel];
         }
     }
-    
+
     public UpgradeRow NextRow
     {
         get
@@ -89,6 +93,27 @@ public class UpgradeSystem : MonoBehaviour
             return false;
 
         currentLevel++;
+        GameDataController.Instance?.SaveGame();
         return true;
+    }
+
+    public void SetLevel(int level)
+    {
+        if (rows == null || rows.Count == 0)
+        {
+            currentLevel = 0;
+            return;
+        }
+
+        currentLevel = Mathf.Clamp(level, 0, rows.Count - 1);
+    }
+
+    public UpgradeSaveData GetSaveData()
+    {
+        return new UpgradeSaveData
+        {
+            upgradeId = saveId,
+            level = currentLevel
+        };
     }
 }

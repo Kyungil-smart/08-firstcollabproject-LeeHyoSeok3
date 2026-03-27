@@ -29,6 +29,7 @@ public class GoldManager : Singleton<GoldManager>
 
         currentGold += amount;
         NotifyGoldChanged();
+        GameDataController.Instance?.SaveGame();
     }
 
     public bool TrySpendGold(int amount)
@@ -41,6 +42,7 @@ public class GoldManager : Singleton<GoldManager>
 
         currentGold -= amount;
         NotifyGoldChanged();
+        GameDataController.Instance?.SaveGame();
         return true;
     }
 

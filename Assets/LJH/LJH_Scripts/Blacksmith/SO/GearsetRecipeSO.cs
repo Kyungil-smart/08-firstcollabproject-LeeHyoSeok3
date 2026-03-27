@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Gearset Recipe")]
 public class GearsetRecipeSO : ScriptableObject
 {
+    public string saveId;
     public string gearsetName;
     [TextArea] public string description;
 
