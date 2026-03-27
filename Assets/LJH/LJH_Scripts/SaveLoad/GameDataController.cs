@@ -14,7 +14,10 @@ public class GameDataController : Singleton<GameDataController>
 
     private void Start()
     {
-        upgradeSystems = FindObjectsOfType<UpgradeSystem>(true);
+        upgradeSystems = FindObjectsByType<UpgradeSystem>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
 
         LoadGame();
 
@@ -54,10 +57,7 @@ public class GameDataController : Singleton<GameDataController>
         {
             foreach (var upgrade in upgradeSystems)
             {
-                if (upgrade == null)
-                    continue;
-
-                if (string.IsNullOrEmpty(upgrade.SaveId))
+                if (upgrade == null || string.IsNullOrEmpty(upgrade.SaveId))
                     continue;
 
                 data.upgrades.Add(upgrade.GetSaveData());
@@ -123,7 +123,10 @@ public class GameDataController : Singleton<GameDataController>
 
     private void RefreshMaterialInventoryUIs()
     {
-        MaterialInventoryUI[] uiList = FindObjectsOfType<MaterialInventoryUI>(true);
+        MaterialInventoryUI[] uiList = FindObjectsByType<MaterialInventoryUI>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
 
         foreach (var ui in uiList)
         {
@@ -134,7 +137,10 @@ public class GameDataController : Singleton<GameDataController>
 
     private void RefreshGearsetSlots()
     {
-        GearsetSlotUI[] slotList = FindObjectsOfType<GearsetSlotUI>(true);
+        GearsetSlotUI[] slotList = FindObjectsByType<GearsetSlotUI>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
 
         foreach (var slot in slotList)
         {
@@ -145,7 +151,10 @@ public class GameDataController : Singleton<GameDataController>
 
     private void RefreshUpgradeUIs()
     {
-        UpgradeUI[] uiList = FindObjectsOfType<UpgradeUI>(true);
+        UpgradeUI[] uiList = FindObjectsByType<UpgradeUI>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
 
         foreach (var ui in uiList)
         {

@@ -53,9 +53,7 @@ public class UpgradeSystem : MonoBehaviour
         rows = UpgradeCSVLoader.Load(csvFile, startColumnIndex);
 
         if (rows == null || rows.Count == 0)
-        {
             Debug.LogError($"{gameObject.name} failed to load upgrade rows.");
-        }
     }
 
     public bool IsMaxLevel()
@@ -65,7 +63,7 @@ public class UpgradeSystem : MonoBehaviour
 
     public int CurrentValue => CurrentRow != null ? CurrentRow.value : 0;
     public int CurrentStageDisplay => CurrentRow != null ? CurrentRow.stageDisplay : 0;
-    public int CurrentUpgradeCost => CurrentRow != null ? CurrentRow.cost : 0;
+    public double CurrentUpgradeCost => CurrentRow != null ? CurrentRow.cost : 0d;
 
     public bool CanUpgrade()
     {

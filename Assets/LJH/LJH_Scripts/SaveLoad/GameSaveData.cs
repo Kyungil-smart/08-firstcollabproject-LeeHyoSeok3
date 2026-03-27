@@ -4,10 +4,9 @@ using System.Collections.Generic;
 [Serializable]
 public class GameSaveData
 {
-    public int gold;
+    public double gold;
     public List<MaterialSaveData> materials = new();
     public List<string> craftedGearIds = new();
-
     public List<UpgradeSaveData> upgrades = new();
 }
 
