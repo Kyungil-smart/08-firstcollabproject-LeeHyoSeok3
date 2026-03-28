@@ -5,12 +5,12 @@ using DesignPattern;
 
 public class GoldManager : Singleton<GoldManager>
 {
-    [SerializeField] private int currentGold = 0;
+    [SerializeField] private double currentGold = 0;
     [SerializeField] private TMP_Text goldText;
 
-    public int CurrentGold => currentGold;
+    public double CurrentGold => currentGold;
 
-    public event Action<int> OnGoldChanged;
+    public event Action<double> OnGoldChanged;
 
     protected override void OnAwake()
     {
@@ -22,16 +22,17 @@ public class GoldManager : Singleton<GoldManager>
         OnGoldChanged?.Invoke(currentGold);
     }
 
-    public void AddGold(int amount)
+    public void AddGold(double amount)
     {
         if (amount <= 0)
             return;
 
         currentGold += amount;
         NotifyGoldChanged();
+        GameDataController.Instance?.SaveGame();
     }
 
-    public bool TrySpendGold(int amount)
+    public bool TrySpendGold(double amount)
     {
         if (amount <= 0)
             return true;
@@ -41,12 +42,13 @@ public class GoldManager : Singleton<GoldManager>
 
         currentGold -= amount;
         NotifyGoldChanged();
+        GameDataController.Instance?.SaveGame();
         return true;
     }
 
-    public void SetGold(int amount)
+    public void SetGold(double amount)
     {
-        currentGold = Mathf.Max(0, amount);
+        currentGold = Math.Max(0, amount);
         NotifyGoldChanged();
     }
 
@@ -59,6 +61,23 @@ public class GoldManager : Singleton<GoldManager>
     private void RefreshUI()
     {
         if (goldText != null)
-            goldText.text = currentGold.ToString("N0");
+            goldText.text = FormatGold(currentGold);
+    }
+
+    public static string FormatGold(double value)
+    {
+        if (value < 1000d)
+            return Math.Floor(value).ToString("F0");
+
+        string[] units = { "", "K", "M", "B", "T", "aa", "ab", "ac", "ad", "ae" };
+
+        int unitIndex = 0;
+        while (value >= 1000d && unitIndex < units.Length - 1)
+        {
+            value /= 1000d;
+            unitIndex++;
+        }
+
+        return $"{value:F2}{units[unitIndex]}";
     }
 }
