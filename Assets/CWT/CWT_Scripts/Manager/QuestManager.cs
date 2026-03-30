@@ -17,6 +17,9 @@ public class QuestManager : Singleton<QuestManager>
     // 퀘스트 종료 시각 (현재 시간 + 소요 시간)
     private DateTime _questEndTime = DateTime.MinValue;
 
+    // ★ 추가: 마지막으로 완료한 퀘스트 데이터 (팀장 보상 시스템에서 가져감)
+    private DungeonData _completedQuest = null;
+
     // 퀘스트 진행 중인지 확인하는 프로퍼티
     public bool IsQuestActive => _currentQuest != null;
 
@@ -86,11 +89,22 @@ public class QuestManager : Singleton<QuestManager>
 
         Debug.Log($"퀘스트 완료! 던전: {_currentQuest.dungeonName}");
 
-        // TODO: 보상 처리 (자루 팝업 표시, 재료 획득 등)
+        // ★ 완료된 퀘스트 데이터를 보관 (팀장 보상 시스템에서 가져감)
+        _completedQuest = _currentQuest;
 
-        // 퀘스트 데이터 초기화
+        // 진행 중인 퀘스트 초기화
         _currentQuest = null;
         _questEndTime = DateTime.MinValue;
+    }
+
+    /// <summary>
+    /// 보상 수령 완료 시 호출 (팀장 자루 시스템에서 호출)
+    /// 완료된 퀘스트 데이터를 초기화
+    /// </summary>
+    public void ClearCompletedQuest()
+    {
+        Debug.Log($"보상 수령 완료! 던전: {_completedQuest?.dungeonName}");
+        _completedQuest = null;
     }
 
     /// <summary>
