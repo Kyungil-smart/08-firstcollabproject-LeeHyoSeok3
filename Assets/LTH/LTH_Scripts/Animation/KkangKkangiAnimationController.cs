@@ -8,7 +8,18 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     protected override void Start()
     {
         base.Start();
+    }
+
+    private void OnEnable()
+    {
+        if (animator == null) animator = GetComponent<Animator>();
+
         blinkCoroutine = StartCoroutine(BlinkRoutine());
+    }
+
+    private void OnDisable()
+    {
+        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
     }
 
     // 눈 깜빡임 애니메이션을 주기적으로 재생하는 코루틴
@@ -16,11 +27,11 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(4f, 8f));
+            yield return new WaitForSeconds(Random.Range(2f, 5f));
             animator.SetTrigger("Blink");
         }
     }
-    
+
     // 크래프팅 애니메이션을 재생하는 메서드
     public void PlayCraftAnimation()
     {
@@ -35,5 +46,4 @@ public class KkangKkangiAnimationController : CharacterAnimationController
         yield return new WaitForSeconds(1f);
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
-
 }
