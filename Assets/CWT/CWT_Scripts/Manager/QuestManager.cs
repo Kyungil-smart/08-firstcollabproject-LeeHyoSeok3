@@ -63,6 +63,12 @@ public class QuestManager : Singleton<QuestManager>
             ScreenStateManager.Instance.GoToWorldMap();
         }
 
+        // ★ 추가: AdventureManager에게 모험 시작 요청
+        if (AdventureManager.Instance != null)
+        {
+            AdventureManager.Instance.StartAdventure(minutes);
+        }
+
         // 6. 월드맵 최소화 컨트롤러에 종료 시각 전달 (남은 시간 표시용)
         WorldMapMinimizedController worldMapMini = FindObjectOfType<WorldMapMinimizedController>();
         if (worldMapMini != null)

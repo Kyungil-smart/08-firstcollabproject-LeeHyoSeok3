@@ -46,10 +46,14 @@ public class QuestItemUI : MonoBehaviour
         if (_button != null)
         {
             _button.onClick.AddListener(OnQuestClicked);
+            // ★ 추가: 요구 특성 충족 여부에 따라 버튼 활성화/비활성화
+        UpdateQuestAvailability();
         }
+
     }
 
     // ─── 추가 3: 퀘스트 패널 클릭 시 호출되는 메서드 ───
+    // ─── 퀘스트 패널 클릭 시 호출되는 메서드 ───
     private void OnQuestClicked()
     {
         // 이미 퀘스트 진행 중이면 출발 불가
@@ -59,8 +63,16 @@ public class QuestItemUI : MonoBehaviour
             return;
         }
 
+        // ★ 추가: 요구 특성을 충족하지 못하면 출발 불가
+        if (PartyEquipManager.Instance != null &&
+            !PartyEquipManager.Instance.CanEnterDungeon(_data.requiredAttribute))
+        {
+            Debug.Log($"요구 특성 불충족! 필요: {_data.requiredAttribute}, " +
+                      $"현재: {PartyEquipManager.Instance.CurrentAttribute}");
+            return;
+        }
+
         // QuestManager에게 출발 요청
-        // QuestManager가 팝업 닫기 + 화면 전환까지 전부 처리해줌
         QuestManager.Instance?.StartQuest(_data);
     }
 
@@ -76,6 +88,44 @@ public class QuestItemUI : MonoBehaviour
         string minuteUnit = LocalizationManager.Instance.GetText("분");
 
         _timeRequired.text = $"{_data.timeRequired}{minuteUnit}";
+    }
+
+    /// <summary>
+    /// 요구 특성 충족 여부에 따라 버튼 활성화/비활성화 + 텍스트 색상 변경
+    /// 기획서 기준:
+    ///   충족 → 버튼 활성화 + 기본 색상
+    ///   불충족 → 버튼 비활성화 + 빨간색 (#FF0000)
+    /// </summary>
+    private void UpdateQuestAvailability()
+    {
+        if (_data == null) return;
+
+        // PartyEquipManager가 없으면 기본적으로 활성화
+        if (PartyEquipManager.Instance == null)
+            return;
+
+        bool canEnter = PartyEquipManager.Instance.CanEnterDungeon(_data.requiredAttribute);
+
+        // 버튼 활성화/비활성화
+        if (_button != null)
+        {
+            _button.interactable = canEnter;
+        }
+
+        // 요구 특성 텍스트 색상 변경
+        if (_requiredAttribute != null)
+        {
+            if (canEnter)
+            {
+                // 충족 → 기본 색상 (파란색)
+                _requiredAttribute.color = Color.blue;
+            }
+            else
+            {
+                // 불충족 → 빨간색 (#FF0000)
+                _requiredAttribute.color = new Color(1f, 0f, 0f, 1f);
+            }
+        }
     }
 
     // 오브젝트가 파괴될 때 이벤트 등록 해제 (메모리 누수 방지)
