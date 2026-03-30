@@ -50,6 +50,7 @@ public class QuestBoardPopupUI : MonoBehaviour
         // PopupManager를 통해 열기
         PopupManager.Instance.OpenQuestBoard();
         SoundManager.Instance.OneShot("mouseClick");
+        
     }
 
     // 퀘스트 보드 팝업창에서 종료버튼

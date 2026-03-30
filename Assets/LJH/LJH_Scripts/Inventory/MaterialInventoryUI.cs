@@ -7,6 +7,12 @@ public class MaterialInventoryUI : MonoBehaviour
     [SerializeField] private MaterialInventory materialInventory;
     [SerializeField] private TextMeshProUGUI inventoryText;
 
+    private void Awake()
+    {
+        if (materialInventory == null)
+            materialInventory = MaterialInventory.Instance;
+    }
+
     private void Start()
     {
         RefreshUI();
