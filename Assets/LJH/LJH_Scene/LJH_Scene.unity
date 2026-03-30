@@ -170,8 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnvilIncomeController
   anvilButton: {fileID: 32764839}
-  clickUpgradeSystem: {fileID: 139744003}
-  autoUpgradeSystem: {fileID: 457791893}
+  clickUpgradeSystem: {fileID: 1983578683}
+  autoUpgradeSystem: {fileID: 263980014}
   floatingTextPrefab: {fileID: 7240305715809942663, guid: e3b5978a097e6c34a9879f1dd3dc7ba1, type: 3}
   floatingParent: {fileID: 1951381787}
   maxFloatingText: 10
@@ -767,23 +767,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &139744003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7138431742354326703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61befd91b0138e64ab34fa25088b441f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeSystem
-  saveId: hammer
-  csvFile: {fileID: 4900000, guid: e6362deae241e1543bd6093eb017a9c9, type: 3}
-  startColumnIndex: 0
-  currentLevel: 0
-  forceMinimumOne: 1
 --- !u!114 &139744004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,7 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8cfd0b735b5e44458ae527a091f36c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeUI
-  upgradeSystem: {fileID: 139744003}
+  upgradeSystem: {fileID: 1983578683}
   levelLabel: Hammer Lv.
   valueLabel: Click Power
   stageLabel: Bonus
@@ -1441,6 +1424,58 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2287601994653454713, guid: 36c9dc5be05ea6b4bb578665142f7d0c, type: 3}
   m_PrefabInstance: {fileID: 1583291511}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &263980012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 263980013}
+  - component: {fileID: 263980014}
+  m_Layer: 5
+  m_Name: UpgradeSystem (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &263980013
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263980012}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1200662586}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &263980014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 263980012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61befd91b0138e64ab34fa25088b441f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeSystem
+  saveId: mastery
+  csvFile: {fileID: 4900000, guid: e6362deae241e1543bd6093eb017a9c9, type: 3}
+  startColumnIndex: 6
+  forceMinimumOne: 0
 --- !u!1 &271757871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,20 +1772,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TooltipHoverUI
   tooltipUI: {fileID: 1138257198}
   tooltipMessage: 
---- !u!114 &444144597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576468816862053}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113370762841384}
-  hoverUI: {fileID: 7342583441487806276}
 --- !u!114 &444144600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1949,23 +1970,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &457791893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7138431741868895064}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61befd91b0138e64ab34fa25088b441f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UpgradeSystem
-  saveId: mastery
-  csvFile: {fileID: 4900000, guid: e6362deae241e1543bd6093eb017a9c9, type: 3}
-  startColumnIndex: 6
-  currentLevel: 0
-  forceMinimumOne: 0
 --- !u!114 &457791894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1978,7 +1982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8cfd0b735b5e44458ae527a091f36c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeUI
-  upgradeSystem: {fileID: 457791893}
+  upgradeSystem: {fileID: 263980014}
   levelLabel: Mastery Lv.
   valueLabel: Effect Power
   stageLabel: Stage
@@ -2066,20 +2070,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &462464793
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576468938271199}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113371714797458}
-  hoverUI: {fileID: 7342583442414505466}
 --- !u!1 &484166909
 GameObject:
   m_ObjectHideFlags: 0
@@ -3840,20 +3830,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &867956968
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576470118389430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113372611264763}
-  hoverUI: {fileID: 7342583441168233105}
 --- !u!1 &870729953
 GameObject:
   m_ObjectHideFlags: 0
@@ -5427,20 +5403,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1145850033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576468738339438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113370836952099}
-  hoverUI: {fileID: 7342583441532999241}
 --- !u!1 &1200662582
 GameObject:
   m_ObjectHideFlags: 0
@@ -5538,6 +5500,9 @@ RectTransform:
   - {fileID: 951515715}
   - {fileID: 957035073}
   - {fileID: 228656985}
+  - {fileID: 1983578682}
+  - {fileID: 263980013}
+  - {fileID: 2138322568}
   - {fileID: 8829991265458541206}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6524,20 +6489,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1437259211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576468872987048}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113371775866853}
-  hoverUI: {fileID: 7342583442470872463}
 --- !u!114 &1453811673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6617,20 +6568,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &1453811679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372576468583290837}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 8206113370925105560}
-  hoverUI: {fileID: 7342583441663177716}
 --- !u!1 &1499765130
 GameObject:
   m_ObjectHideFlags: 0
@@ -6643,7 +6580,6 @@ GameObject:
   - component: {fileID: 1499765136}
   - component: {fileID: 1499765135}
   - component: {fileID: 1499765134}
-  - component: {fileID: 1499765133}
   - component: {fileID: 1499765138}
   - component: {fileID: 1499765137}
   m_Layer: 5
@@ -6675,20 +6611,6 @@ RectTransform:
   m_AnchoredPosition: {x: 225.99535, y: -221.5}
   m_SizeDelta: {x: 451.9907, y: 131}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1499765133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1499765130}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac78c46fb20986f4a9edc141a3b73362, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GearsetUI
-  nameText: {fileID: 1578982414}
-  hoverUI: {fileID: 1500315886}
 --- !u!114 &1499765134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8170,6 +8092,58 @@ RectTransform:
   m_AnchoredPosition: {x: 850, y: 50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1983578681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1983578682}
+  - component: {fileID: 1983578683}
+  m_Layer: 5
+  m_Name: UpgradeSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1983578682
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983578681}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1200662586}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1983578683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1983578681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61befd91b0138e64ab34fa25088b441f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UpgradeSystem
+  saveId: hammer
+  csvFile: {fileID: 4900000, guid: e6362deae241e1543bd6093eb017a9c9, type: 3}
+  startColumnIndex: 0
+  forceMinimumOne: 1
 --- !u!1 &2024291479
 GameObject:
   m_ObjectHideFlags: 0
@@ -8450,12 +8424,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138322566}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 697.0471, y: 530.00665, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -262.95288, y: -9.993347, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1200662586}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2138322569
 MonoBehaviour:
@@ -12176,7 +12150,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7138431741868895065}
   - component: {fileID: 457791894}
-  - component: {fileID: 457791893}
   - component: {fileID: 457791892}
   m_Layer: 5
   m_Name: PanelFrame_02_Gray (2)
@@ -12241,7 +12214,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7138431742354326702}
   - component: {fileID: 139744004}
-  - component: {fileID: 139744003}
   - component: {fileID: 139744002}
   m_Layer: 5
   m_Name: PanelFrame_02_Gray
@@ -12937,7 +12909,6 @@ GameObject:
   - component: {fileID: 5912158228750346849}
   - component: {fileID: 8612668747234308259}
   - component: {fileID: 8435732657174973078}
-  - component: {fileID: 1453811679}
   - component: {fileID: 1453811674}
   - component: {fileID: 1453811673}
   m_Layer: 5
@@ -12959,7 +12930,6 @@ GameObject:
   - component: {fileID: 5912158228662439898}
   - component: {fileID: 8612668747062220056}
   - component: {fileID: 8435732657271303981}
-  - component: {fileID: 1145850033}
   - component: {fileID: 1145850028}
   - component: {fileID: 1145850027}
   m_Layer: 5
@@ -12981,7 +12951,6 @@ GameObject:
   - component: {fileID: 5912158228722296529}
   - component: {fileID: 8612668747007032339}
   - component: {fileID: 8435732657348249126}
-  - component: {fileID: 444144597}
   - component: {fileID: 444144601}
   - component: {fileID: 444144600}
   m_Layer: 5
@@ -13003,7 +12972,6 @@ GameObject:
   - component: {fileID: 5912158229601369116}
   - component: {fileID: 8612668746392790750}
   - component: {fileID: 8435732657941781739}
-  - component: {fileID: 1437259211}
   - component: {fileID: 1437259206}
   - component: {fileID: 1437259205}
   m_Layer: 5
@@ -13025,7 +12993,6 @@ GameObject:
   - component: {fileID: 5912158229674497131}
   - component: {fileID: 8612668746314927785}
   - component: {fileID: 8435732657998148764}
-  - component: {fileID: 462464793}
   - component: {fileID: 462464788}
   - component: {fileID: 462464787}
   m_Layer: 5
@@ -13047,7 +13014,6 @@ GameObject:
   - component: {fileID: 5912158228423240450}
   - component: {fileID: 8612668745145561536}
   - component: {fileID: 8435732657099459573}
-  - component: {fileID: 867956968}
   - component: {fileID: 867956963}
   - component: {fileID: 867956962}
   m_Layer: 5
@@ -14600,6 +14566,5 @@ SceneRoots:
   - {fileID: 43898721}
   - {fileID: 384376083}
   - {fileID: 1200662586}
-  - {fileID: 2138322568}
   - {fileID: 1098572698}
   - {fileID: 1216568210}

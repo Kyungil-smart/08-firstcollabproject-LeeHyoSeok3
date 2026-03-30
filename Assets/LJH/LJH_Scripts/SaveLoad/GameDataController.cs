@@ -6,17 +6,23 @@ using UnityEngine.SceneManagement;
 public class GameDataController : Singleton<GameDataController>
 {
     public static event System.Action OnGameLoaded;
-    
+
     private bool isLoaded = false;
     public bool IsLoaded => isLoaded;
     private UpgradeSystem[] upgradeSystems;
 
     protected override void OnAwake()
     {
+    }
+
+    private void Start()
+    {
         upgradeSystems = FindObjectsByType<UpgradeSystem>(
-            FindObjectsInactive.Exclude, // Include → Exclude 로 변경
+            FindObjectsInactive.Include,
             FindObjectsSortMode.None
         );
+
+        Debug.Log($"[INIT] 발견된 UpgradeSystem 수: {upgradeSystems.Length}");
 
         LoadGame();
     }
@@ -51,17 +57,21 @@ public class GameDataController : Singleton<GameDataController>
         if (GearsetInventory.Instance != null)
             data.craftedGearIds = GearsetInventory.Instance.GetSaveData();
 
-        if (upgradeSystems != null)
-        {
-            foreach (var upgrade in upgradeSystems)
-            {
-                if (upgrade == null || string.IsNullOrEmpty(upgrade.SaveId))
-                    continue;
+        var currentUpgradeSystems = FindObjectsByType<UpgradeSystem>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
 
-                var saveData = upgrade.GetSaveData();
-                Debug.Log($"[SAVE] {upgrade.gameObject.name} / id={saveData.upgradeId} / level={saveData.level}");
-                data.upgrades.Add(saveData);
-            }
+        Debug.Log($"[SAVE] 발견된 UpgradeSystem 수: {currentUpgradeSystems.Length}");
+
+        foreach (var upgrade in currentUpgradeSystems)
+        {
+            if (upgrade == null || string.IsNullOrEmpty(upgrade.SaveId))
+                continue;
+
+            var saveData = upgrade.GetSaveData();
+            Debug.Log($"[SAVE] {upgrade.gameObject.name} / id={saveData.upgradeId} / level={saveData.level}");
+            data.upgrades.Add(saveData);
         }
 
         Debug.Log($"[SAVE] upgrades count = {data.upgrades.Count}");
@@ -75,8 +85,30 @@ public class GameDataController : Singleton<GameDataController>
         if (data == null)
         {
             Debug.LogWarning("[LOAD] save data null");
+
+            if (GoldManager.Instance != null)
+                GoldManager.Instance.SetGold(0);
+
+            if (MaterialInventory.Instance != null)
+                MaterialInventory.Instance.LoadFromSave(null);
+
+            if (GearsetInventory.Instance != null)
+                GearsetInventory.Instance.LoadFromSave(null);
+
+            if (upgradeSystems != null)
+            {
+                foreach (var upgrade in upgradeSystems)
+                {
+                    if (upgrade == null || string.IsNullOrEmpty(upgrade.SaveId))
+                        continue;
+
+                    upgrade.SetLevel(0);
+                }
+            }
+
             isLoaded = true;
             OnGameLoaded?.Invoke();
+            RefreshAllUIs();
             SaveGame();
             return;
         }
@@ -124,13 +156,15 @@ public class GameDataController : Singleton<GameDataController>
         }
 
         isLoaded = true;
-        OnGameLoaded?.Invoke(); 
+        OnGameLoaded?.Invoke();
+        RefreshAllUIs();
     }
 
     public void ResetGame()
     {
         SaveManager.DeleteSave();
         isLoaded = false;
+        OnGameLoaded = null;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 

@@ -9,17 +9,40 @@ public class MaterialInventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        TryBindInventory();
+    }
+
+    private void OnEnable()
+    {
+        TryBindInventory();
+
+        if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
+            RefreshUI();
+        else
+            GameDataController.OnGameLoaded += OnGameLoaded_Handler;
+    }
+
+    private void OnDisable()
+    {
+        GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
+    }
+
+    private void OnGameLoaded_Handler()
+    {
+        GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
+        RefreshUI();
+    }
+
+    private void TryBindInventory()
+    {
         if (materialInventory == null)
             materialInventory = MaterialInventory.Instance;
     }
 
-    private void Start()
-    {
-        RefreshUI();
-    }
-
     public void RefreshUI()
     {
+        TryBindInventory();
+
         if (materialInventory == null)
         {
             Debug.LogWarning("materialInventory가 연결되지 않았습니다.");

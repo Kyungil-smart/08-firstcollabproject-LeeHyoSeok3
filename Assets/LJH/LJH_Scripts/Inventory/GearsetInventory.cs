@@ -62,6 +62,7 @@ public class GearsetInventory : Singleton<GearsetInventory>
 
         if (craftedIds == null)
         {
+            InitDefaultCrafted();   // 추가
             RefreshUI();
             return;
         }

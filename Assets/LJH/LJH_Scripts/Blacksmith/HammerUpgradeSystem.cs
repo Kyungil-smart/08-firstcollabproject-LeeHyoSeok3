@@ -15,7 +15,8 @@ public class UpgradeSystem : MonoBehaviour
     [SerializeField] private bool forceMinimumOne = false;
     
     private List<UpgradeRow> rows;
-
+    private int pendingLevel = -1;
+    
     public string SaveId => saveId;
     public int CurrentLevel => currentLevel;
 
@@ -52,9 +53,13 @@ public class UpgradeSystem : MonoBehaviour
     private void Awake()
     {
         rows = UpgradeCSVLoader.Load(csvFile, startColumnIndex);
+        Debug.Log($"[UpgradeSystem.Awake] id={saveId}, rows={rows?.Count}");
 
-        if (rows == null || rows.Count == 0)
-            Debug.LogError($"{gameObject.name} failed to load upgrade rows.");
+        if (pendingLevel >= 0)
+        {
+            currentLevel = Mathf.Clamp(pendingLevel, 0, rows.Count - 1);
+            pendingLevel = -1;
+        }
     }
 
     public bool IsMaxLevel()
@@ -111,15 +116,11 @@ public class UpgradeSystem : MonoBehaviour
 
     public void SetLevel(int level)
     {
-        // 누가 SetLevel 호출하는지 콜스택 출력
-        Debug.Log($"[SetLevel 호출] id={saveId} / level={level}\n{System.Environment.StackTrace}");
-    
         if (rows == null || rows.Count == 0)
         {
-            currentLevel = 0;
+            pendingLevel = level;  // 아직 로드 안됐으면 보관
             return;
         }
-
         currentLevel = Mathf.Clamp(level, 0, rows.Count - 1);
     }
 

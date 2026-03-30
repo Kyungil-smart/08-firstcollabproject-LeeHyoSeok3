@@ -14,6 +14,7 @@ public class MaterialInventory : Singleton<MaterialInventory>
     {
         BuildLookup();
         InitDefaultMaterials();
+        RefreshUI();
     }
 
     private void BuildLookup()
@@ -62,7 +63,11 @@ public class MaterialInventory : Singleton<MaterialInventory>
         materialDict.Clear();
 
         if (savedMaterials == null)
+        {
+            InitDefaultMaterials();
+            RefreshUI();
             return;
+        }
 
         foreach (var saved in savedMaterials)
         {
@@ -78,6 +83,8 @@ public class MaterialInventory : Singleton<MaterialInventory>
                 Debug.LogWarning($"로드 실패: materialId {saved.materialId} 를 찾을 수 없습니다.");
             }
         }
+
+        RefreshUI();
     }
 
     public List<MaterialSaveData> GetSaveData()
@@ -131,6 +138,7 @@ public class MaterialInventory : Singleton<MaterialInventory>
             materialDict[req.material] -= req.requiredCount;
         }
 
+        RefreshUI();
         GameDataController.Instance?.SaveGame();
     }
 
@@ -155,6 +163,7 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
         Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[material]}");
 
+        RefreshUI();
         GameDataController.Instance?.SaveGame();
     }
 
@@ -171,13 +180,36 @@ public class MaterialInventory : Singleton<MaterialInventory>
             if (reward == null || reward.material == null)
                 continue;
 
-            AddMaterial(reward.material, reward.count);
+            if (reward.count <= 0)
+                continue;
+
+            if (materialDict.ContainsKey(reward.material))
+                materialDict[reward.material] += reward.count;
+            else
+                materialDict.Add(reward.material, reward.count);
         }
+
+        RefreshUI();
+        GameDataController.Instance?.SaveGame();
     }
 
     public Dictionary<MaterialDataSO, int> GetAllMaterials()
     {
         return materialDict;
+    }
+
+    public void RefreshUI()
+    {
+        MaterialInventoryUI[] uiList = FindObjectsByType<MaterialInventoryUI>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
+
+        foreach (var ui in uiList)
+        {
+            if (ui != null)
+                ui.RefreshUI();
+        }
     }
 }
 
