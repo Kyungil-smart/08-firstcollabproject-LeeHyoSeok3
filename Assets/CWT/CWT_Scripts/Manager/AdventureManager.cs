@@ -119,10 +119,10 @@ public class AdventureManager : Singleton<AdventureManager>
     public void StartAdventure(int questMinutes)
     {
         // 1) 퀘스트 시간을 초 단위로 변환 -> 실제 모험하는 시간을 계산해준다.
-        //_questDuration = questMinutes * 60f;
+        _questDuration = questMinutes * 60f;
 
         // 테스트용 코드 30초 모험용
-         _questDuration = 30f;
+        // _questDuration = 30f;
 
         // 2) 가는 시간 = 전체의 2/3, 복귀 시간 = 전체의 1/3
         float movingDuration = _questDuration - _celebrateDuration;
