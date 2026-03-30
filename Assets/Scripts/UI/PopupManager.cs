@@ -45,6 +45,8 @@ public class PopupManager : Singleton<PopupManager>
 
         if (!_activePopups.Contains(popup))
             _activePopups.Add(popup);
+
+        SoundManager.Instance?.OneShot("PopupOpen");
     }
 
     public void ClosePopup(RectTransform popup)
@@ -53,6 +55,8 @@ public class PopupManager : Singleton<PopupManager>
 
         popup.gameObject.SetActive(false);
         _activePopups.Remove(popup);
+
+        SoundManager.Instance?.OneShot("PopupClose");
     }
 
     public void CloseAllPopups()
@@ -133,10 +137,10 @@ public class PopupManager : Singleton<PopupManager>
 
     private void Start()
     {
-        if (questBoardPopup) ScalePopupToScreen(questBoardPopup, 0.38f, 0.46f);
-        if (blacksmithPopup) ScalePopupToScreen(blacksmithPopup, 0.677f, 0.694f);
-        if (partyEquipPopup) ScalePopupToScreen(partyEquipPopup, 0.401f, 0.2963f);
-        if (settingsPopup) ScalePopupToScreen(settingsPopup, 0.208f, 0.37f);
+        //if (questBoardPopup) ScalePopupToScreen(questBoardPopup, 0.38f, 0.46f);
+        //if (blacksmithPopup) ScalePopupToScreen(blacksmithPopup, 0.677f, 0.694f);
+        //if (partyEquipPopup) ScalePopupToScreen(partyEquipPopup, 0.401f, 0.2963f);
+        //if (settingsPopup) ScalePopupToScreen(settingsPopup, 0.208f, 0.37f);
 
         if (questBoardPopup) questBoardPopup.gameObject.SetActive(false);
         if (blacksmithPopup) blacksmithPopup.gameObject.SetActive(false);
