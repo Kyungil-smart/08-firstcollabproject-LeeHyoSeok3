@@ -16,12 +16,31 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     [SerializeField] private GameObject floatingTextPrefab;
     [SerializeField] private RectTransform floatingParent;
     [SerializeField] private int maxFloatingText = 10;
-    
+
     [SerializeField] private TMPro.TextMeshProUGUI gpsText;
 
-    private float autoTimer;
-    
+    private float autoTimer; // Note : 자동 생산을 담당
+
     private readonly Queue<GameObject> floatingQueue = new Queue<GameObject>();
+
+    // ------------------------------------------------------
+    // 추가 : 오프라인 보상 계산을 위해 현재 자동 생산 타이머와 초당 골드 값을 외부에서 접근할 수 있도록 프로퍼티 추가
+    public float CurrentAutoTimer => autoTimer;
+    public int CurrentGoldPerSecond
+    {
+        get
+        {
+            if (autoUpgradeSystem == null) return 0;
+
+            return autoUpgradeSystem.CurrentValue;
+        }
+    }
+
+    public void SetAutoTimer(float value)
+    {
+        autoTimer = Mathf.Clamp(value, 0f, 1f);
+    }
+    // ------------------------------------------------------
 
     private void Start()
     {
@@ -117,7 +136,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
                 Destroy(oldObj);
         }
     }
-    
+
     private void RefreshGPSUI()
     {
         if (gpsText == null || autoUpgradeSystem == null)
