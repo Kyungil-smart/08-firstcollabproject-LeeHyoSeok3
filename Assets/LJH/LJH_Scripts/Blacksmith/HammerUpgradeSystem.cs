@@ -10,9 +10,10 @@ public class UpgradeSystem : MonoBehaviour
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private int startColumnIndex = 0;
 
-    [Header("Runtime Data")]
-    [SerializeField] private int currentLevel = 0;
-
+    private int currentLevel = 0;
+    
+    [SerializeField] private bool forceMinimumOne = false;
+    
     private List<UpgradeRow> rows;
 
     public string SaveId => saveId;
@@ -61,7 +62,20 @@ public class UpgradeSystem : MonoBehaviour
         return rows == null || rows.Count == 0 || currentLevel >= rows.Count - 1;
     }
 
-    public int CurrentValue => CurrentRow != null ? CurrentRow.value : 0;
+    public int CurrentValue
+    {
+        get
+        {
+            if (CurrentRow == null)
+                return forceMinimumOne ? 1 : 0;
+
+            if (forceMinimumOne)
+                return Mathf.Max(1, CurrentRow.value);
+
+            return CurrentRow.value;
+        }
+    }
+    
     public int CurrentStageDisplay => CurrentRow != null ? CurrentRow.stageDisplay : 0;
     public double CurrentUpgradeCost => CurrentRow != null ? CurrentRow.cost : 0d;
 
@@ -97,6 +111,9 @@ public class UpgradeSystem : MonoBehaviour
 
     public void SetLevel(int level)
     {
+        // 누가 SetLevel 호출하는지 콜스택 출력
+        Debug.Log($"[SetLevel 호출] id={saveId} / level={level}\n{System.Environment.StackTrace}");
+    
         if (rows == null || rows.Count == 0)
         {
             currentLevel = 0;

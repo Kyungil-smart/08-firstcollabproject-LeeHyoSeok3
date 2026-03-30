@@ -4,10 +4,20 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Gearset Recipe")]
 public class GearsetRecipeSO : ScriptableObject
 {
+    [Header("Save")]
     public string saveId;
-    public string gearsetName;
-    [TextArea] public string description;
 
+    [Header("Gear Info")]
+    public string gearsetName;
+    [TextArea] public string gearDescription;
+    public Sprite gearIcon;
+
+    [Header("Trait Info")]
+    public string traitName;
+    [TextArea] public string traitDescription;
+    public Sprite traitIcon;
+
+    [Header("Recipe")]
     public List<MaterialRequirement> requirements = new List<MaterialRequirement>();
 }
 
@@ -17,4 +27,3 @@ public class MaterialRequirement
     public MaterialDataSO material;
     public int requiredCount;
 }
-

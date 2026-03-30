@@ -5,25 +5,20 @@ using UnityEngine.SceneManagement;
 
 public class GameDataController : Singleton<GameDataController>
 {
+    public static event System.Action OnGameLoaded;
+    
     private bool isLoaded = false;
+    public bool IsLoaded => isLoaded;
     private UpgradeSystem[] upgradeSystems;
 
     protected override void OnAwake()
     {
-    }
-
-    private void Start()
-    {
         upgradeSystems = FindObjectsByType<UpgradeSystem>(
-            FindObjectsInactive.Include,
+            FindObjectsInactive.Exclude, // Include → Exclude 로 변경
             FindObjectsSortMode.None
         );
 
         LoadGame();
-
-        RefreshMaterialInventoryUIs();
-        RefreshGearsetSlots();
-        RefreshUpgradeUIs();
     }
 
     private void OnApplicationPause(bool pause)
@@ -40,7 +35,10 @@ public class GameDataController : Singleton<GameDataController>
     public void SaveGame()
     {
         if (!isLoaded)
+        {
+            Debug.LogWarning("SaveGame 중단: isLoaded=false");
             return;
+        }
 
         GameSaveData data = new GameSaveData();
 
@@ -60,10 +58,13 @@ public class GameDataController : Singleton<GameDataController>
                 if (upgrade == null || string.IsNullOrEmpty(upgrade.SaveId))
                     continue;
 
-                data.upgrades.Add(upgrade.GetSaveData());
+                var saveData = upgrade.GetSaveData();
+                Debug.Log($"[SAVE] {upgrade.gameObject.name} / id={saveData.upgradeId} / level={saveData.level}");
+                data.upgrades.Add(saveData);
             }
         }
 
+        Debug.Log($"[SAVE] upgrades count = {data.upgrades.Count}");
         SaveManager.Save(data);
     }
 
@@ -73,10 +74,14 @@ public class GameDataController : Singleton<GameDataController>
 
         if (data == null)
         {
+            Debug.LogWarning("[LOAD] save data null");
             isLoaded = true;
+            OnGameLoaded?.Invoke();
             SaveGame();
             return;
         }
+
+        Debug.Log($"[LOAD] upgrades count = {(data.upgrades != null ? data.upgrades.Count : -1)}");
 
         if (GoldManager.Instance != null)
             GoldManager.Instance.SetGold(data.gold);
@@ -96,6 +101,7 @@ public class GameDataController : Singleton<GameDataController>
                 if (saved == null || string.IsNullOrEmpty(saved.upgradeId))
                     continue;
 
+                Debug.Log($"[LOAD-DATA] id={saved.upgradeId} / level={saved.level}");
                 loadedUpgradeLevels[saved.upgradeId] = saved.level;
             }
 
@@ -105,13 +111,20 @@ public class GameDataController : Singleton<GameDataController>
                     continue;
 
                 if (loadedUpgradeLevels.TryGetValue(upgrade.SaveId, out int level))
+                {
+                    Debug.Log($"[APPLY] {upgrade.gameObject.name} / id={upgrade.SaveId} / level={level}");
                     upgrade.SetLevel(level);
+                }
                 else
+                {
+                    Debug.LogWarning($"[APPLY] 저장 데이터 없음 -> 0으로 초기화 / id={upgrade.SaveId}");
                     upgrade.SetLevel(0);
+                }
             }
         }
 
         isLoaded = true;
+        OnGameLoaded?.Invoke(); 
     }
 
     public void ResetGame()
@@ -119,6 +132,13 @@ public class GameDataController : Singleton<GameDataController>
         SaveManager.DeleteSave();
         isLoaded = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void RefreshAllUIs()
+    {
+        RefreshMaterialInventoryUIs();
+        RefreshGearsetSlots();
+        RefreshUpgradeUIs();
     }
 
     private void RefreshMaterialInventoryUIs()
