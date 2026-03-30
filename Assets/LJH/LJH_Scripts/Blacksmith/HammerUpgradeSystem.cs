@@ -61,7 +61,7 @@ public class UpgradeSystem : MonoBehaviour
         return rows == null || rows.Count == 0 || currentLevel >= rows.Count - 1;
     }
 
-    public int CurrentValue => CurrentRow != null ? CurrentRow.value : 0;
+    public int CurrentValue => CurrentRow != null ? CurrentRow.value : 1;
     public int CurrentStageDisplay => CurrentRow != null ? CurrentRow.stageDisplay : 0;
     public double CurrentUpgradeCost => CurrentRow != null ? CurrentRow.cost : 0d;
 
