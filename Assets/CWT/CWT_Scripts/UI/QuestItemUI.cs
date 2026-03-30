@@ -19,6 +19,8 @@ public class QuestItemUI : MonoBehaviour
 
     // 원본 데이터를 저장 (언어 변경 시 다시 텍스트를 갱신하기 위해)
     private DungeonData _data;
+    // ─── Button 참조 ───
+    private Button _button;
 
     public void SetData(DungeonData data)
     {
@@ -37,6 +39,29 @@ public class QuestItemUI : MonoBehaviour
         {
             LocalizationManager.Instance.OnLanguageChanged += RefreshText;
         }
+        
+        // QuestPanel 프리팹에 Button 컴포넌트가 이미 붙어있으니까
+        // 그걸 가져와서 클릭 시 OnQuestClicked 호출되도록 연결
+        _button = GetComponent<Button>();
+        if (_button != null)
+        {
+            _button.onClick.AddListener(OnQuestClicked);
+        }
+    }
+
+    // ─── 추가 3: 퀘스트 패널 클릭 시 호출되는 메서드 ───
+    private void OnQuestClicked()
+    {
+        // 이미 퀘스트 진행 중이면 출발 불가
+        if (QuestManager.Instance != null && QuestManager.Instance.IsQuestActive)
+        {
+            Debug.Log("이미 퀘스트가 진행 중입니다!");
+            return;
+        }
+
+        // QuestManager에게 출발 요청
+        // QuestManager가 팝업 닫기 + 화면 전환까지 전부 처리해줌
+        QuestManager.Instance?.StartQuest(_data);
     }
 
     // 현재 언어에 맞게 텍스트를 갱신하는 메서드
@@ -59,6 +84,12 @@ public class QuestItemUI : MonoBehaviour
         if (LocalizationManager.Instance != null)
         {
             LocalizationManager.Instance.OnLanguageChanged -= RefreshText;
+        }
+
+        // ★ 추가: 버튼 클릭 리스너도 해제 (등록과 짝 맞추기)
+        if (_button != null)
+        {
+            _button.onClick.RemoveListener(OnQuestClicked);
         }
     }
 
