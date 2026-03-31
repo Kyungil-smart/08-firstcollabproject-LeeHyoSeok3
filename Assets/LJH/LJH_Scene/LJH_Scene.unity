@@ -1060,7 +1060,7 @@ MonoBehaviour:
   m_text: Hardcover
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 739a086e10ce9db478264d5235e09697, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -6194564253236070548, guid: 739a086e10ce9db478264d5235e09697, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3674,7 +3674,7 @@ MonoBehaviour:
   m_text: Craft
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 739a086e10ce9db478264d5235e09697, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -6194564253236070548, guid: 739a086e10ce9db478264d5235e09697, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4277,7 +4277,7 @@ MonoBehaviour:
   m_text: Dragonmight
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 739a086e10ce9db478264d5235e09697, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -6194564253236070548, guid: 739a086e10ce9db478264d5235e09697, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6107,7 +6107,7 @@ MonoBehaviour:
   m_text: Gearset Trait
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 739a086e10ce9db478264d5235e09697, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -6194564253236070548, guid: 739a086e10ce9db478264d5235e09697, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
