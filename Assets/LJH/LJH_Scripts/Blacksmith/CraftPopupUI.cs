@@ -1,16 +1,29 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class GearsetCraftPopupUI : MonoBehaviour
 {
+    [Header("Gear UI")]
     [SerializeField] private TextMeshProUGUI gearsetNameText;
-    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private Image gearIconImage;
+
+    [Header("Trait UI")]
+    [SerializeField] private TextMeshProUGUI traitNameText;
+    [SerializeField] private Image traitIconImage;
+
+    [Header("Tooltip Hover")]
+    [SerializeField] private TooltipHoverUI gearIconHover;
+    [SerializeField] private TooltipHoverUI traitIconHover;
+
     [SerializeField] private MaterialInventoryUI inventoryUI;
 
     private GearsetRecipeSO currentRecipe;
     private MaterialInventory currentInventory;
     private GearsetSlotUI currentSlot;
+
+    private Coroutine tooltipCheckCoroutine;
 
     private void Start()
     {
@@ -21,7 +34,7 @@ public class GearsetCraftPopupUI : MonoBehaviour
     {
         if (recipe == null)
         {
-            Debug.LogWarning("GearsetCraftPopupUI: recipe가 null입니다.");
+            Debug.LogWarning("recipe null");
             return;
         }
 
@@ -29,16 +42,54 @@ public class GearsetCraftPopupUI : MonoBehaviour
         currentInventory = inventory;
         currentSlot = slot;
 
-        gearsetNameText.text = recipe.gearsetName;
-        descriptionText.text = recipe.description;
+        if (gearsetNameText != null)
+            gearsetNameText.text = recipe.gearsetName;
+
+        if (gearIconImage != null)
+            gearIconImage.sprite = recipe.gearIcon;
+
+        if (traitNameText != null)
+            traitNameText.text = recipe.traitName;
+
+        if (traitIconImage != null)
+            traitIconImage.sprite = recipe.traitIcon;
+        
+        if (gearIconHover != null)
+            gearIconHover.SetTooltip(recipe.gearDescription);
+
+        if (traitIconHover != null)
+            traitIconHover.SetTooltip(recipe.traitDescription);
 
         gameObject.SetActive(true);
+
+        Canvas.ForceUpdateCanvases();
+
+        if (tooltipCheckCoroutine != null)
+            StopCoroutine(tooltipCheckCoroutine);
+
+        tooltipCheckCoroutine = StartCoroutine(CheckTooltipRepeatedly());
+    }
+
+    private IEnumerator CheckTooltipRepeatedly()
+    {
+        // UI가 안정화될 시간을 잠깐 줌
+        for (int i = 0; i < 5; i++)
+        {
+            yield return null;
+            Canvas.ForceUpdateCanvases();
+
+            if (gearIconHover != null)
+                gearIconHover.CheckAndShowTooltip();
+
+            if (traitIconHover != null)
+                traitIconHover.CheckAndShowTooltip();
+        }
+
+        tooltipCheckCoroutine = null;
     }
 
     public void OnClickCraft()
     {
-        Debug.Log("제작 버튼 클릭됨");
-
         if (currentRecipe == null || currentInventory == null || currentSlot == null)
             return;
 
@@ -47,22 +98,21 @@ public class GearsetCraftPopupUI : MonoBehaviour
 
         currentInventory.Consume(currentRecipe);
         currentSlot.MarkCrafted();
-        
+
         if (inventoryUI != null)
-        {
-            Debug.Log("UI 갱신 호출");
             inventoryUI.RefreshUI();
-        }
-        else
-        {
-            Debug.LogError("inventoryUI 연결 안됨");
-        }
 
         Hide();
     }
 
     public void Hide()
     {
+        if (tooltipCheckCoroutine != null)
+        {
+            StopCoroutine(tooltipCheckCoroutine);
+            tooltipCheckCoroutine = null;
+        }
+
         gameObject.SetActive(false);
     }
 }

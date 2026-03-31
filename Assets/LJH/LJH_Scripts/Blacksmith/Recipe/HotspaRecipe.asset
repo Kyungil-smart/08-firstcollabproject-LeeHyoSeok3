@@ -14,8 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
   saveId: Hotspa
   gearsetName: Hotspa
-  description: Fire core is attached to a iron weapons. Saves time for litting some
-    bonfires.
+  gearDescription: Fire core is attached to a iron weapons. Saves time for litting
+    some bonfires.
+  gearIcon: {fileID: 21300000, guid: 2e35c59319195451c9647c7d5e5d993c, type: 3}
+  traitName: Warm
+  traitDescription: Weapon is consistantly emitting heat from its core. It will keep
+    you warm.
+  traitIcon: {fileID: 21300000, guid: 2e35c59319195451c9647c7d5e5d993c, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: 263753a46dd3cfa4cb301361b5e1631c, type: 2}
     requiredCount: 1

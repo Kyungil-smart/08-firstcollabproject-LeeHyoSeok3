@@ -53,6 +53,25 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
         HandleAutoGain();
         RefreshGPSUI();
     }
+    
+    private void OnEnable()
+    {
+        if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
+            RefreshGPSUI();
+        else
+            GameDataController.OnGameLoaded += OnGameLoaded_Handler;
+    }
+
+    private void OnDisable()
+    {
+        GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
+    }
+
+    private void OnGameLoaded_Handler()
+    {
+        GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
+        RefreshGPSUI();
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -140,7 +159,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     private void RefreshGPSUI()
     {
         if (gpsText == null || autoUpgradeSystem == null)
-            return;
+            return; 
 
         float goldPerSecond = autoUpgradeSystem.CurrentValue;
 

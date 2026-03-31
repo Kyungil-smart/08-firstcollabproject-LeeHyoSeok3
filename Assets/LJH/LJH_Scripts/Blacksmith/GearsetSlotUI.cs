@@ -1,14 +1,25 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GearsetSlotUI : MonoBehaviour
 {
+    [Header("Data")]
     [SerializeField] private GearsetRecipeSO recipe;
+
+    [Header("References")]
     [SerializeField] private GearsetCraftPopupUI popupUI;
     [SerializeField] private MaterialInventory materialInventory;
     [SerializeField] private GearsetInventory gearsetInventory;
     [SerializeField] private Button slotButton;
-    [SerializeField] private Image slotImage;
+
+    [Header("Slot UI")]
+    [SerializeField] private Image backgroundImage;   // 배경
+    [SerializeField] private Image iconImage;         // 장비 아이콘
+    [SerializeField] private TextMeshProUGUI nameText;
+
+    [Header("Tooltip")]
+    [SerializeField] private TooltipHoverUI tooltipHoverUI;
 
     [Header("제작 상태 색상")]
     [SerializeField] private Color craftedColor = Color.white;
@@ -22,9 +33,10 @@ public class GearsetSlotUI : MonoBehaviour
         if (gearsetInventory == null)
             gearsetInventory = GearsetInventory.Instance;
     }
-    
+
     private void Start()
     {
+        RefreshSlotInfo();
         RefreshState();
     }
 
@@ -68,9 +80,7 @@ public class GearsetSlotUI : MonoBehaviour
     public void MarkCrafted()
     {
         if (gearsetInventory != null)
-        {
             gearsetInventory.AddCrafted(recipe);
-        }
 
         RefreshState();
     }
@@ -79,17 +89,39 @@ public class GearsetSlotUI : MonoBehaviour
     {
         bool isCrafted = gearsetInventory != null && gearsetInventory.IsCrafted(recipe);
 
-        if (slotImage != null)
-        {
-            slotImage.color = isCrafted ? craftedColor : notCraftedColor;
-        }
+        Color targetColor = isCrafted ? craftedColor : notCraftedColor;
+
+        if (backgroundImage != null)
+            backgroundImage.color = targetColor;
+
+        if (iconImage != null)
+            iconImage.color = targetColor;
 
         if (slotButton != null)
-        {
             slotButton.interactable = true;
-        }
     }
 
+    public void RefreshSlotInfo()
+    {
+        if (recipe == null)
+            return;
+
+        if (nameText != null)
+            nameText.text = recipe.gearsetName;
+
+        if (iconImage != null && recipe.gearIcon != null)
+            iconImage.sprite = recipe.gearIcon;
+
+        // ⭐ 여기서 바로 세팅
+        if (tooltipHoverUI != null)
+            tooltipHoverUI.SetTooltip(recipe.gearDescription);
+    }
+
+    public GearsetRecipeSO GetRecipe()
+    {
+        return recipe;
+    }
+    
     public bool IsCrafted()
     {
         return gearsetInventory != null && gearsetInventory.IsCrafted(recipe);
