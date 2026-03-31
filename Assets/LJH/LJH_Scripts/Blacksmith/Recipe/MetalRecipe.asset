@@ -15,10 +15,10 @@ MonoBehaviour:
   saveId: Metal
   gearsetName: Metal
   gearDescription: Wooden weapon upgraded with some stones.
-  gearIcon: {fileID: 21300000, guid: 2e35c59319195451c9647c7d5e5d993c, type: 3}
+  gearIcon: {fileID: -5633978557182278360, guid: 6f1548d8a14b86d45a1072cfa61129ea, type: 3}
   traitName: Sturdy
   traitDescription: This weapon is great against rock-solid monsters.
-  traitIcon: {fileID: 21300000, guid: 2e35c59319195451c9647c7d5e5d993c, type: 3}
+  traitIcon: {fileID: 5544489280420278288, guid: f9679dea033dc0d44b2122d4026b37c9, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: 821825c4ef4ff7d46902e0cc9752fdbb, type: 2}
     requiredCount: 1
