@@ -1369,6 +1369,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac1d75219e7a7fa4793dce2165d8a7a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
+  m_recipeDatabase: {fileID: 11400000, guid: acf12f6d03f77dc4a9cdbdc9af01904b, type: 2}
 --- !u!4 &1599342890
 Transform:
   m_ObjectHideFlags: 0

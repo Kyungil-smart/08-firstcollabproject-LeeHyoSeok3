@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
@@ -57,24 +57,40 @@ public class InventoryEquipView : MonoBehaviour
 
     public void ShowDetail(ItemData item)
     {
-        // 1. 블로커(배경)와 팝업 모두 켜기
         if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(true);
         m_detailPanel.SetActive(true);
 
-        m_detailName.text = item.name;
-        m_detailIcon.sprite = item.icon;
-        m_detailDesc.text = item.description;
-
-        // 2. 화면 맨 앞으로 가져오기 (순서: 블로커가 먼저 깔리고, 그 위에 팝업이 올라감)
         if (m_detailBlocker != null) m_detailBlocker.transform.SetAsLastSibling();
         m_detailPanel.transform.SetAsLastSibling();
 
-        // 3. 💡 마우스 로직 제거 및 화면 정중앙 강제 배치
         RectTransform detailRect = m_detailPanel.GetComponent<RectTransform>();
         detailRect.anchorMin = new Vector2(0.5f, 0.5f);
         detailRect.anchorMax = new Vector2(0.5f, 0.5f);
         detailRect.pivot = new Vector2(0.5f, 0.5f);
-        detailRect.anchoredPosition = Vector2.zero; // 오차 없이 완벽한 정중앙 좌표 (0,0)
+        detailRect.anchoredPosition = Vector2.zero;
+
+        // 💡 해금 여부에 따른 UI 분기 처리 (기획서 6페이지 반영)
+        if (item.isUnlocked)
+        {
+            // 1. 해금된 장비: 모든 UI 요소를 켜고 정상적인 데이터를 보여줍니다.
+            m_detailName.gameObject.SetActive(true);
+            m_detailIcon.gameObject.SetActive(true);
+            m_equipButton.gameObject.SetActive(true);
+
+            m_detailName.text = item.name;
+            m_detailIcon.sprite = item.icon;
+            m_detailDesc.text = item.description;
+        }
+        else
+        {
+            // 2. 미해금 장비 (잠금 상태): 이름, 아이콘, 장착 버튼을 숨깁니다.
+            m_detailName.gameObject.SetActive(false);
+            m_detailIcon.gameObject.SetActive(false);
+            m_equipButton.gameObject.SetActive(false);
+
+            // TextMeshPro의 Rich Text 태그(<align>)를 사용하여 텍스트를 팝업 정중앙에 배치합니다.
+            m_detailDesc.text = "<align=center>퀘스트 해금시\n착용가능</align>";
+        }
     }
 
     public void HideDetail()

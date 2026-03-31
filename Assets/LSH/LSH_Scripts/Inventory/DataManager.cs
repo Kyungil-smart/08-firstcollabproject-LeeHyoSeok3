@@ -1,59 +1,88 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
-// 2. 데이터 관리 매니저 (더미 데이터 예시)
+// 게임 내 장비 레시피(SO) 데이터를 불러와 관리하는 클래스입니다.
 public class DataManager : MonoBehaviour
 {
-    private Dictionary<int, ItemData> itemDatabase = new Dictionary<int, ItemData>();
-    private List<ItemData> inventory = new List<ItemData>();
-    private int partyEquippedItemID = -1; // 현재 파티에 장착된 아이템 ID
+    [Header("Scriptable Objects")]
+    // 💡 유니티 Inspector에서 'GearsetRecipeDatabase.asset'을 끌어다 넣을 변수입니다.
+    [SerializeField] private GearsetRecipeDatabaseSO m_recipeDatabase;
 
-    void Awake()
+    // SO 원본 데이터를 보관하는 딕셔너리
+    private Dictionary<int, GearsetRecipeSO> m_itemDatabase = new Dictionary<int, GearsetRecipeSO>();
+    // 기존 UI 시스템(View)에 넘겨주기 위한 매핑 데이터
+    private List<ItemData> m_inventory = new List<ItemData>();
+
+    private int m_partyEquippedItemID = -1;
+
+    private void Awake()
     {
-        LoadDummyData();
+        LoadScriptableObjectData();
     }
 
-    private void LoadDummyData()
+    private void LoadScriptableObjectData()
     {
-        // (가정) CSV에서 읽어온 원본 데이터 로드
-        ItemData item1 = new ItemData { id = 1, name = "녹슨 대검", description = "초보용 전사의 무기. 공격력 +5.", icon = Resources.Load<Sprite>("Icons/Item_01") };
-        ItemData item2 = new ItemData { id = 2, name = "수련의 지팡이", description = "마법의 힘이 깃든 나무 지팡이. 마력 +7.", icon = Resources.Load<Sprite>("Icons/Item_02") };
-        ItemData item3 = new ItemData { id = 3, name = "가죽 갑옷", description = "가볍고 질긴 가죽 갑옷. 방어력 +3.", icon = Resources.Load<Sprite>("Icons/Item_03") };
+        if (m_recipeDatabase == null) return;
 
-        itemDatabase.Add(item1.id, item1);
-        itemDatabase.Add(item2.id, item2);
-        itemDatabase.Add(item3.id, item3);
+        for (int i = 0; i < m_recipeDatabase.recipes.Count; i++)
+        {
+            GearsetRecipeSO recipe = m_recipeDatabase.recipes[i];
+            if (recipe == null) continue;
 
-        // (가정) 인벤토리에 이 아이템들을 가지고 있다고 침
-        inventory.Add(item1);
-        inventory.Add(item2);
-        inventory.Add(item3);
+            int itemID = i;
+            m_itemDatabase.Add(itemID, recipe);
+
+            // 💡 핵심 로직: saveId가 "Rusty"일 때만 true, 나머지는 false로 설정합니다.
+            bool isItemUnlocked = (recipe.saveId == "Rusty");
+
+            ItemData newItem = new ItemData
+            {
+                id = itemID,
+                name = recipe.gearsetName,
+                description = recipe.description,
+                icon = Resources.Load<Sprite>($"Icons/{recipe.saveId}"),
+                isUnlocked = isItemUnlocked // 추가된 필드에 데이터 반영
+            };
+
+            m_inventory.Add(newItem);
+        }
+        Debug.Log($"[DataManager] 총 {m_inventory.Count}개의 장비 데이터를 성공적으로 불러왔습니다!");
     }
 
-    // 팝업에서 호출할 메서드들
+    // Controller가 팝업을 열 때 인벤토리 목록을 가져가기 위한 메서드
     public List<ItemData> GetInventoryItems()
     {
-        return inventory;
+        return m_inventory;
     }
 
+    // 특정 아이템의 ID로 상세 정보를 검색하여 ItemData 형태로 반환하는 메서드
     public ItemData GetItemByID(int id)
     {
-        if (itemDatabase.TryGetValue(id, out ItemData data))
-            return data;
+        if (m_itemDatabase.TryGetValue(id, out GearsetRecipeSO recipe))
+        {
+            return new ItemData
+            {
+                id = id,
+                name = recipe.gearsetName,
+                description = recipe.description,
+                icon = Resources.Load<Sprite>($"Icons/{recipe.saveId}")
+            };
+        }
         return default;
     }
 
+    // 유저가 상세 팝업에서 '장착' 버튼을 눌렀을 때 호출되는 메서드
     public void EquipItemToParty(int itemID)
     {
-        Debug.Log($"[DataManager] 파티에 아이템 장착 시도: ID {itemID}");
-
-        if (itemDatabase.ContainsKey(itemID))
+        if (m_itemDatabase.ContainsKey(itemID))
         {
-            partyEquippedItemID = itemID;
-            Debug.Log($"장착 성공! 현재 파티 아이템: {itemDatabase[itemID].name}");
+            m_partyEquippedItemID = itemID;
+            GearsetRecipeSO equippedRecipe = m_itemDatabase[itemID];
 
-            // (참고) 이전 커밋에서 이야기한 CSV 데이터를 이용해서 실제 파티 스탯에 반영하는 논리를 여기에 구현
-            // 예: System_Data.csv의 파티 공격력/방어력을 업데이트
+            Debug.Log($"[DataManager] 장착 완료! 파티에 '{equippedRecipe.gearsetName}' 세트가 적용되었습니다. (SaveID: {equippedRecipe.saveId})");
+
+            // 추후 개발 단계: 
+            // 여기에 기획서에 있던 '요구 특성 검사' 및 '캐릭터 무기 외형 변경(예: 얼음 칼, 젤리 지팡이)' 로직을 연결하면 됩니다.
         }
     }
 }
