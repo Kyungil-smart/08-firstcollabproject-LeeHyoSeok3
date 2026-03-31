@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7159840795975500784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7227341366773331583}
+  - component: {fileID: 5216261730709412908}
+  - component: {fileID: 2530173191300662069}
+  - component: {fileID: 6972857582966093108}
+  m_Layer: 5
+  m_Name: GearsetUIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7227341366773331583
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159840795975500784}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5216261730709412908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159840795975500784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad5decde2eded4040b4fb74b75921263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CSVLoader
+  csvFile: {fileID: 4900000, guid: 7bd48f90977dd2e4f9d0a77e0c5d60f6, type: 3}
+--- !u!114 &2530173191300662069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159840795975500784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e830ebbbcf47ef499862d0ce2725246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GearsetListUI
+  csvLoader: {fileID: 5216261730709412908}
+  recipeDatabase: {fileID: 11400000, guid: acf12f6d03f77dc4a9cdbdc9af01904b, type: 2}
+  slots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &6972857582966093108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7159840795975500784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70c742d634bf0644f83c3611841b3c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GearsetInventory
+  isPersistent: 1
+  defaultCraftedList:
+  - {fileID: 11400000, guid: 2c2c768a6f19e8b4285ea7de569cd0e8, type: 2}
+  allRecipes:
+  - {fileID: 11400000, guid: 2c2c768a6f19e8b4285ea7de569cd0e8, type: 2}
+  - {fileID: 11400000, guid: 86fb29f9d7c7a8c4caf74b5b37d222c9, type: 2}
+  - {fileID: 11400000, guid: 03def881c1815cb489d426da1860127f, type: 2}
+  - {fileID: 11400000, guid: 5d90b6d7deb7ca44f8b9426f14dd8c7f, type: 2}
+  - {fileID: 11400000, guid: 1e72662e4b86f6346a370b78f58d2985, type: 2}
+  - {fileID: 11400000, guid: de4d169145d201649a739c1447b40697, type: 2}
+  - {fileID: 11400000, guid: dcc9500209b636945aeebdc1e7f64f68, type: 2}
+  - {fileID: 11400000, guid: 5d72e0f549370254c9e0214dfd7ae23e, type: 2}
+  valueText: {fileID: 0}
