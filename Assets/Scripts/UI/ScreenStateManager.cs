@@ -45,20 +45,14 @@ public class ScreenStateManager : MonoBehaviour
     {
         _uiScaler = FindObjectOfType<ResponsiveUIScaler>();
         _boundsHandler = FindObjectOfType<ScreenBoundsHandler>();
-        ForceState(ScreenState.Main);
+        TransitionTo(ScreenState.Main);
     }
 
     /// <summary>지정된 화면 상태로 전환합니다.</summary>
     public void TransitionTo(ScreenState newState)
     {
         ScreenState previousState = CurrentState;
-        if (previousState == newState)
-            return;
-
         CurrentState = newState;
-
-        if (!IsMinimizedState(previousState) && IsMinimizedState(newState))
-            GameLifecycleManager.Instance?.SaveMinimizedTime();
 
         UpdateScreenVisibility();
         _uiScaler?.ApplyScale();
@@ -70,22 +64,6 @@ public class ScreenStateManager : MonoBehaviour
     public void GoToMinimized() => TransitionTo(ScreenState.Minimized);
     public void GoToWorldMap() => TransitionTo(ScreenState.WorldMap);
     public void GoToWorldMapMinimized() => TransitionTo(ScreenState.WorldMapMinimized);
-
-    private void ForceState(ScreenState newState)
-    {
-        ScreenState previousState = CurrentState;
-        CurrentState = newState;
-
-        UpdateScreenVisibility();
-        _uiScaler?.ApplyScale();
-
-        OnScreenStateChanged?.Invoke(previousState, newState);
-    }
-
-    private static bool IsMinimizedState(ScreenState state)
-    {
-        return state == ScreenState.Minimized || state == ScreenState.WorldMapMinimized;
-    }
 
     private void UpdateScreenVisibility()
     {

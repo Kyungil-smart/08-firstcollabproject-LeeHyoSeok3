@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Kirurobo;
 
 /// <summary>
@@ -15,10 +14,7 @@ public class WindowSystemManager : MonoBehaviour
     [SerializeField] private UniWindowController uniWinController;
 
     // 클릭 통과 모드 상태
-    //public bool IsClickThrough => uniWinController != null && uniWinController.isClickThrough;
-
-    private bool _isClickThrough = false;
-    public bool IsClickThrough => _isClickThrough;
+    public bool IsClickThrough => uniWinController != null && uniWinController.isClickThrough;
 
     private void Awake()
     {
@@ -52,15 +48,14 @@ public class WindowSystemManager : MonoBehaviour
         // 항상 최상위
         uniWinController.isTopmost = true;
         // 초기 클릭 통과 모드: 비활성화 (인터랙션 모드로 시작)
-       // SetClickThrough(false);
+        SetClickThrough(false);
     }
 
     /// <summary>클릭 통과 모드 전환</summary>
     public void SetClickThrough(bool enable)
     {
         if (uniWinController == null) return;
-        _isClickThrough = enable;
-        //uniWinController.isClickThrough = enable;
+        uniWinController.isClickThrough = enable;
     }
 
     /// <summary>창 위치 반환 (스크린 좌표)</summary>
