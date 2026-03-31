@@ -57,9 +57,6 @@ public class ScreenStateManager : MonoBehaviour
 
         CurrentState = newState;
 
-        if (!IsMinimizedState(previousState) && IsMinimizedState(newState))
-            GameLifecycleManager.Instance?.SaveMinimizedTime();
-
         UpdateScreenVisibility();
         _uiScaler?.ApplyScale();
 
