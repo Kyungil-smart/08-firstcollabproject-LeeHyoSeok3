@@ -10,11 +10,13 @@ public class UpgradeSystem : MonoBehaviour
     [SerializeField] private TextAsset csvFile;
     [SerializeField] private int startColumnIndex = 0;
 
-    [Header("Runtime Data")]
-    [SerializeField] private int currentLevel = 0;
-
+    private int currentLevel = 0;
+    
+    [SerializeField] private bool forceMinimumOne = false;
+    
     private List<UpgradeRow> rows;
-
+    private int pendingLevel = -1;
+    
     public string SaveId => saveId;
     public int CurrentLevel => currentLevel;
 
@@ -51,9 +53,13 @@ public class UpgradeSystem : MonoBehaviour
     private void Awake()
     {
         rows = UpgradeCSVLoader.Load(csvFile, startColumnIndex);
+        Debug.Log($"[UpgradeSystem.Awake] id={saveId}, rows={rows?.Count}");
 
-        if (rows == null || rows.Count == 0)
-            Debug.LogError($"{gameObject.name} failed to load upgrade rows.");
+        if (pendingLevel >= 0)
+        {
+            currentLevel = Mathf.Clamp(pendingLevel, 0, rows.Count - 1);
+            pendingLevel = -1;
+        }
     }
 
     public bool IsMaxLevel()
@@ -61,7 +67,20 @@ public class UpgradeSystem : MonoBehaviour
         return rows == null || rows.Count == 0 || currentLevel >= rows.Count - 1;
     }
 
-    public int CurrentValue => CurrentRow != null ? CurrentRow.value : 0;
+    public int CurrentValue
+    {
+        get
+        {
+            if (CurrentRow == null)
+                return forceMinimumOne ? 1 : 0;
+
+            if (forceMinimumOne)
+                return Mathf.Max(1, CurrentRow.value);
+
+            return CurrentRow.value;
+        }
+    }
+    
     public int CurrentStageDisplay => CurrentRow != null ? CurrentRow.stageDisplay : 0;
     public double CurrentUpgradeCost => CurrentRow != null ? CurrentRow.cost : 0d;
 
@@ -99,10 +118,9 @@ public class UpgradeSystem : MonoBehaviour
     {
         if (rows == null || rows.Count == 0)
         {
-            currentLevel = 0;
+            pendingLevel = level;  // 아직 로드 안됐으면 보관
             return;
         }
-
         currentLevel = Mathf.Clamp(level, 0, rows.Count - 1);
     }
 
