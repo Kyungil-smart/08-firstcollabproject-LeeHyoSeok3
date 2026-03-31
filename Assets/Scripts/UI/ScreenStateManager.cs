@@ -41,6 +41,24 @@ public class ScreenStateManager : MonoBehaviour
         Instance = this;
     }
 
+    private void OnEnable()
+    {
+        if (AdventureManager.Instance != null)
+        {
+            AdventureManager.Instance.OnAdventureStarted += HandleAdventureStarted;
+            AdventureManager.Instance.OnAdventureCompleted += HandleAdventureCompleted;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (AdventureManager.Instance != null)
+        {
+            AdventureManager.Instance.OnAdventureStarted -= HandleAdventureStarted;
+            AdventureManager.Instance.OnAdventureCompleted -= HandleAdventureCompleted;
+        }
+    }
+
     private void Start()
     {
         _uiScaler = FindObjectOfType<ResponsiveUIScaler>();
@@ -77,6 +95,31 @@ public class ScreenStateManager : MonoBehaviour
         _uiScaler?.ApplyScale();
 
         OnScreenStateChanged?.Invoke(previousState, newState);
+    }
+
+    // 모험 중 최소화 창 대비 화면 전환 처리
+    private void HandleAdventureStarted()
+    {
+        if (CurrentState == ScreenState.Minimized)
+        {
+            GoToWorldMapMinimized();
+        }
+        else
+        {
+            GoToWorldMap();
+        }
+    }
+
+    private void HandleAdventureCompleted()
+    {
+        if (CurrentState == ScreenState.WorldMapMinimized)
+        {
+            GoToMinimized();
+        }
+        else
+        {
+            GoToMain();
+        }
     }
 
     private static bool IsMinimizedState(ScreenState state)
