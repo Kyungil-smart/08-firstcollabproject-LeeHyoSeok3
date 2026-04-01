@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DesignPattern;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameDataController : Singleton<GameDataController>
 {
@@ -75,6 +76,29 @@ public class GameDataController : Singleton<GameDataController>
         }
 
         Debug.Log($"[SAVE] upgrades count = {data.upgrades.Count}");
+
+        // 퀘스트 저장
+        if (QuestManager.Instance != null)
+        {
+            data.isQuestActive = QuestManager.Instance.IsQuestActive;
+            data.currentQuestDungeonName = QuestManager.Instance.CurrentQuest != null
+                ? QuestManager.Instance.CurrentQuest.dungeonName
+                : string.Empty;
+
+            data.questStartTime = QuestManager.Instance.QuestStartTime != DateTime.MinValue
+                ? QuestManager.Instance.QuestStartTime.ToString("o")
+                : string.Empty;
+
+            data.questEndTime = QuestManager.Instance.QuestEndTime != DateTime.MinValue
+                ? QuestManager.Instance.QuestEndTime.ToString("o")
+                : string.Empty;
+
+            data.hasCompletedQuest = QuestManager.Instance.HasCompletedQuest;
+            data.completedQuestDungeonName = QuestManager.Instance.CompletedQuest != null
+                ? QuestManager.Instance.CompletedQuest.dungeonName
+                : string.Empty;
+        }
+
         SaveManager.Save(data);
     }
 
@@ -154,6 +178,45 @@ public class GameDataController : Singleton<GameDataController>
                 }
             }
         }
+
+          // 퀘스트 로드
+            DungeonDataLoader dungeonLoader = FindFirstObjectByType<DungeonDataLoader>();
+
+            DungeonData loadedCurrentQuest = null;
+            DungeonData loadedCompletedQuest = null;
+            DateTime loadedStartTime = DateTime.MinValue;
+            DateTime loadedEndTime = DateTime.MinValue;
+
+            if (dungeonLoader != null)
+            {
+                if (data.isQuestActive && !string.IsNullOrEmpty(data.currentQuestDungeonName))
+                {
+                    loadedCurrentQuest = dungeonLoader.FindDungeonByName(data.currentQuestDungeonName);
+
+                    if (!string.IsNullOrEmpty(data.questStartTime))
+                        DateTime.TryParse(data.questStartTime, out loadedStartTime);
+
+                    if (!string.IsNullOrEmpty(data.questEndTime))
+                        DateTime.TryParse(data.questEndTime, out loadedEndTime);
+                }
+
+                if (data.hasCompletedQuest && !string.IsNullOrEmpty(data.completedQuestDungeonName))
+                {
+                    loadedCompletedQuest = dungeonLoader.FindDungeonByName(data.completedQuestDungeonName);
+                }
+            }
+
+            if (QuestManager.Instance != null)
+            {
+                QuestManager.Instance.LoadQuestState(
+                    loadedCurrentQuest,
+                    loadedStartTime,
+                    loadedEndTime,
+                    loadedCompletedQuest
+                );
+
+                QuestManager.Instance.ApplyOfflineQuestProgress();
+            }
 
         isLoaded = true;
         OnGameLoaded?.Invoke();
