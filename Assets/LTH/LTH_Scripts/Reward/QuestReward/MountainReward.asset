@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4de26ada2d59df346b7d507c1b263951, type: 3}
+  m_Name: MountainReward
+  m_EditorClassIdentifier: Assembly-CSharp::QuestRewardSo
+  dungeonName: "\uC0B0"
+  gold: 10000
+  materials:
+  - material: {fileID: 11400000, guid: 821825c4ef4ff7d46902e0cc9752fdbb, type: 2}
+    count: 1
