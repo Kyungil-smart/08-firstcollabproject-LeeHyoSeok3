@@ -1,7 +1,7 @@
 ,,,,,,,
 Dungeon_ID,던전_이름,Dungeon_Name,던전_설명,Dungeon_Info,요구_특성,획득_재료,소요 시간
 ,평원,Fields,따뜻한 햇살과 바람이 불어오는 평원입니다. 산책가기에 딱 좋은 장소입니다.,"What a sunny, windy field it is. Would be a good place for picnic.",,단단한 나뭇가지,10
-,산,Mountain,"오르막길을 올라야 하니, 짐을 너무 많이 챙기지는 마세요.",Overpacking is not recommended since you are about to climb a whole mountain.,가벼움,"철 원석",20
+,산,Mountain,"오르막길을 올라야 하니, 짐을 너무 많이 챙기지는 마세요.",Overpacking is not recommended since you are about to climb a whole mountain.,가벼움,"철 원석",1
 ,동굴,Caves,해가 들지 않아 습기차고 어두운 동굴입니다.,"Hidden away from the sun, this whole cave has turned into a damp, dark place.",견고함,슬라임 핵,20
 ,마법사의 탑,Wizard's tower,"탑의 주인은 오래 전에 떠났지만, 책들은 아직 많이 남아있습니다.","Even though the tower has lost its owner, it didn't lose its books.",끈적거림,책,30
 ,화산,Volcano,정말 '화끈한' 친구들이 모여 사는 동네입니다.,Fully packed with 'hot' fellas.,마법이 걸림,불타는 핵,30

@@ -7,6 +7,8 @@
 
 using UnityEngine;
 using DesignPattern;
+using System;
+using System.Data;
 
 public class AdventureManager : Singleton<AdventureManager>
 {
@@ -56,9 +58,19 @@ public class AdventureManager : Singleton<AdventureManager>
     [SerializeField] private GameObject _bubbleExclamation;    // ! 말풍선
     //[SerializeField] private GameObject _bubbleZzz;            // Zzz 말풍선
 
-    [Header("─── 모험 화면 패널 ───")]
-    [SerializeField] private GameObject _worldMapPanel;        // 모험 화면 전체 패널
-    [SerializeField] private GameObject _mainScreenGroup;      // 메인 화면 UI 그룹
+    // --------------------- 수정 : ScreenStateManager에서 화면 전환 담당 --------------------
+    // [Header("─── 모험 화면 패널 ───")]
+    // [SerializeField] private GameObject _worldMapPanel;        // 모험 화면 전체 패널
+    // [SerializeField] private GameObject _mainScreenGroup;      // 메인 화면 UI 그룹
+
+    // 추가 : ScreenStateManager에서 구독하여 화면 전환 처리
+    public event Action OnAdventureStarted;   // 모험 시작 이벤트 
+    public event Action OnAdventureCompleted; // 모험 완료 이벤트
+
+    // 추가 : 퀘스트가 중복 완료 되는 부분 방어
+    private bool _isCompleting;
+
+    // -------------------------------------------------------------------------------------
 
     [Header("─── 이벤트 감지 범위 ───")]
     [SerializeField] private float _eventRange = 40f;          // 지점과 파티가 이 거리 안이면 "겹침" 판정
@@ -103,8 +115,8 @@ public class AdventureManager : Singleton<AdventureManager>
     protected override void OnAwake()
     {
         // 시작할 때 모험 화면은 비활성화
-        if (_worldMapPanel != null)
-            _worldMapPanel.SetActive(false);
+        // if (_worldMapPanel != null)
+        //     _worldMapPanel.SetActive(false);
     }
 
     // ============================================
@@ -118,11 +130,15 @@ public class AdventureManager : Singleton<AdventureManager>
     /// <param name="questMinutes">퀘스트 소요 시간 (분 단위)</param>
     public void StartAdventure(int questMinutes)
     {
+        if (CurrentState != AdventureState.None) return;
+
+        _isCompleting = false;
+
         // 1) 퀘스트 시간을 초 단위로 변환 -> 실제 모험하는 시간을 계산해준다.
         _questDuration = questMinutes * 60f;
 
         // 테스트용 코드 30초 모험용
-        // _questDuration = 30f;
+        //_questDuration = 30f;
 
         // 2) 가는 시간 = 전체의 2/3, 복귀 시간 = 전체의 1/3
         float movingDuration = _questDuration - _celebrateDuration;
@@ -145,15 +161,18 @@ public class AdventureManager : Singleton<AdventureManager>
         SetPartySprite(PartyVisual.Default);
         HideAllBubbles();
 
-        // 7) 화면 전환
-        if (_mainScreenGroup != null)
-            _mainScreenGroup.SetActive(false);
+        // 화면 전환(테스트용)
+        // if (_mainScreenGroup != null)
+        //     _mainScreenGroup.SetActive(false);
 
-        if (_worldMapPanel != null)
-            _worldMapPanel.SetActive(true);
+        // if (_worldMapPanel != null)
+        //     _worldMapPanel.SetActive(true);
 
-        // 8) 상태를 Going으로 변경 → Update에서 이동 시작
+        // 7) 상태를 Going으로 변경 → Update에서 이동 시작
         CurrentState = AdventureState.Going;
+
+        // 8) 모험 시작 이벤트 호출
+        OnAdventureStarted?.Invoke();
 
         Debug.Log($"[AdventureManager] 모험 시작! 총 시간: {questMinutes}분, " +
                   $"가는 시간: {_goingDuration}초, 복귀 시간: {_returningDuration}초");
@@ -422,6 +441,10 @@ public class AdventureManager : Singleton<AdventureManager>
     /// </summary>
     private void CompleteAdventure()
     {
+        if (_isCompleting || CurrentState == AdventureState.None) return;
+
+        _isCompleting = true;
+
         CurrentState = AdventureState.Completed;
 
         // 파티 스케일 원상복구
@@ -433,12 +456,15 @@ public class AdventureManager : Singleton<AdventureManager>
         HideAllPartySprites();
         HideAllBubbles();
 
-        // 모험 화면 끄고 메인 화면 켜기
-        if (_worldMapPanel != null)
-            _worldMapPanel.SetActive(false);
+        // 모험 완료 이벤트 호출
+        OnAdventureCompleted?.Invoke();
 
-        if (_mainScreenGroup != null)
-            _mainScreenGroup.SetActive(true);
+        // 모험 화면 끄고 메인 화면 켜기
+        // if (_worldMapPanel != null)
+        //     _worldMapPanel.SetActive(false);
+
+        // if (_mainScreenGroup != null)
+        //     _mainScreenGroup.SetActive(true);
 
         // QuestManager에게 완료 알림
         if (QuestManager.Instance != null)
@@ -562,4 +588,130 @@ public class AdventureManager : Singleton<AdventureManager>
         if (_bubbleExclamation != null) _bubbleExclamation.SetActive(false);
         //if (_bubbleZzz != null) _bubbleZzz.SetActive(false);
     }
+
+#region SyncSystem
+    // ============================================
+    // 12. 동기화 시스템
+    // ============================================
+    public void SyncFromQuestTime(DateTime questStartTime, DateTime questEndTime)
+    {
+        if (questStartTime == DateTime.MinValue || questEndTime == DateTime.MinValue)
+        {
+            Debug.LogWarning("[AdventureManager] 퀘스트 시간이 동기화 되지 않았습니다.");
+            return;
+        }
+
+        // 전체 퀘스트 시간(초)
+        _questDuration = (float)(questEndTime - questStartTime).TotalSeconds;
+
+        if (_questDuration <= 0f) return;
+
+        float movingDuration = _questDuration - _celebrateDuration;
+        _goingDuration = movingDuration * (2f / 3f);
+        _returningDuration = movingDuration * (1f / 3f);
+
+        _startX = _startPoint.anchoredPosition.x;
+        _leftEndX = _leftEndPoint.anchoredPosition.x;
+
+        float elapsedSinceStart = (float)(DateTime.Now - questStartTime).TotalSeconds;
+        elapsedSinceStart = Mathf.Clamp(elapsedSinceStart, 0f, _questDuration);
+
+        ApplyProgressByElapsedTime(elapsedSinceStart);
+
+        Debug.Log($"[AdventureManager] Sync 완료 / elapsed = {elapsedSinceStart:F1}s / total = {_questDuration:F1}s / state = {CurrentState}");
+
+    }
+
+    private void ApplyProgressByElapsedTime(float elapsedSinceStart)
+    {
+        HideAllBubbles();
+
+        // 1) Going 구간
+        if (elapsedSinceStart < _goingDuration)
+        {
+            float progress = Mathf.Clamp01(elapsedSinceStart / _goingDuration);
+            float currentX = Mathf.Lerp(_startX, _leftEndX, progress);
+            MovePartyTo(currentX);
+
+            _elapsedTime = elapsedSinceStart;
+
+            // 기본은 Going
+            CurrentState = AdventureState.Going;
+            SetPartySprite(PartyVisual.Default);
+
+            // 현재 위치 기준으로 이벤트 상태 덮어쓰기
+            if (IsNearPoint(_discoverPoint))
+            {
+                CurrentState = AdventureState.Discovering;
+                _bubbleTimer = 0f;
+                _bubbleVisible = true;
+                _showQuestion = true;
+            }
+            else if (IsNearPoint(_campPoint))
+            {
+                CurrentState = AdventureState.Camping;
+                SetPartySprite(PartyVisual.Tent);
+            }
+            else if (IsNearPoint(_dungeonPoint))
+            {
+                CurrentState = AdventureState.Battle;
+                SetPartySprite(PartyVisual.Battle);
+            }
+
+            // 진행 방향: 출발 → 좌측
+            Vector3 scale = _partyGroup.localScale;
+            scale.x = Mathf.Abs(scale.x);
+            _partyGroup.localScale = scale;
+
+            return;
+        }
+
+        // 2) Celebrate 구간
+        if (elapsedSinceStart < _goingDuration + _celebrateDuration)
+        {
+            MovePartyTo(_leftEndX);
+
+            CurrentState = AdventureState.Celebrate;
+            SetPartySprite(PartyVisual.Celebrate);
+
+            _celebrateTimer = elapsedSinceStart - _goingDuration;
+
+            // 복귀 준비 방향(좌 -> 우)
+            Vector3 scale = _partyGroup.localScale;
+            scale.x = -Mathf.Abs(scale.x);
+            _partyGroup.localScale = scale;
+
+            return;
+        }
+
+        // 3) Returning 구간
+        if (elapsedSinceStart < _questDuration)
+        {
+            float returningElapsed = elapsedSinceStart - (_goingDuration + _celebrateDuration);
+            float progress = Mathf.Clamp01(returningElapsed / _returningDuration);
+            float currentX = Mathf.Lerp(_leftEndX, _startX, progress);
+            MovePartyTo(currentX);
+
+            CurrentState = AdventureState.Returning;
+            SetPartySprite(PartyVisual.Celebrate);
+            _elapsedTime = returningElapsed;
+
+            Vector3 scale = _partyGroup.localScale;
+            scale.x = -Mathf.Abs(scale.x);
+            _partyGroup.localScale = scale;
+
+            return;
+        }
+
+        // 4) 완전 종료 구간
+        CurrentState = AdventureState.Completed;
+        MovePartyTo(_startX);
+        HideAllPartySprites();
+        HideAllBubbles();
+
+        Vector3 resetScale = _partyGroup.localScale;
+        resetScale.x = Mathf.Abs(resetScale.x);
+        _partyGroup.localScale = resetScale;
+    }
+#endregion
 }

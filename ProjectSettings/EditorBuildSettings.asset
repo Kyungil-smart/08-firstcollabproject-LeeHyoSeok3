@@ -8,10 +8,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/GameView.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  - enabled: 0
+  - enabled: 1
     path: Assets/LTH/LTH_Scenes/PrototypeScene.unity
     guid: 5fe8f25c9a2cb6f4e9692c82651fc79d
-  - enabled: 1
+  - enabled: 0
     path: Assets/LJH/LJH_Scene/LJH_Scene.unity
     guid: 02b7cc7e88f32364185f3580a76813dd
   m_configObjects:

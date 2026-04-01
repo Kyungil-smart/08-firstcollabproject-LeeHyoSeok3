@@ -14,11 +14,21 @@ public class QuestManager : Singleton<QuestManager>
     // 현재 진행 중인 퀘스트 데이터 (null이면 퀘스트 미진행)
     private DungeonData _currentQuest = null;
 
+    //-------------------- 수정 --------------------------
+    // 퀘스트 시작 시간(월드맵 재진입 시 현재 진행률 계산하기 위해 필요)
+    private DateTime _questStartTime = DateTime.MinValue;
+    public DateTime QuestStartTime => _questStartTime;
+
     // 퀘스트 종료 시각 (현재 시간 + 소요 시간)
     private DateTime _questEndTime = DateTime.MinValue;
+    public DateTime QuestEndTime => _questEndTime;
+
+    // -------------------- 수정 --------------------------
+
 
     // ★ 추가: 마지막으로 완료한 퀘스트 데이터 (팀장 보상 시스템에서 가져감)
     private DungeonData _completedQuest = null;
+    public bool HasCompletedQuest => _completedQuest != null;
 
     // 퀘스트 진행 중인지 확인하는 프로퍼티
     public bool IsQuestActive => _currentQuest != null;
@@ -26,8 +36,7 @@ public class QuestManager : Singleton<QuestManager>
     // 현재 퀘스트 데이터를 외부에서 읽을 수 있는 프로퍼티
     public DungeonData CurrentQuest => _currentQuest;
 
-    // 퀘스트 종료 시각을 외부에서 읽을 수 있는 프로퍼티
-    public DateTime QuestEndTime => _questEndTime;
+
 
     /// <summary>
     /// 퀘스트 출발 처리
@@ -47,9 +56,14 @@ public class QuestManager : Singleton<QuestManager>
 
         // 2. 소요 시간 문자열을 분(minute)으로 변환해서 종료 시각 계산
         int minutes = ParseTimeToMinutes(questData.timeRequired);
+        _questStartTime = DateTime.Now; // 시작 시간 추가
         _questEndTime = DateTime.Now.AddMinutes(minutes);
 
-        Debug.Log($"퀘스트 출발! 던전: {questData.dungeonName}, 소요시간: {minutes}분, 종료시각: {_questEndTime}");
+        Debug.Log($"[QuestManager] 퀘스트 시작\n" +
+          $"- 던전: {questData.dungeonName}\n" +
+          $"- 시작 시각: {_questStartTime}\n" +
+          $"- 종료 시각: {_questEndTime}\n" +
+          $"- 총 소요 시간(분): {minutes}");
 
         // 3. 퀘스트 보드 팝업 닫기
         PopupManager.Instance.CloseAllPopups();
@@ -61,10 +75,10 @@ public class QuestManager : Singleton<QuestManager>
         }
 
         // 5. 모험 화면(WorldMap)으로 전환
-        if (ScreenStateManager.Instance != null)
-        {
-            ScreenStateManager.Instance.GoToWorldMap();
-        }
+        // if (ScreenStateManager.Instance != null)
+        // {
+        //     ScreenStateManager.Instance.GoToWorldMap();
+        // }
 
         // ★ 추가: AdventureManager에게 모험 시작 요청
         if (AdventureManager.Instance != null)
@@ -92,9 +106,16 @@ public class QuestManager : Singleton<QuestManager>
         // ★ 완료된 퀘스트 데이터를 보관 (팀장 보상 시스템에서 가져감)
         _completedQuest = _currentQuest;
 
+        Debug.Log($"[QuestManager] HasCompletedQuest = {HasCompletedQuest}");
+
         // 진행 중인 퀘스트 초기화
         _currentQuest = null;
+        _questStartTime = DateTime.MinValue; // 시작 시간 추가
         _questEndTime = DateTime.MinValue;
+
+        Debug.Log($"[QuestManager] 초기화 완료\n" +
+              $"- StartTime: {_questStartTime}\n" +
+              $"- EndTime: {_questEndTime}");
     }
 
     /// <summary>
@@ -105,6 +126,8 @@ public class QuestManager : Singleton<QuestManager>
     {
         Debug.Log($"보상 수령 완료! 던전: {_completedQuest?.dungeonName}");
         _completedQuest = null;
+
+        Debug.Log($"[QuestManager] HasCompletedQuest = {HasCompletedQuest}");
     }
 
     /// <summary>
@@ -113,16 +136,23 @@ public class QuestManager : Singleton<QuestManager>
     public TimeSpan GetRemainingTime()
     {
         if (!IsQuestActive) return TimeSpan.Zero;
-        return _questEndTime - DateTime.Now;
+
+        TimeSpan remaining = _questEndTime - DateTime.Now;
+        if (remaining < TimeSpan.Zero) // 예외처리 : 남은 시간이 음수인 경우(이미 종료된 경우) 0으로 반환
+        {
+            return TimeSpan.Zero;
+        }
+        return remaining;
+        // return _questEndTime - DateTime.Now;
     }
 
     private void Update()
     {
-        // 퀘스트 진행 중이고, 종료 시각이 지났으면 자동 완료
-        if (IsQuestActive && DateTime.Now >= _questEndTime)
-        {
-            CompleteQuest();
-        }
+        // // 퀘스트 진행 중이고, 종료 시각이 지났으면 자동 완료
+        // if (IsQuestActive && DateTime.Now >= _questEndTime)
+        // {
+        //     CompleteQuest();
+        // }
     }
 
     /// <summary>
