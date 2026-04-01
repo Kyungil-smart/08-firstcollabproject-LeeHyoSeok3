@@ -25,10 +25,33 @@ public class SimpleTooltipUI : MonoBehaviour
 
     private void Awake()
     {
+        if (tooltipText == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] tooltipText가 연결되지 않았습니다.", this);
+            return;
+        }
+
+        if (tooltipRect == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] tooltipRect가 연결되지 않았습니다.", this);
+            return;
+        }
+
+        if (bgRect == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] bgRect가 연결되지 않았습니다.", this);
+            return;
+        }
+
         textRect = tooltipText.rectTransform;
+
         parentCanvas = GetComponentInParent<Canvas>();
         if (parentCanvas != null)
             canvasRect = parentCanvas.transform as RectTransform;
+
+        tooltipRect.anchorMin = new Vector2(0.5f, 0.5f);
+        tooltipRect.anchorMax = new Vector2(0.5f, 0.5f);
+        tooltipRect.pivot = new Vector2(0, 1);
 
         Hide();
     }
@@ -44,23 +67,48 @@ public class SimpleTooltipUI : MonoBehaviour
     public void Show(string message, Vector2 screenPosition)
     {
         if (tooltipRect == null || bgRect == null || tooltipText == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] Show 실패: 필수 참조가 비어 있습니다.", this);
             return;
+        }
+
+        if (textRect == null)
+            textRect = tooltipText.rectTransform;
 
         tooltipText.text = message;
-        gameObject.SetActive(true);
-        isShowing = true;
 
         ResizeBg();
         Canvas.ForceUpdateCanvases();
         UpdatePosition(screenPosition);
+
+        if (!gameObject.activeSelf)
+            gameObject.SetActive(true);
+
+        isShowing = true;
     }
 
     private void ResizeBg()
     {
+        if (tooltipText == null || bgRect == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] ResizeBg 실패: tooltipText 또는 bgRect가 null입니다.", this);
+            return;
+        }
+
+        if (textRect == null)
+            textRect = tooltipText.rectTransform;
+
+        if (textRect == null)
+        {
+            Debug.LogError("[SimpleTooltipUI] ResizeBg 실패: textRect를 가져오지 못했습니다.", this);
+            return;
+        }
+
         tooltipText.enableWordWrapping = true;
 
         float textWidth = maxWidth - (leftPadding + rightPadding);
-        if (textWidth < 1f) textWidth = 1f;
+        if (textWidth < 1f)
+            textWidth = 1f;
 
         textRect.sizeDelta = new Vector2(textWidth, textRect.sizeDelta.y);
         tooltipText.ForceMeshUpdate();
@@ -84,7 +132,7 @@ public class SimpleTooltipUI : MonoBehaviour
 
     private void UpdatePosition(Vector2 mouseScreenPos)
     {
-        if (canvasRect == null)
+        if (canvasRect == null || tooltipRect == null || bgRect == null)
             return;
 
         Camera cam = null;
@@ -101,23 +149,17 @@ public class SimpleTooltipUI : MonoBehaviour
         float width = bgRect.rect.width;
         float height = bgRect.rect.height;
 
-        // 기본: 마우스 오른쪽 아래로 띄우기
         Vector2 target = localPoint + offset;
 
-        // 캔버스 로컬 좌표 기준 보정
         float canvasWidth = canvasRect.rect.width;
         float canvasHeight = canvasRect.rect.height;
 
-        // tooltipRect pivot은 (0,1) 기준 추천
         if (target.x + width > canvasWidth * 0.5f)
             target.x = localPoint.x - width - Mathf.Abs(offset.x);
 
         if (target.y - height < -canvasHeight * 0.5f)
             target.y = localPoint.y + height + Mathf.Abs(offset.y);
 
-        tooltipRect.anchorMin = new Vector2(0.5f, 0.5f);
-        tooltipRect.anchorMax = new Vector2(0.5f, 0.5f);
-        tooltipRect.pivot = new Vector2(0, 1);
         tooltipRect.anchoredPosition = target;
     }
 

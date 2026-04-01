@@ -23,10 +23,19 @@ public class TooltipHoverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (tooltipUI != null)
-            tooltipUI.Show(tooltipMessage, Vector2.zero); // 위치 의미 없음
+        if (tooltipUI == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(tooltipMessage))
+            return;
+
+        if (Mouse.current == null)
+            return;
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        tooltipUI.Show(tooltipMessage, mousePos);
     }
-    
+
     public void OnPointerExit(PointerEventData eventData)
     {
         if (tooltipUI != null)
