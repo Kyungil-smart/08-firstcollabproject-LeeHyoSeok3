@@ -6,7 +6,8 @@ using DesignPattern;
 public class GoldManager : Singleton<GoldManager>
 {
     [SerializeField] private double currentGold = 0;
-    [SerializeField] private TMP_Text goldText;
+    [SerializeField] private TMP_Text mainGoldText;
+    [SerializeField] private TMP_Text minimizedGoldText;
 
     public double CurrentGold => currentGold;
 
@@ -60,8 +61,13 @@ public class GoldManager : Singleton<GoldManager>
 
     private void RefreshUI()
     {
-        if (goldText != null)
-            goldText.text = FormatGold(currentGold);
+        string formatted = FormatGold(currentGold);
+
+        if (mainGoldText != null)
+            mainGoldText.text = formatted;
+
+        if (minimizedGoldText != null)
+            minimizedGoldText.text = formatted;
     }
 
     public static string FormatGold(double value)
