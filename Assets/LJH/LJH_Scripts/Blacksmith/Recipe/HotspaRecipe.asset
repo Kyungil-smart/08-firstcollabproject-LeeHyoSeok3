@@ -16,11 +16,11 @@ MonoBehaviour:
   gearsetName: Hotspa
   gearDescription: Fire core is attached to a iron weapons. Saves time for litting
     some bonfires.
-  gearIcon: {fileID: 2548274034016378360, guid: 47da5734b712d1644b164193c342e9a0, type: 3}
+  gearIcon: {fileID: 21300000, guid: ddadd54d03a1d5a499bf305a5452e543, type: 3}
   traitName: Warm
   traitDescription: Weapon is consistantly emitting heat from its core. It will keep
     you warm.
-  traitIcon: {fileID: -6894765269640387828, guid: ada261b739b361f42942ebd46b02590a, type: 3}
+  traitIcon: {fileID: 21300000, guid: 3f16f98fd72804841b82aaa92052cbde, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: 263753a46dd3cfa4cb301361b5e1631c, type: 2}
     requiredCount: 1

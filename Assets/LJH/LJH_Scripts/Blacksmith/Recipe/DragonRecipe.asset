@@ -16,11 +16,11 @@ MonoBehaviour:
   gearsetName: Dragon
   gearDescription: 'Upgraded iron weapons with the dragon''s bodyparts. This is unutterly
     the best gears possible. '
-  gearIcon: {fileID: -66017274735556171, guid: 6e859b1db3c9ffb4f92e8c8dcc854d04, type: 3}
+  gearIcon: {fileID: 21300000, guid: 0eec0fa8b76749a41bfbe18239046143, type: 3}
   traitName: Dragonmight
   traitDescription: Dragon has granted these weapons with the might, making it possible
     to wound the strong beings.
-  traitIcon: {fileID: 7375985789240013445, guid: 58105e8d1875cbb4fa9ba992d07658c4, type: 3}
+  traitIcon: {fileID: 21300000, guid: a13f686d330b0034db61a045862bdeb9, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: c0cd48242ff6b6646970eb0fa82c9286, type: 2}
     requiredCount: 1

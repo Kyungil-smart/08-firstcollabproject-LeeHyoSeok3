@@ -16,11 +16,11 @@ MonoBehaviour:
   gearsetName: Frozen
   gearDescription: Frozen slime weapon it is. It surely is cold and cool, but always
     keep your tongue away from it.
-  gearIcon: {fileID: -9129236515988747455, guid: 0029321d520079649945b91edd88ce26, type: 3}
+  gearIcon: {fileID: 21300000, guid: c9b2b8f26c10a0245b78f2b7146f72ef, type: 3}
   traitName: Frozen
   traitDescription: The cold air from the weapon will make snowdrops to fall and
     freeze the wings of those flying beings.
-  traitIcon: {fileID: -1145166851677664519, guid: 58aac963609107541af5bdde65b270c3, type: 3}
+  traitIcon: {fileID: 21300000, guid: e87de3f3d1533514e95b1c99b330436a, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: bd229328d780961498d47099db908174, type: 2}
     requiredCount: 1

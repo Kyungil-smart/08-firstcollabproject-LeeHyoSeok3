@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public struct ItemData
+public class ItemData // 💡 struct를 class로 변경합니다!
 {
     public int id;
     public string name;
     public string description;
     public Sprite icon;
-
-    // 💡 새로 추가된 필드: 아이템 해금 여부
     public bool isUnlocked;
+
+    // 💡 SO 구조에 맞춘 특성 데이터 추가
+    public string traitName;
+    public string traitDescription;
+    public Sprite traitIcon;
 }
