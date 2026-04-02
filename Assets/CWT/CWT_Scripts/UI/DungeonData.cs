@@ -14,4 +14,8 @@ public class DungeonData
     public Sprite dungeonIcon;       // 던전 아이콘 (평원, 산, 동굴 그림)
     public Sprite attributeIcon;     // 특성 아이콘 (가벼움, 견고함 그림)
     public Sprite materialIcon;      // 재료 아이콘 (나뭇가지, 철 원석 그림)
+
+    // ★ 추가: 던전 배경 스프라이트 ───
+    public Sprite dungeonBackground;       // 일반 던전 배경 (DG_01~08)
+    public Sprite dungeonBattleBackground; // 전투 중 던전 배경 (몬스터 추가 버전, 미구현 시 null)
 }
