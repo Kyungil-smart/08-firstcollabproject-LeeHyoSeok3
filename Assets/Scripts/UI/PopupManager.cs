@@ -9,7 +9,9 @@ public class PopupManager : Singleton<PopupManager>
     [SerializeField] private RectTransform blacksmithPopup;
     [SerializeField] private RectTransform partyEquipPopup;
     [SerializeField] private RectTransform settingsPopup;
-    [SerializeField] private RectTransform rewardPopup;
+    [SerializeField] private RectTransform offlineRewardPopup;
+    [SerializeField] private RectTransform rewardPopup; 
+    [SerializeField] private RectTransform WarningPopup;
 
     [Header("팝업을 배치할 Canvas")]
     [SerializeField] private Canvas popupCanvas;
@@ -28,7 +30,9 @@ public class PopupManager : Singleton<PopupManager>
     public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
     public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
     public void OpenSettings() => OpenPopup(settingsPopup);
+    public void OpenOfflineRewardPopup() => OpenPopup(offlineRewardPopup);
     public void OpenRewardPopup() => OpenPopup(rewardPopup);
+    public void OpenWarningPopup() => OpenPopup(WarningPopup);
 
     public void OpenPopup(RectTransform popup)
     {
@@ -146,7 +150,9 @@ public class PopupManager : Singleton<PopupManager>
         if (blacksmithPopup) blacksmithPopup.gameObject.SetActive(false);
         if (partyEquipPopup) partyEquipPopup.gameObject.SetActive(false);
         if (settingsPopup) settingsPopup.gameObject.SetActive(false);
+        if (offlineRewardPopup) offlineRewardPopup.gameObject.SetActive(false);
         if (rewardPopup) rewardPopup.gameObject.SetActive(false);
+        if (WarningPopup) WarningPopup.gameObject.SetActive(false);
 
         _activePopups.Clear();
     }

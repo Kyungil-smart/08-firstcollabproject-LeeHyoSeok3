@@ -8,6 +8,15 @@ public class GameSaveData
     public List<MaterialSaveData> materials = new();
     public List<string> craftedGearIds = new();
     public List<UpgradeSaveData> upgrades = new();
+
+      // 퀘스트 오프라인 보상을 위한 저장 데이터
+    public bool isQuestActive;
+    public string currentQuestDungeonName;
+    public string questStartTime;
+    public string questEndTime;
+
+    public bool hasCompletedQuest;
+    public string completedQuestDungeonName;
 }
 
 [Serializable]

@@ -7,6 +7,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 {
     [Header("Button")]
     [SerializeField] private Button anvilButton;
+    [SerializeField] private Button minimizedAnvilButton; // 최소화 화면에서 클리커 버튼
 
     [Header("Upgrade Systems")]
     [SerializeField] private UpgradeSystem clickUpgradeSystem;
@@ -14,7 +15,8 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
     [Header("Floating Text")]
     [SerializeField] private GameObject floatingTextPrefab;
-    [SerializeField] private RectTransform floatingParent;
+    [SerializeField] private RectTransform mainFloatingParent;
+    [SerializeField] private RectTransform minimizedFloatingParent;
     [SerializeField] private int maxFloatingText = 10;
 
     [SerializeField] private TMPro.TextMeshProUGUI gpsText;
@@ -46,6 +48,9 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     {
         if (anvilButton != null)
             anvilButton.onClick.AddListener(GainByClick);
+
+        if (minimizedAnvilButton != null)
+            minimizedAnvilButton.onClick.AddListener(GainByClick);
     }
 
     private void Update()
@@ -53,7 +58,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
         HandleAutoGain();
         RefreshGPSUI();
     }
-    
+
     private void OnEnable()
     {
         if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
@@ -80,12 +85,26 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
     private Vector2 lastPointerScreenPosition;
 
+    private RectTransform GetFloatingParent(bool isMinimized)
+    {
+        if (isMinimized) return minimizedFloatingParent;
+
+        return mainFloatingParent;
+    }
+
+    // 외부에서 클릭 위치를 설정할 수 있도록 메서드 추가 (최소화 화면에서 작동할 수 있도록 추가)
+    public void SetPointerScreenPosition(Vector2 screenPosition)
+    {
+        lastPointerScreenPosition = screenPosition;
+    }
+
     public void GainByClick()
     {
         if (clickUpgradeSystem == null || GoldManager.Instance == null)
             return;
 
         int amount = clickUpgradeSystem.CurrentValue;
+        Debug.Log($"[CLICK] GainByClick 호출 / amount={amount}");
         GoldManager.Instance.AddGold(amount);
 
         SpawnFloatingTextAtScreenPosition(amount, lastPointerScreenPosition);
@@ -109,16 +128,21 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
     private void SpawnFloatingTextAtScreenPosition(int amount, Vector2 screenPosition)
     {
-        if (floatingTextPrefab == null || floatingParent == null)
-            return;
+        bool isMinimized = minimizedAnvilButton != null && minimizedAnvilButton.gameObject.activeInHierarchy;
+        RectTransform currentFloatingParent = GetFloatingParent(isMinimized);
 
-        GameObject obj = Instantiate(floatingTextPrefab, floatingParent);
+        if (floatingTextPrefab == null || currentFloatingParent == null)
+        {
+            return;
+        }
+
+        GameObject obj = Instantiate(floatingTextPrefab, currentFloatingParent);
         obj.transform.SetAsLastSibling();
 
         RectTransform textRect = obj.GetComponent<RectTransform>();
         if (textRect != null)
         {
-            Canvas canvas = floatingParent.GetComponentInParent<Canvas>();
+            Canvas canvas = currentFloatingParent.GetComponentInParent<Canvas>();
             Camera cam = null;
 
             if (canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay)
@@ -126,7 +150,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
             Vector2 localPoint;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                floatingParent,
+                currentFloatingParent,
                 screenPosition,
                 cam,
                 out localPoint
@@ -159,7 +183,7 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     private void RefreshGPSUI()
     {
         if (gpsText == null || autoUpgradeSystem == null)
-            return; 
+            return;
 
         float goldPerSecond = autoUpgradeSystem.CurrentValue;
 

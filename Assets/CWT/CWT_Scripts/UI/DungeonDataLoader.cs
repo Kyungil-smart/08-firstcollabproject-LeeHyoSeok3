@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DungeonDataLoader : MonoBehaviour
@@ -15,6 +16,9 @@ public class DungeonDataLoader : MonoBehaviour
 
     [Header("재료 아이콘")]
     [SerializeField] private IconEntry[] _materialIcons;
+
+    [Header("퀘스트 보상 데이터")]
+    [SerializeField] private QuestRewardSo[] _questRewards;
 
     private void Start()
     {
@@ -50,6 +54,28 @@ public class DungeonDataLoader : MonoBehaviour
                 attributeIcon = FindIcon(_traitIcons, values[5].Trim()),
                 materialIcon = FindIcon(_materialIcons, values[6].Trim()),
             };
+
+            QuestRewardSo reward = FindRewardByDungeonName(data.dungeonName);
+
+            if (reward == null)
+            {
+                Debug.LogWarning($"[Reward] 매칭 실패: {data.dungeonName}");
+            }
+            else
+            {
+                Debug.Log($"[Reward] 매칭 성공: {data.dungeonName} / 골드: {reward.gold}");
+
+                if (reward.materials != null)
+                {
+                    foreach (var mat in reward.materials)
+                    {
+                        if (mat != null && mat.material != null)
+                        {
+                            Debug.Log($"[Reward] 재료: {mat.material.materialName} x {mat.count}");
+                        }
+                    }
+                }
+            }
 
             dungeonIndex++;
             _dungeonDatalist.Add(data);
@@ -104,6 +130,30 @@ public class DungeonDataLoader : MonoBehaviour
         }
         result.Add(currentValue);
         return result;
+    }
+
+    private QuestRewardSo FindRewardByDungeonName(string dungeonName)
+    {
+        if (string.IsNullOrEmpty(dungeonName) || _questRewards == null) return null;
+
+        foreach (var reward in _questRewards)
+        {
+            if (reward == null) continue;
+
+            if (reward.dungeonName == dungeonName) return reward;
+        }
+        return null;
+    }
+
+    public DungeonData FindDungeonByName(string dungeonName)
+    {
+        if (string.IsNullOrEmpty(dungeonName)) return null;
+
+        foreach (var data in _dungeonDatalist)
+        {
+            if (data != null && data.dungeonName == dungeonName) return data;
+        }
+        return null;
     }
 }
 

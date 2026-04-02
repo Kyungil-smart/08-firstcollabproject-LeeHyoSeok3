@@ -25,10 +25,13 @@ public class QuestManager : Singleton<QuestManager>
 
     // -------------------- 수정 --------------------------
 
-
     // ★ 추가: 마지막으로 완료한 퀘스트 데이터 (팀장 보상 시스템에서 가져감)
     private DungeonData _completedQuest = null;
     public bool HasCompletedQuest => _completedQuest != null;
+
+    // 프로퍼티 추가
+    public DungeonData CompletedQuest => _completedQuest;
+
 
     // 퀘스트 진행 중인지 확인하는 프로퍼티
     public bool IsQuestActive => _currentQuest != null;
@@ -36,7 +39,12 @@ public class QuestManager : Singleton<QuestManager>
     // 현재 퀘스트 데이터를 외부에서 읽을 수 있는 프로퍼티
     public DungeonData CurrentQuest => _currentQuest;
 
-
+    /// <summary>
+    /// 저장된 퀘스트가 활성 상태인지 확인하는 프로퍼티
+    /// </summary>
+    public bool IsQuestSavedActive => _currentQuest != null;
+    public string CurrentQuestDungeonName => _currentQuest != null ? _currentQuest.dungeonName : string.Empty;
+    public string CompletedQuestDungeonName => _completedQuest != null ? _completedQuest.dungeonName : string.Empty;
 
     /// <summary>
     /// 퀘스트 출발 처리
@@ -44,6 +52,13 @@ public class QuestManager : Singleton<QuestManager>
     /// </summary>
     public void StartQuest(DungeonData questData)
     {
+        if (HasCompletedQuest)
+        {
+            Debug.Log("[QuestManager] 미수령 보상이 있어 새 퀘스트를 시작할 수 없습니다.");
+            PopupManager.Instance?.OpenWarningPopup();
+            return;
+        }
+
         // 이미 퀘스트 진행 중이면 출발 불가
         if (IsQuestActive)
         {
@@ -144,6 +159,43 @@ public class QuestManager : Singleton<QuestManager>
         }
         return remaining;
         // return _questEndTime - DateTime.Now;
+    }
+
+    /// <summary>
+    /// 게임 재진입 시 오프라인으로 진행된 퀘스트 시간을 반영하는 함수
+    /// </summary>
+    /// <param name="currentQuest"></param>
+    /// <param name="questStartTime"></param>
+    /// <param name="questEndTime"></param>
+    /// <param name="completedQuest"></param>
+    public void LoadQuestState(
+    DungeonData currentQuest,
+    DateTime questStartTime,
+    DateTime questEndTime,
+    DungeonData completedQuest)
+    {
+        _currentQuest = currentQuest;
+        _questStartTime = questStartTime;
+        _questEndTime = questEndTime;
+        _completedQuest = completedQuest;
+
+        Debug.Log($"[QuestManager] LoadQuestState 완료\n" +
+                  $"- CurrentQuest: {_currentQuest?.dungeonName}\n" +
+                  $"- StartTime: {_questStartTime}\n" +
+                  $"- EndTime: {_questEndTime}\n" +
+                  $"- CompletedQuest: {_completedQuest?.dungeonName}");
+    }
+
+    public void ApplyOfflineQuestProgress()
+    {
+        if (!IsQuestActive) return;
+        if (_questEndTime == DateTime.MinValue) return;
+
+        if (DateTime.Now >= _questEndTime)
+        {
+            Debug.Log("[QuestManager] 오프라인 복귀 시 퀘스트 완료 처리");
+            CompleteQuest();
+        }
     }
 
     private void Update()
