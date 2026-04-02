@@ -22,7 +22,12 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
     [SerializeField] private TMPro.TextMeshProUGUI gpsText;
 
     [Header("Animation")]
-    [SerializeField] private KkangKkangiAnimationController kkangKkangiAnimationController; // 추가: 깡깡이 애니메이션 컨트롤러 참조
+    [SerializeField] private KkangKkangiAnimationController mainKkangKkangiAnimationController;
+    [SerializeField] private KkangKkangiAnimationController minimizedKkangKkangiAnimationController;
+
+    [Header("Roots")]
+    [SerializeField] private GameObject mainRoot;
+    [SerializeField] private GameObject minimizedRoot;
 
     private float autoTimer; // Note : 자동 생산을 담당
 
@@ -88,6 +93,11 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
     private Vector2 lastPointerScreenPosition;
 
+    private bool IsMinimizedMode()
+    {
+        return minimizedRoot != null && minimizedRoot.activeInHierarchy;
+    }
+
     private RectTransform GetFloatingParent(bool isMinimized)
     {
         if (isMinimized) return minimizedFloatingParent;
@@ -109,9 +119,16 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
         int amount = clickUpgradeSystem.CurrentValue;
         GoldManager.Instance.AddGold(amount);
 
-        if (kkangKkangiAnimationController != null)
-        kkangKkangiAnimationController.PlayCraftAnimation();
-
+        if (IsMinimizedMode())
+        {
+            if (minimizedKkangKkangiAnimationController != null)
+                minimizedKkangKkangiAnimationController.PlayCraftAnimation();
+        }
+        else
+        {
+            if (mainKkangKkangiAnimationController != null)
+                mainKkangKkangiAnimationController.PlayCraftAnimation();
+        }
         SpawnFloatingTextAtScreenPosition(amount, lastPointerScreenPosition);
     }
 

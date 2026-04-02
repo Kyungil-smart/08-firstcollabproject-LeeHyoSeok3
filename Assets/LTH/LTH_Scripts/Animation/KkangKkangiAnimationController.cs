@@ -4,6 +4,7 @@ using System.Collections;
 public class KkangKkangiAnimationController : CharacterAnimationController
 {
     private Coroutine blinkCoroutine;
+    [SerializeField] private GameObject hammerHead;
 
     protected override void Start()
     {
@@ -13,7 +14,6 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     private void OnEnable()
     {
         if (animator == null) animator = GetComponent<Animator>();
-
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
 
@@ -27,15 +27,21 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     {
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(2f, 5f));
-            animator.SetTrigger("Blink");
+            yield return new WaitForSeconds(Random.Range(4f, 8f));
+
+            if (animator != null) animator.SetTrigger("Blink");
         }
     }
 
     // 크래프팅 애니메이션을 재생하는 메서드
     public void PlayCraftAnimation()
     {
-        StopCoroutine(blinkCoroutine);
+        if (!gameObject.activeInHierarchy) return;
+
+        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+
+        if (hammerHead != null) hammerHead.SetActive(false);
+
         animator.SetTrigger("Craft");
         StartCoroutine(CraftRoutine());
     }
@@ -44,6 +50,7 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     IEnumerator CraftRoutine()
     {
         yield return new WaitForSeconds(1f);
+        if (hammerHead != null) hammerHead.SetActive(true);
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
 }
