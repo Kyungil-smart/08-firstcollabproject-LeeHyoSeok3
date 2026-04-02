@@ -20,7 +20,7 @@ public static class UpgradeCSVLoader
             return rows;
         }
 
-        for (int i = 1; i < lines.Length; i++) // skip header
+        for (int i = 1; i < lines.Length; i++) // header 제외
         {
             string line = lines[i].Trim();
 
@@ -29,7 +29,8 @@ public static class UpgradeCSVLoader
 
             string[] values = line.Split(',');
 
-            if (values.Length <= startColumnIndex + 3)
+            // level, value, cost, stageDisplay, iconKey
+            if (values.Length <= startColumnIndex + 4)
             {
                 Debug.LogWarning($"Line {i + 1} does not have enough columns: {line}");
                 continue;
@@ -60,6 +61,8 @@ public static class UpgradeCSVLoader
                 Debug.LogWarning($"Stage display parse failed at line {i + 1}: {line}");
                 continue;
             }
+
+            row.iconKey = values[startColumnIndex + 4].Trim().Replace("\"", "");
 
             rows.Add(row);
         }
