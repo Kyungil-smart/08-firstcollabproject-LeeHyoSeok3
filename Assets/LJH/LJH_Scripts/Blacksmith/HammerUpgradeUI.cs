@@ -18,9 +18,12 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private TMP_Text stageText;
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private Button upgradeButton;
-    
+
     private bool isSubscribed;
     private Coroutine bindCoroutine;
+
+    [Header("Hammer Animation")]
+    [SerializeField] private HammerAnimationOverrideController hammerAnimationOverrideController;
 
     private void Awake()
     {
@@ -179,7 +182,12 @@ public class UpgradeUI : MonoBehaviour
 
     private void OnClickUpgrade()
     {
-        if (upgradeSystem.TryUpgrade())
-            RefreshUI();
+        if (!upgradeSystem.TryUpgrade())
+            return;
+
+        if (hammerAnimationOverrideController != null)
+            hammerAnimationOverrideController.ApplyHammerAnimationByLevel();
+            
+        RefreshUI();
     }
 }

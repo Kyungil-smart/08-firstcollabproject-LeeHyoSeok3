@@ -26,8 +26,8 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
 
     // 추가
     [Header("배경 투명화 조정")]
-    [SerializeField] private Image backgroundImage;        // BackGroundImage
-    [SerializeField] private CanvasGroup maxUICanvasGroup; // MaxUICanvas
+    [SerializeField] private Image backgroundImage;    // BackGroundImage
+    [SerializeField] private CanvasGroup CanvasGroup; // 투명화 할 CanvasGroup (최대화 화면 전체)
 
     [Header("클릭 통과 시 Raycast Target 끌 대상들")]
     [SerializeField] private List<Graphic> raycastTargets;
@@ -119,11 +119,11 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
             backgroundImage.color = c;
         }
 
-        if (maxUICanvasGroup != null)
+        if (CanvasGroup != null)
         {
-            maxUICanvasGroup.alpha = isClickThrough ? 0.3f : 1f;
-            maxUICanvasGroup.interactable = !isClickThrough;
-            maxUICanvasGroup.blocksRaycasts = !isClickThrough;
+            CanvasGroup.alpha = isClickThrough ? 0.3f : 1f;
+            CanvasGroup.interactable = !isClickThrough;
+            CanvasGroup.blocksRaycasts = !isClickThrough;
         }
     }
 }

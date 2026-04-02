@@ -21,8 +21,16 @@ public class GearsetTooltipUI : MonoBehaviour
 
     [SerializeField] private MaterialInventory materialInventory;
 
+    private GearsetRecipeSO currentRecipe;
+    private Vector2 currentPosition;
+    
     private bool isShowing;
-
+    
+    private void Awake()
+    {
+        TryBindInventory();
+    }
+    
     private void Update()
     {
         if (isShowing && Mouse.current != null)
@@ -31,11 +39,36 @@ public class GearsetTooltipUI : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        TryBindInventory();
+
+        if (materialInventory != null)
+            materialInventory.OnInventoryChanged += RefreshTooltip;
+    }
+
+    private void OnDisable()
+    {
+        if (materialInventory != null)
+            materialInventory.OnInventoryChanged -= RefreshTooltip;
+    }
+
+    private void TryBindInventory()
+    {
+        if (materialInventory == null)
+            materialInventory = MaterialInventory.Instance;
+    }
+    
     public void ShowTooltip(GearsetRecipeSO recipe, Vector2 position)
     {
-        if (recipe == null)
-            return;
+        currentRecipe = recipe;
+        currentPosition = position;
 
+        DrawTooltip(recipe, position);
+    }
+
+    private void DrawTooltip(GearsetRecipeSO recipe, Vector2 position)
+    {
         isShowing = false;
         gameObject.SetActive(false);
 
@@ -45,45 +78,12 @@ public class GearsetTooltipUI : MonoBehaviour
         if (titleText != null)
             titleText.text = recipe.gearsetName;
 
-        Debug.Log($"툴팁 열기: {recipe.gearsetName}");
-        Debug.Log($"requirements 개수: {recipe.requirements.Count}");
-
         for (int i = 0; i < recipe.requirements.Count; i++)
         {
             var requirement = recipe.requirements[i];
 
-            if (requirement == null)
-            {
-                Debug.LogError($"requirements[{i}]가 null");
-                continue;
-            }
-
-            if (requirement.material == null)
-            {
-                Debug.LogError($"requirements[{i}].material이 null");
-                continue;
-            }
-
-            if (materialLinePrefab == null)
-            {
-                Debug.LogError("materialLinePrefab이 연결되지 않음");
-                return;
-            }
-
-            if (materialContent == null)
-            {
-                Debug.LogError("materialContent가 연결되지 않음");
-                return;
-            }
-
             GameObject lineObj = Instantiate(materialLinePrefab, materialContent);
             MaterialLineUI lineUI = lineObj.GetComponent<MaterialLineUI>();
-
-            if (lineUI == null)
-            {
-                Debug.LogError("materialLinePrefab에 MaterialLineUI가 없음");
-                continue;
-            }
 
             int ownedCount = GetOwnedMaterialCount(requirement.material);
 
@@ -94,14 +94,6 @@ public class GearsetTooltipUI : MonoBehaviour
                 requirement.requiredCount
             );
         }
-
-        Canvas.ForceUpdateCanvases();
-
-        if (materialContentRect != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(materialContentRect);
-
-        if (bgRect != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(bgRect);
 
         tooltipRect.position = position + offset;
         isShowing = true;
@@ -169,5 +161,13 @@ public class GearsetTooltipUI : MonoBehaviour
             return;
 
         bgRect.sizeDelta = new Vector2(bgRect.sizeDelta.x, defaultBgHeight);
+    }
+    
+    private void RefreshTooltip()
+    {
+        if (!isShowing || currentRecipe == null)
+            return;
+
+        DrawTooltip(currentRecipe, currentPosition);
     }
 }
