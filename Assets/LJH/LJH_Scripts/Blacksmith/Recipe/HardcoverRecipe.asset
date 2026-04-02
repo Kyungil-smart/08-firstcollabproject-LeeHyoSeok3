@@ -16,11 +16,11 @@ MonoBehaviour:
   gearsetName: Hardcover
   gearDescription: Books are tied to a wooden weapons. Enchantment on the books keep
     the owner from the lethal damage.
-  gearIcon: {fileID: 3796479996247273478, guid: 088fd631e727abb4c84a8f1a6f2b2e54, type: 3}
+  gearIcon: {fileID: 21300000, guid: d3ad9f8da57b5a540bc245e600f276b1, type: 3}
   traitName: Enchanted
   traitDescription: The enchantment casted on the weapon keeps its users safe from
     fire damage.
-  traitIcon: {fileID: 7546412300090844041, guid: db9322daaf45568469599575e1f83a1c, type: 3}
+  traitIcon: {fileID: 21300000, guid: 782b7934f49e6ee46a3be15c31661da7, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: 8709f5a9f47a48a4daf97ab60ab191fc, type: 2}
     requiredCount: 1
