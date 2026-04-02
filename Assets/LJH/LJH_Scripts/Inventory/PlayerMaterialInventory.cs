@@ -6,10 +6,17 @@ public class MaterialInventory : Singleton<MaterialInventory>
 {
     [SerializeField] private List<MaterialEntry> startMaterials = new();
     [SerializeField] private List<MaterialDataSO> allMaterials = new();
-
-    private Dictionary<MaterialDataSO, int> materialDict = new();
+    
+    private Dictionary<string, int> materialDict = new();
     private Dictionary<string, MaterialDataSO> materialLookup = new();
+    
+    public event System.Action OnInventoryChanged;
 
+    private void NotifyChanged()
+    {
+        OnInventoryChanged?.Invoke();
+    }
+    
     protected override void OnAwake()
     {
         BuildLookup();
@@ -48,13 +55,15 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
         foreach (var entry in startMaterials)
         {
-            if (entry.material == null)
+            if (entry == null || entry.material == null || string.IsNullOrEmpty(entry.material.saveId))
                 continue;
 
-            if (materialDict.ContainsKey(entry.material))
-                materialDict[entry.material] += entry.count;
+            string id = entry.material.saveId;
+
+            if (materialDict.ContainsKey(id))
+                materialDict[id] += entry.count;
             else
-                materialDict.Add(entry.material, entry.count);
+                materialDict.Add(id, entry.count);
         }
     }
 
@@ -74,9 +83,9 @@ public class MaterialInventory : Singleton<MaterialInventory>
             if (saved == null || string.IsNullOrEmpty(saved.materialId))
                 continue;
 
-            if (materialLookup.TryGetValue(saved.materialId, out var material))
+            if (materialLookup.ContainsKey(saved.materialId))
             {
-                materialDict[material] = saved.count;
+                materialDict[saved.materialId] = saved.count;
             }
             else
             {
@@ -85,6 +94,7 @@ public class MaterialInventory : Singleton<MaterialInventory>
         }
 
         RefreshUI();
+        NotifyChanged();
     }
 
     public List<MaterialSaveData> GetSaveData()
@@ -93,12 +103,9 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
         foreach (var pair in materialDict)
         {
-            if (pair.Key == null || string.IsNullOrEmpty(pair.Key.saveId))
-                continue;
-
             list.Add(new MaterialSaveData
             {
-                materialId = pair.Key.saveId,
+                materialId = pair.Key,
                 count = pair.Value
             });
         }
@@ -108,13 +115,16 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
     public int GetCount(MaterialDataSO material)
     {
-        if (material == null) return 0;
-        return materialDict.TryGetValue(material, out int count) ? count : 0;
+        if (material == null || string.IsNullOrEmpty(material.saveId))
+            return 0;
+
+        return materialDict.TryGetValue(material.saveId, out int count) ? count : 0;
     }
 
     public bool CanCraft(GearsetRecipeSO recipe)
     {
-        if (recipe == null) return false;
+        if (recipe == null)
+            return false;
 
         foreach (var req in recipe.requirements)
         {
@@ -135,11 +145,18 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
         foreach (var req in recipe.requirements)
         {
-            materialDict[req.material] -= req.requiredCount;
+            if (req == null || req.material == null || string.IsNullOrEmpty(req.material.saveId))
+                continue;
+
+            string id = req.material.saveId;
+
+            if (materialDict.ContainsKey(id))
+                materialDict[id] -= req.requiredCount;
         }
 
         RefreshUI();
         GameDataController.Instance?.SaveGame();
+        NotifyChanged();
     }
 
     public void AddMaterial(MaterialDataSO material, int amount)
@@ -150,21 +167,30 @@ public class MaterialInventory : Singleton<MaterialInventory>
             return;
         }
 
+        if (string.IsNullOrEmpty(material.saveId))
+        {
+            Debug.LogWarning($"{material.name} : saveId가 비어있습니다.");
+            return;
+        }
+
         if (amount <= 0)
         {
             Debug.LogWarning($"AddMaterial 실패: 잘못된 수량 {amount}");
             return;
         }
 
-        if (materialDict.ContainsKey(material))
-            materialDict[material] += amount;
-        else
-            materialDict.Add(material, amount);
+        string id = material.saveId;
 
-        Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[material]}");
+        if (materialDict.ContainsKey(id))
+            materialDict[id] += amount;
+        else
+            materialDict.Add(id, amount);
+
+        Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[id]}");
 
         RefreshUI();
         GameDataController.Instance?.SaveGame();
+        NotifyChanged();
     }
 
     public void AddMaterials(List<MaterialEntry> rewards)
@@ -180,22 +206,39 @@ public class MaterialInventory : Singleton<MaterialInventory>
             if (reward == null || reward.material == null)
                 continue;
 
+            if (string.IsNullOrEmpty(reward.material.saveId))
+                continue;
+
             if (reward.count <= 0)
                 continue;
 
-            if (materialDict.ContainsKey(reward.material))
-                materialDict[reward.material] += reward.count;
+            string id = reward.material.saveId;
+
+            if (materialDict.ContainsKey(id))
+                materialDict[id] += reward.count;
             else
-                materialDict.Add(reward.material, reward.count);
+                materialDict.Add(id, reward.count);
         }
 
         RefreshUI();
         GameDataController.Instance?.SaveGame();
+        NotifyChanged();
     }
 
+    // UI 출력용
     public Dictionary<MaterialDataSO, int> GetAllMaterials()
     {
-        return materialDict;
+        Dictionary<MaterialDataSO, int> result = new();
+
+        foreach (var pair in materialDict)
+        {
+            if (materialLookup.TryGetValue(pair.Key, out var material))
+            {
+                result[material] = pair.Value;
+            }
+        }
+
+        return result;
     }
 
     public void RefreshUI()

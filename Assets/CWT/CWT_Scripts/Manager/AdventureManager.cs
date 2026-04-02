@@ -9,6 +9,7 @@ using UnityEngine;
 using DesignPattern;
 using System;
 using System.Data;
+using UnityEngine.UI;
 
 public class AdventureManager : Singleton<AdventureManager>
 {
@@ -44,6 +45,9 @@ public class AdventureManager : Singleton<AdventureManager>
     [SerializeField] private RectTransform _leftEndPoint;      // 좌측 끝
     [SerializeField] private RectTransform _returnEndPoint;    // 복귀 종료 (= 출발 위치)
 
+    [Header("─── 던전 아이콘 (DungeonPoint의 Image) ───")]
+    [SerializeField] private Image _dungeonPointIcon;  // DungeonPoint에 붙어있는 Image 컴포넌트
+
     [Header("─── 파티 그룹 (이동 대상) ───")]
     [SerializeField] private RectTransform _partyGroup;        // 파티 전체를 움직일 RectTransform
 
@@ -57,6 +61,9 @@ public class AdventureManager : Singleton<AdventureManager>
     [SerializeField] private GameObject _bubbleQuestion;       // ? 말풍선
     [SerializeField] private GameObject _bubbleExclamation;    // ! 말풍선
     //[SerializeField] private GameObject _bubbleZzz;            // Zzz 말풍선
+
+    [Header("─── 던전 배경 (DungeonBackground의 Image) ───")]
+    [SerializeField] private Image _dungeonBackgroundImage;  // DungeonBackground에 붙어있는 Image
 
     // --------------------- 수정 : ScreenStateManager에서 화면 전환 담당 --------------------
     // [Header("─── 모험 화면 패널 ───")]
@@ -156,6 +163,23 @@ public class AdventureManager : Singleton<AdventureManager>
 
         // 5) 경과 시간 초기화
         _elapsedTime = 0f;
+
+        Debug.Log($"[AdventureManager] 던전 아이콘 확인 - " +
+                  $"Icon null? {QuestManager.Instance.CurrentQuest.dungeonIcon == null}, " +
+                  $"Image null? {_dungeonPointIcon == null}");
+
+        // ★ 추가: 선택한 던전의 아이콘을 DungeonPoint에 표시
+        if (_dungeonPointIcon != null && QuestManager.Instance.CurrentQuest != null)
+        {
+            _dungeonPointIcon.sprite = QuestManager.Instance.CurrentQuest.dungeonIcon;
+        }
+
+        // ★ 추가: 선택한 던전의 배경을 DungeonBackground에 표시
+        if (_dungeonBackgroundImage != null && QuestManager.Instance.CurrentQuest != null)
+        {
+            // 모험 시작 시에는 일반 던전 배경
+            _dungeonBackgroundImage.sprite = QuestManager.Instance.CurrentQuest.dungeonBackground;
+        }
 
         // 6) 비주얼 초기화 (기본 스프라이트만 켜기)
         SetPartySprite(PartyVisual.Default);
@@ -408,7 +432,19 @@ public class AdventureManager : Singleton<AdventureManager>
     private void EnterBattle()
     {
         CurrentState = AdventureState.Battle;
-        SetPartySprite(PartyVisual.Battle);  // 전투(흙먼지) 스프라이트
+        SetPartySprite(PartyVisual.Battle);
+
+        // ★ 추가: 전투 진입 시 던전 배경을 전투 버전으로 교체
+        // 전투 배경이 있으면 교체, 없으면 기존 배경 유지
+        if (_dungeonBackgroundImage != null && QuestManager.Instance.CurrentQuest != null)
+        {
+            Sprite battleBG = QuestManager.Instance.CurrentQuest.dungeonBattleBackground;
+            if (battleBG != null)
+            {
+                _dungeonBackgroundImage.sprite = battleBG;
+            }
+            // battleBG가 null이면 아무것도 안 함 → 기존 던전 배경 그대로 유지
+        }
 
         Debug.Log("[AdventureManager] 던전 진입! 전투 시작!");
     }

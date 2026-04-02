@@ -16,7 +16,7 @@ public class OfflineRewardManager : MonoBehaviour
 
     // ---------------------Test-------------------------------------
     // private AutoProductionTimer m_autoTimer; // 테스트용(자동 생산)
-    private QuestTimer m_questTimer; // 테스트용(퀘스트)
+    // private QuestTimer m_questTimer; // 테스트용(퀘스트)
     // --------------------------------------------------------------
 
     private Action m_onProcessComplete; // 보상 계산 완료 후 호출할 콜백
@@ -25,7 +25,7 @@ public class OfflineRewardManager : MonoBehaviour
 
     private void Awake()
     {
-        m_questTimer = new QuestTimer(7200f);
+        // m_questTimer = new QuestTimer(7200f);
     }
 
     private void Start()
@@ -92,7 +92,7 @@ public class OfflineRewardManager : MonoBehaviour
         Debug.Log($"[OfflineReward] 지급 예정 골드: {m_pendingAutoRewardGold}");
 
         // 5. 퀘스트 남은 시간 계산 및 완료 처리
-        if (m_questTimer != null) m_questTimer.ApplyOfflineTime(offlineSeconds);
+        //if (m_questTimer != null) m_questTimer.ApplyOfflineTime(offlineSeconds);
 
         // 6. 모든 계산이 끝난 후 총 보상 팝업 출력 
         ShowTotalRewardPopup(m_pendingAutoRewardGold, m_pendingOfflineSeconds);
@@ -165,7 +165,7 @@ public class OfflineRewardManager : MonoBehaviour
             return;
         }
 
-        PopupManager.Instance.OpenRewardPopup();
+        PopupManager.Instance.OpenOfflineRewardPopup();
         m_offlineRewardPopupUI.Setup(message, OnClickConfirmPopup);
 
         Debug.Log("[OfflineReward] 팝업 표시 완료");
@@ -265,8 +265,8 @@ public class OfflineRewardManager : MonoBehaviour
     {
         // 타이머들 일시정지 해제 및 인게임 로직 다시 시작
         // m_autoTimer.IsPaused = false;
-        m_questTimer.ResumeTimer();
-        Debug.Log("게임 진행!");
+        //   m_questTimer.ResumeTimer();
+        Debug.Log("[OfflineReward] 게임 진행 재개");
     }
 
     // // 게임 종료 또는 창을 닫을 때 시간 저장 
