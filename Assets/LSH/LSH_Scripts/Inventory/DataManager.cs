@@ -1,59 +1,110 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
-// 2. 데이터 관리 매니저 (더미 데이터 예시)
 public class DataManager : MonoBehaviour
 {
-    private Dictionary<int, ItemData> itemDatabase = new Dictionary<int, ItemData>();
-    private List<ItemData> inventory = new List<ItemData>();
-    private int partyEquippedItemID = -1; // 현재 파티에 장착된 아이템 ID
+    [Header("Scriptable Objects")]
+    [SerializeField] private GearsetRecipeDatabaseSO m_recipeDatabase;
 
-    void Awake()
+    private Dictionary<int, GearsetRecipeSO> m_itemDatabase = new Dictionary<int, GearsetRecipeSO>();
+    private List<ItemData> m_inventory = new List<ItemData>();
+
+    private int m_partyEquippedItemID = 0;
+
+    // 현재 파티 특성을 저장할 변수 (초기값은 특성 없음)
+    private string m_currentPartyTrait = "None";
+
+    private void Awake()
     {
-        LoadDummyData();
+        LoadScriptableObjectData();
     }
 
-    private void LoadDummyData()
+    private void LoadScriptableObjectData()
     {
-        // (가정) CSV에서 읽어온 원본 데이터 로드
-        ItemData item1 = new ItemData { id = 1, name = "녹슨 대검", description = "초보용 전사의 무기. 공격력 +5.", icon = Resources.Load<Sprite>("Icons/Item_01") };
-        ItemData item2 = new ItemData { id = 2, name = "수련의 지팡이", description = "마법의 힘이 깃든 나무 지팡이. 마력 +7.", icon = Resources.Load<Sprite>("Icons/Item_02") };
-        ItemData item3 = new ItemData { id = 3, name = "가죽 갑옷", description = "가볍고 질긴 가죽 갑옷. 방어력 +3.", icon = Resources.Load<Sprite>("Icons/Item_03") };
+        if (m_recipeDatabase == null)
+        {
+            Debug.LogError("[DataManager] Database SO가 연결되지 않았습니다! 인스펙터를 확인해주세요.");
+            return;
+        }
 
-        itemDatabase.Add(item1.id, item1);
-        itemDatabase.Add(item2.id, item2);
-        itemDatabase.Add(item3.id, item3);
+        for (int i = 0; i < m_recipeDatabase.recipes.Count; i++)
+        {
+            GearsetRecipeSO recipe = m_recipeDatabase.recipes[i];
+            if (recipe == null) continue;
 
-        // (가정) 인벤토리에 이 아이템들을 가지고 있다고 침
-        inventory.Add(item1);
-        inventory.Add(item2);
-        inventory.Add(item3);
+            m_itemDatabase.Add(i, recipe);
+
+            // 박사님이 작성하신 SO 변수명에 맞춰 매핑합니다.
+            ItemData newItem = new ItemData
+            {
+                id = i,
+                name = recipe.gearsetName,
+                description = recipe.gearDescription,
+                icon = recipe.gearIcon,
+                isUnlocked = (recipe.saveId == "Rusty"),
+
+                // 특성 데이터 매핑
+                traitName = recipe.traitName,
+                traitDescription = recipe.traitDescription,
+                traitIcon = recipe.traitIcon
+            };
+
+            m_inventory.Add(newItem);
+        }
     }
 
-    // 팝업에서 호출할 메서드들
-    public List<ItemData> GetInventoryItems()
-    {
-        return inventory;
-    }
+    public List<ItemData> GetInventoryItems() => m_inventory;
+    public int GetEquippedItemID() => m_partyEquippedItemID;
 
+    // 💡 [에러 해결!] InventoryEquipmentPopup 등에서 호출하던 함수를 복구했습니다.
     public ItemData GetItemByID(int id)
     {
-        if (itemDatabase.TryGetValue(id, out ItemData data))
-            return data;
-        return default;
+        for (int i = 0; i < m_inventory.Count; i++)
+        {
+            if (m_inventory[i].id == id)
+            {
+                return m_inventory[i];
+            }
+        }
+        return null; // ItemData를 class로 변경했으므로 못 찾으면 null을 반환합니다.
+    }
+
+    public void UnlockItem(int id)
+    {
+        for (int i = 0; i < m_inventory.Count; i++)
+        {
+            if (m_inventory[i].id == id)
+            {
+                m_inventory[i].isUnlocked = true;
+                break;
+            }
+        }
     }
 
     public void EquipItemToParty(int itemID)
     {
-        Debug.Log($"[DataManager] 파티에 아이템 장착 시도: ID {itemID}");
-
-        if (itemDatabase.ContainsKey(itemID))
+        if (m_itemDatabase.ContainsKey(itemID))
         {
-            partyEquippedItemID = itemID;
-            Debug.Log($"장착 성공! 현재 파티 아이템: {itemDatabase[itemID].name}");
+            m_partyEquippedItemID = itemID;
+            GearsetRecipeSO equippedData = m_itemDatabase[itemID];
 
-            // (참고) 이전 커밋에서 이야기한 CSV 데이터를 이용해서 실제 파티 스탯에 반영하는 논리를 여기에 구현
-            // 예: System_Data.csv의 파티 공격력/방어력을 업데이트
+            // 장비 장착 시, 파티의 현재 특성 이름도 함께 갱신됩니다!
+            m_currentPartyTrait = equippedData.traitName;
+
+            Debug.Log($"[DataManager] '{equippedData.gearsetName}' 장착 완료! 현재 파티 특성: [{m_currentPartyTrait}]");
         }
+    }
+
+    // --- 퀘스트 시스템에서 호출할 특성 검사 로직 ---
+
+    public string GetCurrentPartyTrait()
+    {
+        return m_currentPartyTrait;
+    }
+
+    public bool CanEnterQuest(string requiredTrait)
+    {
+        // 문자열 기반으로 요구 특성과 장착 특성이 일치하는지 검사합니다.
+        return m_currentPartyTrait == requiredTrait;
     }
 }

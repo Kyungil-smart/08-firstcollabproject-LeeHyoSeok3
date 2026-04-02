@@ -1,39 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
-using TMPro;
 
-// 3. 파티 슬롯 프리팹 스크립트
 public class InventorySlot : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private Button slotButton;
+    [SerializeField] private Image m_iconImage;
+    [SerializeField] private Button m_button;
 
-    private int itemID;
-    private Action<int> onClickAction; // 클릭 시 Item ID를 전달할 콜백
+    // 💡 비활성화(잠금) 상태일 때 덮어씌울 어두운 회색
+    private Color m_lockedColor = new Color(0.2f, 0.2f, 0.2f, 1f);
+    private Color m_unlockedColor = Color.white;
 
-    public void SetSlot(int id, Sprite icon, Action<int> onClick)
+    // 💡 매개변수에 bool isUnlocked가 추가되었습니다!
+    public void SetSlot(int id, Sprite icon, bool isUnlocked, Action<int> onClicked)
     {
-        itemID = id;
-        iconImage.sprite = icon;
-        iconImage.color = Color.white; // 비어 있지 않다면 불투명하게
-        onClickAction = onClick;
+        m_iconImage.sprite = icon;
 
-        slotButton.onClick.RemoveAllListeners();
-        slotButton.onClick.AddListener(OnClicked);
+        // 해금 상태에 따라 아이콘의 색상을 원래 색(하얀색 필터) 또는 어두운 회색으로 변경합니다.
+        m_iconImage.color = isUnlocked ? m_unlockedColor : m_lockedColor;
+
+        m_button.onClick.RemoveAllListeners();
+        m_button.onClick.AddListener(() => onClicked?.Invoke(id));
     }
 
-    // 비어 있는 슬롯 설정
-    public void SetEmpty(Sprite emptyIcon)
+    public void SetEmpty(Sprite emptySprite)
     {
-        itemID = -1;
-        iconImage.sprite = emptyIcon;
-        iconImage.color = new Color(1, 1, 1, 0.5f); // 비어 있으면 투명하게
-        slotButton.onClick.RemoveAllListeners();
-    }
-
-    private void OnClicked()
-    {
-        onClickAction?.Invoke(itemID);
+        m_iconImage.sprite = emptySprite;
+        m_iconImage.color = Color.white; // 빈 슬롯은 기본 색상 유지
+        m_button.onClick.RemoveAllListeners();
     }
 }

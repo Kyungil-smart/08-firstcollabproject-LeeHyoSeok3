@@ -1,70 +1,84 @@
-using NUnit.Framework.Interfaces;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class InventoryEquipController : MonoBehaviour
 {
-    [SerializeField] private InventoryEquipView m_view; // Inspector에서 View 스크립트 연결
-    [SerializeField] private DataManager m_dataManager; // 전체 데이터 관리자
+    [SerializeField] private InventoryEquipView m_view;
+    [SerializeField] private DataManager m_dataManager;
 
-    private InventoryEquipModel m_model;
+    // 💡 View에서 마지막으로 클릭한 아이템의 ID를 기억해둘 컨트롤러의 '뇌(기억장치)' 입니다.
+    private int m_currentSelectedItemID = -1;
 
     private void Start()
     {
-        // 1. Model 초기화
-        m_model = new InventoryEquipModel();
-
-        // 2. Model -> View 방향 연결 (데이터가 변하면 UI가 알아서 갱신되도록)
-        m_model.OnInventoryUpdated += m_view.DrawSlots;
-        m_model.OnItemSelected += m_view.ShowDetail;
-
-        // 3. View -> Controller 방향 연결 (유저가 버튼을 누르면 Controller가 로직 수행)
+        // View의 버튼 이벤트 구독
         m_view.OnSlotClicked += HandleSlotClicked;
         m_view.OnEquipClicked += HandleEquipClicked;
-        m_view.OnCloseClicked += ClosePopup;
+        m_view.OnCloseClicked += HandleCloseClicked;
+        m_view.OnUnlockClicked += HandleUnlockClicked;
 
-        // 팝업 열기 테스트
-        OpenPopup();
+        // 시작 시 인벤토리 목록 갱신
+        RefreshUI();
     }
 
-    public void OpenPopup()
+    private void RefreshUI()
     {
-        m_view.gameObject.SetActive(true);
-        m_view.HideDetail(); // 초기엔 상세창 숨김
-
-        // DataManager에서 아이템 목록을 가져와 Model에 밀어넣음
-        // -> Model 이벤트 발생 -> View의 DrawSlots가 자동 실행됨
-        var items = m_dataManager.GetInventoryItems();
-        m_model.UpdateInventory(items);
+        List<ItemData> items = m_dataManager.GetInventoryItems();
+        m_view.DrawSlots(items);
     }
 
-    private void HandleSlotClicked(int index)
+    private void HandleSlotClicked(int slotIndex)
     {
-        // View에서 슬롯 클릭 이벤트가 오면, Model에게 선택된 아이템을 바꾸라고 지시함
-        // -> Model 이벤트 발생 -> View의 ShowDetail이 자동 실행됨
-        m_model.SelectItem(index);
+        List<ItemData> items = m_dataManager.GetInventoryItems();
+        if (slotIndex >= 0 && slotIndex < items.Count)
+        {
+            ItemData clickedItem = items[slotIndex];
+
+            // 💡 나중에 '장착' 버튼을 누를 때를 대비해서, 방금 클릭한 아이템의 ID를 기억해 둡니다!
+            m_currentSelectedItemID = clickedItem.id;
+
+            bool isEquipped = (m_dataManager.GetEquippedItemID() == clickedItem.id);
+
+            // View에게 선택된 아이템 정보를 넘겨주며 그려달라고 요청
+            m_view.ShowDetail(clickedItem, isEquipped);
+        }
     }
 
     private void HandleEquipClicked()
     {
-        // 장착 로직 실행
-        ItemData itemToEquip = m_model.GetSelectedItem();
-        m_dataManager.EquipItemToParty(itemToEquip.id);
-
-        ClosePopup();
-    }
-
-    private void ClosePopup()
-    {
-        m_view.gameObject.SetActive(false);
-    }
-
-    private void OnDestroy()
-    {
-        // 메모리 누수 방지를 위한 이벤트 해제
-        if (m_model != null)
+        // 💡 기억해둔 ID가 제대로 있는지(선택된 상태인지) 확인하고 장착을 실행합니다!
+        if (m_currentSelectedItemID != -1)
         {
-            m_model.OnInventoryUpdated -= m_view.DrawSlots;
-            m_model.OnItemSelected -= m_view.ShowDetail;
+            Debug.Log($"[Controller] 아이템 장착 명령 전달: ID {m_currentSelectedItemID}");
+
+            // 1. DataManager에 실제 파티 장착 요청
+            m_dataManager.EquipItemToParty(m_currentSelectedItemID);
+
+            // 2. 기획서 사양: 장착 후에는 상세 팝업창 닫기
+            m_view.HideDetail();
+
+            // 3. UI 새로고침 (장착 중인 아이템 표시가 달라져야 하므로)
+            RefreshUI();
         }
+    }
+
+    private void HandleUnlockClicked(int itemID)
+    {
+        // 1. 모델 해금 처리
+        m_dataManager.UnlockItem(itemID);
+
+        // 2. UI 새로고침 (회색 -> 밝은 색으로 갱신)
+        RefreshUI();
+
+        // 3. 해금된 아이템 상세 정보 정상적으로 다시 보여주기
+        ItemData unlockedItem = m_dataManager.GetItemByID(itemID);
+        bool isEquipped = (m_dataManager.GetEquippedItemID() == itemID);
+        m_view.ShowDetail(unlockedItem, isEquipped);
+    }
+
+    private void HandleCloseClicked()
+    {
+        // 팝업 닫기
+        gameObject.SetActive(false);
     }
 }
