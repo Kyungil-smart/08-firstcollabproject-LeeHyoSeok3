@@ -17993,7 +17993,7 @@ MonoBehaviour:
   lineHeight: 30
   lineSpacing: 2
   bgPadding: 20
-  materialInventory: {fileID: 0}
+  materialInventory: {fileID: 1438098205}
 --- !u!1 &1685980148
 GameObject:
   m_ObjectHideFlags: 0

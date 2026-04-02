@@ -170,12 +170,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnvilIncomeController
   anvilButton: {fileID: 32764839}
+  minimizedAnvilButton: {fileID: 0}
   clickUpgradeSystem: {fileID: 1983578683}
   autoUpgradeSystem: {fileID: 263980014}
   floatingTextPrefab: {fileID: 7240305715809942663, guid: e3b5978a097e6c34a9879f1dd3dc7ba1, type: 3}
-  floatingParent: {fileID: 1951381787}
+  mainFloatingParent: {fileID: 0}
+  minimizedFloatingParent: {fileID: 0}
   maxFloatingText: 10
   gpsText: {fileID: 1827639193}
+  kkangKkangiAnimationController: {fileID: 0}
 --- !u!114 &32764839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -788,6 +791,15 @@ MonoBehaviour:
   stageText: {fileID: 666083647}
   goldText: {fileID: 3645729937640562262}
   upgradeButton: {fileID: 139744002}
+  iconImage: {fileID: 6551553880370244881}
+  defaultIcon: {fileID: 21300000, guid: 11a72b1ab42d64176af2a5b1ca42e2da, type: 3}
+  iconList:
+  - {fileID: 5620355365188860911, guid: feaa32f8d36bf4147835d908a0aa31db, type: 3}
+  - {fileID: -2986480522433596089, guid: 133c6ba7a4dd8f5449b27e5862563f79, type: 3}
+  - {fileID: -77511989929478714, guid: 4b749fc13a5099244b9716830e9c7a26, type: 3}
+  - {fileID: 4268079810484271982, guid: 78c0ffd1d0d08124b862440362c8af77, type: 3}
+  - {fileID: -1409027860110786291, guid: a7c902ebba8274447a3b8ac840de3fae, type: 3}
+  - {fileID: -1122319918220441354, guid: dd275a14380db524dbd019be62735c98, type: 3}
 --- !u!1 &146742306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1169,7 +1181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GoldManager
   isPersistent: 1
   currentGold: 0
-  goldText: {fileID: 61894391}
+  mainGoldText: {fileID: 61894391}
+  minimizedGoldText: {fileID: 0}
 --- !u!4 &228656985
 Transform:
   m_ObjectHideFlags: 0
@@ -1991,6 +2004,13 @@ MonoBehaviour:
   stageText: {fileID: 602467008}
   goldText: {fileID: 3645729937181287323}
   upgradeButton: {fileID: 457791892}
+  iconImage: {fileID: 6551553879776743644}
+  defaultIcon: {fileID: 21300000, guid: bdbd8944b72c84fb08e359c03f60518a, type: 3}
+  iconList:
+  - {fileID: -8596520376513825570, guid: 348b2c447e1a79245b797320d9ce9788, type: 3}
+  - {fileID: -1523477500510264325, guid: c4b1d9012e746d4459d836b0c5bcd231, type: 3}
+  - {fileID: -3472435481649918759, guid: a4e1f4188be07e64f8fa304db75775af, type: 3}
+  - {fileID: 5626521724434569836, guid: 7be24a556632e734b96d01bf5832126a, type: 3}
 --- !u!114 &462464787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8448,7 +8468,9 @@ MonoBehaviour:
   blacksmithPopup: {fileID: 8829991265458541206}
   partyEquipPopup: {fileID: 0}
   settingsPopup: {fileID: 0}
+  offlineRewardPopup: {fileID: 0}
   rewardPopup: {fileID: 0}
+  WarningPopup: {fileID: 0}
   popupCanvas: {fileID: 1200662585}
 --- !u!114 &2138322570
 MonoBehaviour:

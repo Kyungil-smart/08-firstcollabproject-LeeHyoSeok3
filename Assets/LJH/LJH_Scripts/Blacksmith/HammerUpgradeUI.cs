@@ -1,7 +1,8 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public class UpgradeUI : MonoBehaviour
 {
@@ -19,16 +20,31 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private Button upgradeButton;
 
-    private bool isSubscribed;
-    private Coroutine bindCoroutine;
+    [Header("Icon")]
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Sprite defaultIcon;
+    [SerializeField] private List<Sprite> iconList; // imports 폴더에서 끌어다 넣기
 
     [Header("Hammer Animation")]
     [SerializeField] private HammerAnimationOverrideController hammerAnimationOverrideController;
+
+    private Dictionary<string, Sprite> iconDict;
+
+    private bool isSubscribed;
+    private Coroutine bindCoroutine;
 
     private void Awake()
     {
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnClickUpgrade);
+
+        iconDict = new Dictionary<string, Sprite>();
+
+        foreach (var sprite in iconList)
+        {
+            if (sprite != null && !iconDict.ContainsKey(sprite.name))
+                iconDict.Add(sprite.name, sprite);
+        }
     }
 
     private void Start()
@@ -38,13 +54,11 @@ public class UpgradeUI : MonoBehaviour
 
     private void OnEnable()
     {
-        // GoldManager 구독은 유지
         if (GoldManager.Instance != null)
             SubscribeGoldEvent();
         else
             bindCoroutine = StartCoroutine(BindGoldManager());
 
-        // 로드가 끝난 이후에만 RefreshUI
         if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
         {
             RefreshUI();
@@ -64,7 +78,7 @@ public class UpgradeUI : MonoBehaviour
         }
 
         UnsubscribeGoldEvent();
-        GameDataController.OnGameLoaded -= OnGameLoaded_Handler; // 구독 해제
+        GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
     }
 
     private void OnGameLoaded_Handler()
@@ -126,6 +140,8 @@ public class UpgradeUI : MonoBehaviour
             if (stageText != null) stageText.text = $"{stageLabel} : -";
             if (goldText != null) goldText.text = "- / -";
             if (upgradeButton != null) upgradeButton.interactable = false;
+
+            SetIcon(defaultIcon);
             return;
         }
 
@@ -152,6 +168,8 @@ public class UpgradeUI : MonoBehaviour
                 ? $"{stageLabel} : {current.stageDisplay} → {next.stageDisplay}"
                 : $"{stageLabel} : {current.stageDisplay} (MAX)";
         }
+
+        UpdateIcon(current);
 
         double gold = GoldManager.Instance != null ? GoldManager.Instance.CurrentGold : 0d;
         double cost = upgradeSystem.CurrentUpgradeCost;
@@ -180,6 +198,37 @@ public class UpgradeUI : MonoBehaviour
         }
     }
 
+    private void UpdateIcon(UpgradeRow row)
+    {
+        if (iconImage == null)
+            return;
+
+        if (row == null || string.IsNullOrEmpty(row.iconKey))
+        {
+            SetIcon(defaultIcon);
+            return;
+        }
+
+        if (iconDict.TryGetValue(row.iconKey, out var sprite))
+        {
+            SetIcon(sprite);
+        }
+        else
+        {
+            Debug.LogWarning($"아이콘 없음: {row.iconKey}");
+            SetIcon(defaultIcon);
+        }
+    }
+
+    private void SetIcon(Sprite sprite)
+    {
+        if (iconImage == null)
+            return;
+
+        iconImage.sprite = sprite;
+        iconImage.enabled = sprite != null;
+    }
+
     private void OnClickUpgrade()
     {
         if (!upgradeSystem.TryUpgrade())
@@ -187,7 +236,7 @@ public class UpgradeUI : MonoBehaviour
 
         if (hammerAnimationOverrideController != null)
             hammerAnimationOverrideController.ApplyHammerAnimationByLevel();
-            
+
         RefreshUI();
     }
 }
