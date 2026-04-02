@@ -21,6 +21,9 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
 
     [SerializeField] private TMPro.TextMeshProUGUI gpsText;
 
+    [Header("Animation")]
+    [SerializeField] private KkangKkangiAnimationController kkangKkangiAnimationController; // 추가: 깡깡이 애니메이션 컨트롤러 참조
+
     private float autoTimer; // Note : 자동 생산을 담당
 
     private readonly Queue<GameObject> floatingQueue = new Queue<GameObject>();
@@ -104,8 +107,10 @@ public class AnvilGoldController : MonoBehaviour, IPointerDownHandler
             return;
 
         int amount = clickUpgradeSystem.CurrentValue;
-        Debug.Log($"[CLICK] GainByClick 호출 / amount={amount}");
         GoldManager.Instance.AddGold(amount);
+
+        if (kkangKkangiAnimationController != null)
+        kkangKkangiAnimationController.PlayCraftAnimation();
 
         SpawnFloatingTextAtScreenPosition(amount, lastPointerScreenPosition);
     }
