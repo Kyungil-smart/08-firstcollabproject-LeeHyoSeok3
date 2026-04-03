@@ -16,6 +16,7 @@ MonoBehaviour:
   gearsetName: Wooden
   gearDescription: Light, but hard enough.
   gearIcon: {fileID: 21300000, guid: 50a4aaef4e30d0449b001cedb6b1b1af, type: 3}
+  traitKey: trait_light
   traitName: Light
   traitDescription: Light weapons surely lifts your burden.
   traitIcon: {fileID: 21300000, guid: fcca29590c765364db55a313197fb34f, type: 3}

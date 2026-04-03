@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public class DataManager : MonoBehaviour
@@ -11,8 +12,12 @@ public class DataManager : MonoBehaviour
 
     private int m_partyEquippedItemID = 0;
 
-    // 현재 파티 특성을 저장할 변수 (초기값은 특성 없음)
+    // 현재 파티 특성 표시명/비교키를 따로 보관합니다.
     private string m_currentPartyTrait = "None";
+    private string m_currentPartyTraitKey = "";
+
+    // 파티 특성이 변경될 때마다 발생하는 이벤트 지정(특성에 따라 퀘스트를 입장할 수 있는지 확인)
+    public event Action<string> OnPartyTraitChanged;
 
     private void Awake()
     {
@@ -44,6 +49,7 @@ public class DataManager : MonoBehaviour
                 isUnlocked = (recipe.saveId == "Rusty"),
 
                 // 특성 데이터 매핑
+                traitKey = string.IsNullOrWhiteSpace(recipe.traitKey) ? recipe.traitName : recipe.traitKey,
                 traitName = recipe.traitName,
                 traitDescription = recipe.traitDescription,
                 traitIcon = recipe.traitIcon
@@ -55,6 +61,8 @@ public class DataManager : MonoBehaviour
 
     public List<ItemData> GetInventoryItems() => m_inventory;
     public int GetEquippedItemID() => m_partyEquippedItemID;
+    public string CurrentPartyTrait => m_currentPartyTrait; // 현재 파티 특성을 외부에서 읽을 수 있도록 하는 프로퍼티 선언
+    public string CurrentPartyTraitKey => m_currentPartyTraitKey;
 
     // 💡 [에러 해결!] InventoryEquipmentPopup 등에서 호출하던 함수를 복구했습니다.
     public ItemData GetItemByID(int id)
@@ -83,15 +91,43 @@ public class DataManager : MonoBehaviour
 
     public void EquipItemToParty(int itemID)
     {
+        Debug.Log($"[DataManager] EquipItemToParty 호출됨 / itemID = {itemID}");
+
         if (m_itemDatabase.ContainsKey(itemID))
         {
             m_partyEquippedItemID = itemID;
             GearsetRecipeSO equippedData = m_itemDatabase[itemID];
 
-            // 장비 장착 시, 파티의 현재 특성 이름도 함께 갱신됩니다!
-            m_currentPartyTrait = equippedData.traitName;
+            // 장비 장착 시, 표시명과 비교용 키를 함께 갱신합니다.
+            string newTrait = equippedData.traitName;
+            string newTraitKey = string.IsNullOrWhiteSpace(equippedData.traitKey)
+                ? equippedData.traitName
+                : equippedData.traitKey;
 
-            Debug.Log($"[DataManager] '{equippedData.gearsetName}' 장착 완료! 현재 파티 특성: [{m_currentPartyTrait}]");
+            Debug.Log($"[DataManager] 장착 아이템 이름 = {equippedData.gearsetName}");
+            Debug.Log($"[DataManager] 장착 아이템 traitName = '{newTrait}'");
+            Debug.Log($"[DataManager] 장착 아이템 traitKey = '{newTraitKey}'");
+            Debug.Log($"[DataManager] 기존 파티 특성 = '{m_currentPartyTrait}'");
+            Debug.Log($"[DataManager] 기존 파티 특성키 = '{m_currentPartyTraitKey}'");
+
+            bool traitChanged = m_currentPartyTraitKey != newTraitKey;
+            m_currentPartyTrait = newTrait;
+            m_currentPartyTraitKey = newTraitKey;
+
+            Debug.Log($"[DataManager] 변경 후 파티 특성 = '{m_currentPartyTrait}'");
+            Debug.Log($"[DataManager] 변경 후 파티 특성키 = '{m_currentPartyTraitKey}'");
+            Debug.Log($"[DataManager] traitChanged = {traitChanged}");
+
+            if (traitChanged)
+            {
+                Debug.Log($"[DataManager] OnPartyTraitChanged 이벤트 호출");
+                OnPartyTraitChanged?.Invoke(m_currentPartyTraitKey);
+            }
+
+        }
+        else
+        {
+            Debug.LogWarning($"[DataManager] m_itemDatabase에 itemID {itemID}가 없음");
         }
     }
 
@@ -102,9 +138,16 @@ public class DataManager : MonoBehaviour
         return m_currentPartyTrait;
     }
 
-    public bool CanEnterQuest(string requiredTrait)
+    public string GetCurrentPartyTraitKey()
     {
-        // 문자열 기반으로 요구 특성과 장착 특성이 일치하는지 검사합니다.
-        return m_currentPartyTrait == requiredTrait;
+        return m_currentPartyTraitKey;
+    }
+
+    public bool CanEnterQuest(string requiredTraitKey)
+    {
+        return string.Equals(
+            m_currentPartyTraitKey?.Trim(),
+            requiredTraitKey?.Trim(),
+            StringComparison.Ordinal);
     }
 }

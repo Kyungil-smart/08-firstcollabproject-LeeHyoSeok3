@@ -21,6 +21,7 @@ public class QuestItemUI : MonoBehaviour
     private DungeonData _data;
     // ─── Button 참조 ───
     private Button _button;
+    private PartyEquipManager _partyEquipManager;
 
     public void SetData(DungeonData data)
     {
@@ -47,7 +48,14 @@ public class QuestItemUI : MonoBehaviour
         {
             _button.onClick.AddListener(OnQuestClicked);
             // ★ 추가: 요구 특성 충족 여부에 따라 버튼 활성화/비활성화
-        UpdateQuestAvailability();
+            UpdateQuestAvailability();
+        }
+
+        _partyEquipManager = PartyEquipManager.Instance;
+        if (_partyEquipManager != null)
+        {
+            _partyEquipManager.OnAttributeChanged -= HandlePartyAttributeChanged;
+            _partyEquipManager.OnAttributeChanged += HandlePartyAttributeChanged;
         }
 
     }
@@ -65,7 +73,7 @@ public class QuestItemUI : MonoBehaviour
 
         // ★ 추가: 요구 특성을 충족하지 못하면 출발 불가
         if (PartyEquipManager.Instance != null &&
-            !PartyEquipManager.Instance.CanEnterDungeon(_data.requiredAttribute))
+            !PartyEquipManager.Instance.CanEnterDungeon(_data.requiredTraitKey))
         {
             Debug.Log($"요구 특성 불충족! 필요: {_data.requiredAttribute}, " +
                       $"현재: {PartyEquipManager.Instance.CurrentAttribute}");
@@ -101,10 +109,10 @@ public class QuestItemUI : MonoBehaviour
         if (_data == null) return;
 
         // PartyEquipManager가 없으면 기본적으로 활성화
-        if (PartyEquipManager.Instance == null)
+        if (_partyEquipManager == null)
             return;
 
-        bool canEnter = PartyEquipManager.Instance.CanEnterDungeon(_data.requiredAttribute);
+        bool canEnter = _partyEquipManager.CanEnterDungeon(_data.requiredTraitKey);
 
         // 버튼 활성화/비활성화
         if (_button != null)
@@ -128,12 +136,22 @@ public class QuestItemUI : MonoBehaviour
         }
     }
 
+    private void HandlePartyAttributeChanged(string currentAttribute)
+    {
+        UpdateQuestAvailability();
+    }
+
     // 오브젝트가 파괴될 때 이벤트 등록 해제 (메모리 누수 방지)
     private void OnDestroy()
     {
         if (LocalizationManager.Instance != null)
         {
             LocalizationManager.Instance.OnLanguageChanged -= RefreshText;
+        }
+
+        if (_partyEquipManager != null)
+        {
+            _partyEquipManager.OnAttributeChanged -= HandlePartyAttributeChanged;
         }
 
         // ★ 추가: 버튼 클릭 리스너도 해제 (등록과 짝 맞추기)

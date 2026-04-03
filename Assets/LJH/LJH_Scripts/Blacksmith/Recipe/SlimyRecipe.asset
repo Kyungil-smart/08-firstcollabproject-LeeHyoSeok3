@@ -17,6 +17,7 @@ MonoBehaviour:
   gearDescription: Slime core attached to a wooden weapons. It surely is sticky,
     but is stronger than the wooden one.
   gearIcon: {fileID: 21300000, guid: ac920813d6e9a814d9e217c74967d209, type: 3}
+  traitKey: trait_sticky
   traitName: Sticky
   traitDescription: Slime oozing out of this weapon is slowing monsters down.
   traitIcon: {fileID: 21300000, guid: fadbcc9561050864fb947dbf7071e898, type: 3}
