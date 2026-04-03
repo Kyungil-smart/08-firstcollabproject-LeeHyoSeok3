@@ -414,19 +414,28 @@ public class AdventureManager : Singleton<AdventureManager>
     private void EnterCamping()
     {
         CurrentState = AdventureState.Camping;
-        SetPartySprite(PartyVisual.Tent);   // 텐트로 변경
-        // Zzz 말풍선은 애니메이션으로 대체 예정
 
-        Debug.Log("[AdventureManager] 야영 지점 진입!");
+        // ★ v3 변경: 파티 스프라이트 전부 숨기기 (파티는 안 보이지만 계속 이동)
+        HideAllPartySprites();
+
+        // ★ v3 변경: 텐트를 CampPoint 위치에 고정 출력
+        _partyTent.SetActive(true);
+
+        Debug.Log("[AdventureManager] 야영 지점 진입! 파티 숨김 + 텐트 출력");
     }
 
     private void ExitCamping()
     {
         CurrentState = AdventureState.Going;
-        SetPartySprite(PartyVisual.Default); // 기본 스프라이트로 복구
+
+        // ★ v3 변경: 텐트 숨기기
+        _partyTent.SetActive(false);
+
+        // ★ v3 변경: 파티 스프라이트 다시 보이기
+        SetPartySprite(PartyVisual.Default);
         HideAllBubbles();
 
-        Debug.Log("[AdventureManager] 야영 지점 벗어남");
+        Debug.Log("[AdventureManager] 야영 지점 벗어남! 텐트 숨김 + 파티 복구");
     }
 
     private void EnterBattle()
@@ -560,7 +569,6 @@ public class AdventureManager : Singleton<AdventureManager>
         _partyDefault.SetActive(visual == PartyVisual.Default);
         _partyBattle.SetActive(visual == PartyVisual.Battle);
         _partyCelebrate.SetActive(visual == PartyVisual.Celebrate);
-        _partyTent.SetActive(visual == PartyVisual.Tent);
     }
 
     /// <summary>
@@ -571,7 +579,6 @@ public class AdventureManager : Singleton<AdventureManager>
         _partyDefault.SetActive(false);
         _partyBattle.SetActive(false);
         _partyCelebrate.SetActive(false);
-        _partyTent.SetActive(false);
     }
 
     // ============================================
@@ -686,7 +693,8 @@ public class AdventureManager : Singleton<AdventureManager>
             else if (IsNearPoint(_campPoint))
             {
                 CurrentState = AdventureState.Camping;
-                SetPartySprite(PartyVisual.Tent);
+                HideAllPartySprites();
+                _partyTent.SetActive(true);
             }
             else if (IsNearPoint(_dungeonPoint))
             {
