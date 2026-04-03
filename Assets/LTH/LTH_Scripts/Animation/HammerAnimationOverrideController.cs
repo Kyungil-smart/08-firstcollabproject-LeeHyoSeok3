@@ -38,16 +38,30 @@ public class HammerAnimationOverrideController : MonoBehaviour
     private void OnEnable()
     {
         GameDataController.OnGameLoaded += HandleGameLoaded;
+
+        if (hammerUpgradeSystem != null)
+            hammerUpgradeSystem.OnLevelChanged += HandleHammerLevelChanged;
+
+        if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
+            ApplyHammerAnimationByLevel();
     }
 
     private void OnDisable()
     {
         GameDataController.OnGameLoaded -= HandleGameLoaded;
+
+        if (hammerUpgradeSystem != null)
+            hammerUpgradeSystem.OnLevelChanged -= HandleHammerLevelChanged;
     }
 
     private void HandleGameLoaded()
     {
         Debug.Log("[HAMMER_ANIM] 게임 로드 완료 후 재적용");
+        ApplyHammerAnimationByLevel();
+    }
+
+    private void HandleHammerLevelChanged(int level)
+    {
         ApplyHammerAnimationByLevel();
     }
 
