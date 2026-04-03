@@ -46,6 +46,8 @@ public class InventoryEquipController : MonoBehaviour
 
     private void HandleEquipClicked()
     {
+        Debug.Log($"[EquipClick] 현재 선택된 아이템 ID = {m_currentSelectedItemID}");
+
         // 💡 기억해둔 ID가 제대로 있는지(선택된 상태인지) 확인하고 장착을 실행합니다!
         if (m_currentSelectedItemID != -1)
         {
@@ -60,10 +62,21 @@ public class InventoryEquipController : MonoBehaviour
             // 3. UI 새로고침 (장착 중인 아이템 표시가 달라져야 하므로)
             RefreshUI();
         }
+        else
+        {
+            Debug.LogWarning("[EquipClick] 선택된 아이템이 없어서 장착이 안 됨");
+        }
     }
 
     private void HandleUnlockClicked(int itemID)
     {
+        ItemData item = m_dataManager.GetItemByID(itemID);
+        if (item == null)
+            return;
+
+        if (!item.isCrafted || item.isUnlocked)
+            return;
+
         // 1. 모델 해금 처리
         m_dataManager.UnlockItem(itemID);
 

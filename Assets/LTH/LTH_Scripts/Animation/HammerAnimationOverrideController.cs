@@ -10,6 +10,7 @@ public class HammerAnimationOverrideController : MonoBehaviour
         public int maxLevel;
         public AnimationClip craftClip;
         public Sprite idleSprite;
+        public ParticleSystem hitEffect;
     }
 
     [SerializeField] private UpgradeSystem hammerUpgradeSystem;
@@ -17,9 +18,9 @@ public class HammerAnimationOverrideController : MonoBehaviour
     [SerializeField] private AnimationClip baseCraftClip;
     [SerializeField] private HammerAnimSet[] hammerAnimSets;
     [SerializeField] private Image hammerImage;
+    [SerializeField] private KkangKkangiAnimationController kkangKkangiAnimationController;
 
     private AnimatorOverrideController runtimeOverrideController;
-
 
     private void Awake()
     {
@@ -28,6 +29,9 @@ public class HammerAnimationOverrideController : MonoBehaviour
             runtimeOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
             animator.runtimeAnimatorController = runtimeOverrideController;
         }
+
+        if (kkangKkangiAnimationController == null)
+            kkangKkangiAnimationController = GetComponent<KkangKkangiAnimationController>();
     }
 
     private void Start()
@@ -38,16 +42,29 @@ public class HammerAnimationOverrideController : MonoBehaviour
     private void OnEnable()
     {
         GameDataController.OnGameLoaded += HandleGameLoaded;
+
+        if (hammerUpgradeSystem != null)
+            hammerUpgradeSystem.OnLevelChanged += HandleHammerLevelChanged;
+
+        if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
+            ApplyHammerAnimationByLevel();
     }
 
     private void OnDisable()
     {
         GameDataController.OnGameLoaded -= HandleGameLoaded;
+
+        if (hammerUpgradeSystem != null)
+            hammerUpgradeSystem.OnLevelChanged -= HandleHammerLevelChanged;
     }
 
     private void HandleGameLoaded()
     {
-        Debug.Log("[HAMMER_ANIM] 게임 로드 완료 후 재적용");
+        ApplyHammerAnimationByLevel();
+    }
+
+    private void HandleHammerLevelChanged(int level)
+    {
         ApplyHammerAnimationByLevel();
     }
 
@@ -55,33 +72,32 @@ public class HammerAnimationOverrideController : MonoBehaviour
     {
         if (hammerUpgradeSystem == null || animator == null || runtimeOverrideController == null || baseCraftClip == null)
         {
-            Debug.LogWarning($"[HAMMER_ANIM] 참조 누락 - {gameObject.name}");
+            Debug.LogWarning($"[HAMMER_ANIM] Missing reference on {gameObject.name}");
             return;
         }
 
         int level = hammerUpgradeSystem.CurrentLevel;
-        Debug.Log($"[HAMMER_ANIM] 현재 레벨 = {level}, baseCraftClip = {baseCraftClip.name}");
 
         for (int i = 0; i < hammerAnimSets.Length; i++)
         {
             HammerAnimSet set = hammerAnimSets[i];
-            Debug.Log($"[HAMMER_ANIM] 현재 레벨 = {level}, 대상 = {gameObject.name}");
 
-            if (level >= set.minLevel && level <= set.maxLevel)
-            {
-                if (set.craftClip != null)
-                {
-                    runtimeOverrideController[baseCraftClip.name] = set.craftClip;
-                    Debug.Log($"[HAMMER_ANIM] 적용됨: {set.craftClip.name} / 대상 = {gameObject.name}");
-                }
+            if (level < set.minLevel || level > set.maxLevel)
+                continue;
 
-                if (hammerImage != null && set.idleSprite != null)
-                {
-                    hammerImage.sprite = set.idleSprite;
-                }
+            if (set.craftClip != null)
+                runtimeOverrideController[baseCraftClip.name] = set.craftClip;
 
-                return;
-            }
+            if (hammerImage != null && set.idleSprite != null)
+                hammerImage.sprite = set.idleSprite;
+
+            if (kkangKkangiAnimationController != null)
+                kkangKkangiAnimationController.SetHammerHitEffect(set.hitEffect);
+
+            return;
         }
+
+        if (kkangKkangiAnimationController != null)
+            kkangKkangiAnimationController.SetHammerHitEffect(null);
     }
 }

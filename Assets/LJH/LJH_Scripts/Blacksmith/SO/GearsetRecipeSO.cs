@@ -13,6 +13,7 @@ public class GearsetRecipeSO : ScriptableObject
     public Sprite gearIcon;
 
     [Header("Trait Info")]
+    public string traitKey;
     public string traitName;
     [TextArea] public string traitDescription;
     public Sprite traitIcon;

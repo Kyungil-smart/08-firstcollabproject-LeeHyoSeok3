@@ -130,7 +130,6 @@ public class GearsetTooltipUI : MonoBehaviour
     {
         if (materialInventory == null)
         {
-            Debug.LogError("materialInventory가 연결되지 않았습니다.");
             return 0;
         }
 

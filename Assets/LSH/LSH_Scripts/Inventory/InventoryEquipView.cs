@@ -114,7 +114,7 @@ public class InventoryEquipView : MonoBehaviour
             int slotIndex = i;
 
             if (i < items.Count)
-                slot.SetSlot(items[i].id, items[i].icon, items[i].isUnlocked, (id) => OnSlotClicked?.Invoke(slotIndex));
+                slot.SetSlot(items[i].id, items[i].icon, items[i].isCrafted || items[i].isUnlocked, (id) => OnSlotClicked?.Invoke(slotIndex));
             else
                 slot.SetEmpty(m_emptySlotSprite);
         }
@@ -130,25 +130,39 @@ public class InventoryEquipView : MonoBehaviour
         m_detailPanel.SetActive(true);
         if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(true);
 
-        // 📝 미해금(잠금) 장비 처리
-        if (!item.isUnlocked)
+        bool canUnlock = item.isCrafted && !item.isUnlocked;
+
+        // 제작되지 않은 장비
+        if (!item.isCrafted)
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
 
-            // 💡 그룹 스위칭: 잠금 UI 켜고, 일반 UI 끄기
+            if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(false);
+            if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(true);
+
+            if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
+            if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(false);
+            if (m_detailTraitName != null) m_detailTraitName.text = "제작 후 해금 가능";
+            if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
+        }
+        // 제작은 완료됐지만 아직 해금 전인 장비
+        else if (canUnlock)
+        {
+            if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+
             if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(false);
             if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(true);
 
             if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
             if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(true);
+            if (m_detailTraitName != null) m_detailTraitName.text = "해금 후 착용 가능";
             if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
         }
-        // 📝 해금된 장비 처리
+        // 해금된 장비 처리
         else
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = m_originalDetailColor;
 
-            // 💡 그룹 스위칭: 일반 UI 켜고, 잠금 UI 끄기
             if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(true);
             if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(false);
 

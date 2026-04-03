@@ -15,5 +15,5 @@ MonoBehaviour:
   dungeonName: "\uB9C8\uC655\uC131"
   gold: 100000000
   materials:
-  - material: {fileID: 0}
+  - material: {fileID: 11400000, guid: a997113eeb4f6e94ca5a75318e80a62f, type: 2}
     count: 0

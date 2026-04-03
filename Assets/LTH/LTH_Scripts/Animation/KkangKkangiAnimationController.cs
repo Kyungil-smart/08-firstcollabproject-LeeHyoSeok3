@@ -1,10 +1,13 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class KkangKkangiAnimationController : CharacterAnimationController
 {
     private Coroutine blinkCoroutine;
+
     [SerializeField] private GameObject hammerHead;
+
+    private ParticleSystem currentHammerHitEffect;
 
     protected override void Start()
     {
@@ -22,8 +25,12 @@ public class KkangKkangiAnimationController : CharacterAnimationController
         if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
     }
 
-    // 눈 깜빡임 애니메이션을 주기적으로 재생하는 코루틴
-    IEnumerator BlinkRoutine()
+    public void SetHammerHitEffect(ParticleSystem hammerHitEffect)
+    {
+        currentHammerHitEffect = hammerHitEffect;
+    }
+
+    private IEnumerator BlinkRoutine()
     {
         while (true)
         {
@@ -33,7 +40,6 @@ public class KkangKkangiAnimationController : CharacterAnimationController
         }
     }
 
-    // 크래프팅 애니메이션을 재생하는 메서드
     public void PlayCraftAnimation()
     {
         if (!gameObject.activeInHierarchy) return;
@@ -46,11 +52,21 @@ public class KkangKkangiAnimationController : CharacterAnimationController
         StartCoroutine(CraftRoutine());
     }
 
-    // 크래프팅 애니메이션이 끝난 후 다시 눈 깜빡임 루틴을 시작하는 코루틴
-    IEnumerator CraftRoutine()
+    public void PlayHammerHitEffect()
+    {
+        if (!gameObject.activeInHierarchy || currentHammerHitEffect == null)
+            return;
+
+        currentHammerHitEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        currentHammerHitEffect.Play();
+    }
+
+    private IEnumerator CraftRoutine()
     {
         yield return new WaitForSeconds(1f);
+
         if (hammerHead != null) hammerHead.SetActive(true);
+
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
 }

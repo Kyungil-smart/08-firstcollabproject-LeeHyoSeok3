@@ -58,6 +58,13 @@ public class GameDataController : Singleton<GameDataController>
         if (GearsetInventory.Instance != null)
             data.craftedGearIds = GearsetInventory.Instance.GetSaveData();
 
+        DataManager dataManager = FindFirstObjectByType<DataManager>();
+        if (dataManager != null)
+        {
+            data.unlockedGearIds = dataManager.GetUnlockedSaveIds();
+            data.equippedGearId = dataManager.GetEquippedSaveId();
+        }
+
         var currentUpgradeSystems = FindObjectsByType<UpgradeSystem>(
             FindObjectsInactive.Include,
             FindObjectsSortMode.None
@@ -147,6 +154,14 @@ public class GameDataController : Singleton<GameDataController>
 
         if (GearsetInventory.Instance != null)
             GearsetInventory.Instance.LoadFromSave(data.craftedGearIds);
+
+        DataManager dataManager = FindFirstObjectByType<DataManager>();
+        if (dataManager != null)
+        {
+            dataManager.ApplyCraftedState(data.craftedGearIds);
+            dataManager.ApplyUnlockedState(data.unlockedGearIds);
+            dataManager.EquipItemBySaveId(data.equippedGearId);
+        }
 
         if (upgradeSystems != null && data.upgrades != null)
         {

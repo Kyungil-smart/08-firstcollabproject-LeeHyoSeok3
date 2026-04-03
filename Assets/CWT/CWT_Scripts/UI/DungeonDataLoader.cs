@@ -47,7 +47,7 @@ public class DungeonDataLoader : MonoBehaviour
         {
             List<string> values = ParseCSVLine(lines[i]);
 
-            if (values.Count < 7 || string.IsNullOrEmpty(values[1].Trim())) continue;
+            if (values.Count < 9 || string.IsNullOrEmpty(values[1].Trim())) continue;
 
             DungeonData data = new DungeonData
             {
@@ -55,12 +55,13 @@ public class DungeonDataLoader : MonoBehaviour
                 dungeonNameEng = values[2].Trim(),
                 description = values[3].Trim(),
                 requiredAttribute = values[5].Trim(),
-                rewardItem = values[6].Trim(),
-                timeRequired = values[7].Trim(),
+                requiredTraitKey = values[6].Trim(),
+                rewardItem = values[7].Trim(),
+                timeRequired = values[8].Trim(),
 
                 dungeonIcon = (dungeonIndex < _dungeonIcons.Length) ? _dungeonIcons[dungeonIndex] : null,
                 attributeIcon = FindIcon(_traitIcons, values[5].Trim()),
-                materialIcon = FindIcon(_materialIcons, values[6].Trim()),
+                materialIcon = FindIcon(_materialIcons, values[7].Trim()),
 
                 // ★ 추가: 던전 배경 스프라이트 연결
                 dungeonBackground = (dungeonIndex < _dungeonBackgrounds.Length) ?
