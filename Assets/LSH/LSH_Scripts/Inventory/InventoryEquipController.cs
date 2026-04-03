@@ -70,6 +70,13 @@ public class InventoryEquipController : MonoBehaviour
 
     private void HandleUnlockClicked(int itemID)
     {
+        ItemData item = m_dataManager.GetItemByID(itemID);
+        if (item == null)
+            return;
+
+        if (!item.isCrafted || item.isUnlocked)
+            return;
+
         // 1. 모델 해금 처리
         m_dataManager.UnlockItem(itemID);
 

@@ -7,6 +7,7 @@ public class ItemData // 💡 struct를 class로 변경합니다!
     public string name;
     public string description;
     public Sprite icon;
+    public bool isCrafted;
     public bool isUnlocked;
 
     // 💡 SO 구조에 맞춘 특성 데이터 추가
