@@ -15,12 +15,19 @@ public class InventoryEquipView : MonoBehaviour
     [Header("Right Panel - Detail")]
     [SerializeField] private GameObject m_detailPanel;
     [SerializeField] private Image m_detailBackgroundImage;
-    [SerializeField] private Image m_detailIcon;             // 장비 아이콘
+
+    // 💡 [NEW] UI 스위칭용 그룹 변수
+    [Header("UI Groups")]
+    [SerializeField] private GameObject m_unlockedUIGroup; // 해금 시 켜지는 그룹 (아이콘, 이름, 특성 등 몽땅)
+    [SerializeField] private GameObject m_lockedUIGroup;   // 잠금 시 켜지는 그룹 (정중앙 안내 문구)
+
+    [Header("Unlocked UI Elements")]
+    [SerializeField] private Image m_detailIcon;
     [SerializeField] private TextMeshProUGUI m_detailName;
+    [SerializeField] private Image m_detailTraitIcon;
+    [SerializeField] private TextMeshProUGUI m_detailTraitName;
 
-    [SerializeField] private Image m_detailTraitIcon;        // 특성 아이콘
-    [SerializeField] private TextMeshProUGUI m_detailTraitName;  // 특성 이름 텍스트 (미해금 시 안내 문구로 활용)
-
+    [Header("Buttons")]
     [SerializeField] private Button m_equipButton;
     [SerializeField] private Button m_unlockButton;
     [SerializeField] private Button m_detailBlocker;
@@ -41,7 +48,7 @@ public class InventoryEquipView : MonoBehaviour
 
     private int m_currentViewedItemID = -1;
     private Color m_originalDetailColor;
-    private ItemData m_currentDetailItem; // 툴팁용 데이터 임시 저장
+    private ItemData m_currentDetailItem;
 
     private void Awake()
     {
@@ -60,7 +67,6 @@ public class InventoryEquipView : MonoBehaviour
 
         if (m_detailBackgroundImage != null) m_originalDetailColor = m_detailBackgroundImage.color;
 
-        // 💡 [듀얼 툴팁 연결] 장비(true)와 특성(false)에 각각 이벤트를 붙여줍니다.
         if (m_detailIcon != null) SetupTooltipTrigger(m_detailIcon.gameObject, true);
         if (m_detailTraitIcon != null) SetupTooltipTrigger(m_detailTraitIcon.gameObject, false);
 
@@ -77,9 +83,8 @@ public class InventoryEquipView : MonoBehaviour
         EventTrigger.Entry enter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
         enter.callback.AddListener((data) => {
             if (m_tooltipPanel == null || m_currentDetailItem == null) return;
-            if (!m_currentDetailItem.isUnlocked) return; // 미해금 장비는 툴팁 안 띄움
+            if (!m_currentDetailItem.isUnlocked) return;
 
-            // 💡 [듀얼 툴팁 로직] 마우스가 올라간 대상에 맞춰 내용을 다르게 표시!
             if (isEquipment)
             {
                 if (m_tooltipName != null) m_tooltipName.text = m_currentDetailItem.name;
@@ -125,22 +130,14 @@ public class InventoryEquipView : MonoBehaviour
         m_detailPanel.SetActive(true);
         if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(true);
 
-        // 📝 미해금 장비 처리
+        // 📝 미해금(잠금) 장비 처리
         if (!item.isUnlocked)
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
 
-            // 아이콘 및 이름 숨기기
-            if (m_detailName != null) m_detailName.gameObject.SetActive(false);
-            if (m_detailIcon != null) m_detailIcon.gameObject.SetActive(false);
-            if (m_detailTraitIcon != null) m_detailTraitIcon.gameObject.SetActive(false);
-
-            // 💡 [미해금 텍스트 수정] 특성 이름 텍스트 자리를 활용하여 해금 메시지 노출
-            if (m_detailTraitName != null)
-            {
-                m_detailTraitName.gameObject.SetActive(true);
-                m_detailTraitName.text = "<align=center><color=#55FF55>던전 해금 시\n착용 가능</color></align>";
-            }
+            // 💡 그룹 스위칭: 잠금 UI 켜고, 일반 UI 끄기
+            if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(false);
+            if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(true);
 
             if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
             if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(true);
@@ -151,19 +148,14 @@ public class InventoryEquipView : MonoBehaviour
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = m_originalDetailColor;
 
-            if (m_detailName != null) { m_detailName.gameObject.SetActive(true); m_detailName.text = item.name; }
-            if (m_detailIcon != null) { m_detailIcon.gameObject.SetActive(true); m_detailIcon.sprite = item.icon; }
+            // 💡 그룹 스위칭: 일반 UI 켜고, 잠금 UI 끄기
+            if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(true);
+            if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(false);
 
-            if (m_detailTraitIcon != null)
-            {
-                m_detailTraitIcon.gameObject.SetActive(true);
-                m_detailTraitIcon.sprite = item.traitIcon;
-            }
-            if (m_detailTraitName != null)
-            {
-                m_detailTraitName.gameObject.SetActive(true);
-                m_detailTraitName.text = item.traitName;
-            }
+            if (m_detailName != null) m_detailName.text = item.name;
+            if (m_detailIcon != null) m_detailIcon.sprite = item.icon;
+            if (m_detailTraitIcon != null) m_detailTraitIcon.sprite = item.traitIcon;
+            if (m_detailTraitName != null) m_detailTraitName.text = item.traitName;
 
             if (m_equipButton != null) m_equipButton.gameObject.SetActive(true);
             if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(false);
