@@ -22,6 +22,15 @@ MonoBehaviour:
   traitDescription: The cold air from the weapon will make snowdrops to fall and
     freeze the wings of those flying beings.
   traitIcon: {fileID: 21300000, guid: e87de3f3d1533514e95b1c99b330436a, type: 3}
+  characterWeaponSprites:
+  - characterId: 0
+    weaponSprite: {fileID: 21300000, guid: 850155417820375478a340c7387c949a, type: 3}
+  - characterId: 1
+    weaponSprite: {fileID: 21300000, guid: 1bbef3ccb63ae194db67ee48d4c59db5, type: 3}
+  - characterId: 2
+    weaponSprite: {fileID: 21300000, guid: dba3968a5e1b80142b07de1d0ff51614, type: 3}
+  - characterId: 3
+    weaponSprite: {fileID: 21300000, guid: 541fc862a863e9f49aab06b28b488522, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: bd229328d780961498d47099db908174, type: 2}
     requiredCount: 1

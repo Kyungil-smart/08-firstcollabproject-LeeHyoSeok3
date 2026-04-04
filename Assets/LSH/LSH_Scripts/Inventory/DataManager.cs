@@ -19,6 +19,10 @@ public class DataManager : MonoBehaviour
 
     // 파티 특성이 변경될 때마다 발생하는 이벤트 지정(특성에 따라 퀘스트를 입장할 수 있는지 확인)
     public event Action<string> OnPartyTraitChanged;
+    /// <summary>
+    /// 장착된 아이템이 변경될 때마다 발생하는 이벤트
+    /// </summary>
+    public event Action<GearsetRecipeSO> OnEquippedItemChanged;
 
     private void Awake()
     {
@@ -71,6 +75,14 @@ public class DataManager : MonoBehaviour
     public int GetEquippedItemID() => m_partyEquippedItemID;
     public string CurrentPartyTrait => m_currentPartyTrait; // 현재 파티 특성을 외부에서 읽을 수 있도록 하는 프로퍼티 선언
     public string CurrentPartyTraitKey => m_currentPartyTraitKey;
+
+    public GearsetRecipeSO GetEquippedRecipe()
+    {
+        if (m_itemDatabase.TryGetValue(m_partyEquippedItemID, out GearsetRecipeSO recipe))
+            return recipe;
+
+        return null;
+    }
 
     // 💡 [에러 해결!] InventoryEquipmentPopup 등에서 호출하던 함수를 복구했습니다.
     public ItemData GetItemByID(int id)
@@ -270,6 +282,7 @@ public class DataManager : MonoBehaviour
         {
             m_partyEquippedItemID = itemID;
             GearsetRecipeSO equippedData = m_itemDatabase[itemID];
+            OnEquippedItemChanged?.Invoke(equippedData);
 
             // 장비 장착 시, 표시명과 비교용 키를 함께 갱신합니다.
             string newTrait = equippedData.traitName;

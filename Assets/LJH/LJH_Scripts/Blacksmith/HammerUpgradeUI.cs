@@ -25,9 +25,6 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private Sprite defaultIcon;
     [SerializeField] private List<Sprite> iconList; // imports 폴더에서 끌어다 넣기
 
-    [Header("Hammer Animation")]
-    [SerializeField] private HammerAnimationOverrideController hammerAnimationOverrideController;
-
     private Dictionary<string, Sprite> iconDict;
 
     private bool isSubscribed;
@@ -38,13 +35,7 @@ public class UpgradeUI : MonoBehaviour
         if (upgradeButton != null)
             upgradeButton.onClick.AddListener(OnClickUpgrade);
 
-        iconDict = new Dictionary<string, Sprite>();
-
-        foreach (var sprite in iconList)
-        {
-            if (sprite != null && !iconDict.ContainsKey(sprite.name))
-                iconDict.Add(sprite.name, sprite);
-        }
+        EnsureIconDict();
     }
 
     private void Start()
@@ -130,6 +121,8 @@ public class UpgradeUI : MonoBehaviour
         if (upgradeSystem == null)
             return;
 
+        EnsureIconDict();
+
         UpgradeRow current = upgradeSystem.CurrentRow;
         UpgradeRow next = upgradeSystem.NextRow;
 
@@ -203,6 +196,8 @@ public class UpgradeUI : MonoBehaviour
         if (iconImage == null)
             return;
 
+        EnsureIconDict();
+
         if (row == null || string.IsNullOrEmpty(row.iconKey))
         {
             SetIcon(defaultIcon);
@@ -220,6 +215,23 @@ public class UpgradeUI : MonoBehaviour
         }
     }
 
+    private void EnsureIconDict()
+    {
+        if (iconDict != null)
+            return;
+
+        iconDict = new Dictionary<string, Sprite>();
+
+        if (iconList == null)
+            return;
+
+        foreach (var sprite in iconList)
+        {
+            if (sprite != null && !iconDict.ContainsKey(sprite.name))
+                iconDict.Add(sprite.name, sprite);
+        }
+    }
+
     private void SetIcon(Sprite sprite)
     {
         if (iconImage == null)
@@ -233,9 +245,6 @@ public class UpgradeUI : MonoBehaviour
     {
         if (!upgradeSystem.TryUpgrade())
             return;
-
-        if (hammerAnimationOverrideController != null)
-            hammerAnimationOverrideController.ApplyHammerAnimationByLevel();
 
         RefreshUI();
     }

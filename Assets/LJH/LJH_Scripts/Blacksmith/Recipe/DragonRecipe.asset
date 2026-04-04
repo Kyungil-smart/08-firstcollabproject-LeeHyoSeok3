@@ -22,6 +22,15 @@ MonoBehaviour:
   traitDescription: Dragon has granted these weapons with the might, making it possible
     to wound the strong beings.
   traitIcon: {fileID: 21300000, guid: a13f686d330b0034db61a045862bdeb9, type: 3}
+  characterWeaponSprites:
+  - characterId: 0
+    weaponSprite: {fileID: 21300000, guid: ad10e7e4ae6dc6148ba3a06cb6bbb03e, type: 3}
+  - characterId: 1
+    weaponSprite: {fileID: 21300000, guid: e6e08c39a5ab20441a6b035a86a69ed4, type: 3}
+  - characterId: 2
+    weaponSprite: {fileID: 21300000, guid: bd1bcfb0de8d98142993ccb391ace49e, type: 3}
+  - characterId: 3
+    weaponSprite: {fileID: 21300000, guid: ce866b1ffa9dc2f46a0cd345cef4d6e1, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: c0cd48242ff6b6646970eb0fa82c9286, type: 2}
     requiredCount: 1

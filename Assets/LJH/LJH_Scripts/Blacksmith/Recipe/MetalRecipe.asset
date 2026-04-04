@@ -20,6 +20,15 @@ MonoBehaviour:
   traitName: Sturdy
   traitDescription: This weapon is great against rock-solid monsters.
   traitIcon: {fileID: 21300000, guid: 0525d072ff812134a9d290cc338a439a, type: 3}
+  characterWeaponSprites:
+  - characterId: 0
+    weaponSprite: {fileID: 21300000, guid: cab029688b8b7df4c8e29e7303e8bad7, type: 3}
+  - characterId: 1
+    weaponSprite: {fileID: 21300000, guid: 82917c3b0dc1a8946a3abf86cd7668e0, type: 3}
+  - characterId: 2
+    weaponSprite: {fileID: 21300000, guid: e3b157dd1e3bca64bbf5545a61c058bd, type: 3}
+  - characterId: 3
+    weaponSprite: {fileID: 21300000, guid: 2841d352ef923df4994506334b42fc98, type: 3}
   requirements:
   - material: {fileID: 11400000, guid: 821825c4ef4ff7d46902e0cc9752fdbb, type: 2}
     requiredCount: 1
