@@ -1,6 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CharacterId
+{
+    Elf,
+    Cat,
+    Dwarf,
+    Human
+}
+
+[System.Serializable]
+public class CharacterWeaponSpriteData
+{
+    public CharacterId characterId;
+    public Sprite weaponSprite;
+}
+
 [CreateAssetMenu(menuName = "Game/Gearset Recipe")]
 public class GearsetRecipeSO : ScriptableObject
 {
@@ -17,6 +32,9 @@ public class GearsetRecipeSO : ScriptableObject
     public string traitName;
     [TextArea] public string traitDescription;
     public Sprite traitIcon;
+
+    [Header("Character Weapon Visuals")]
+    public List<CharacterWeaponSpriteData> characterWeaponSprites = new List<CharacterWeaponSpriteData>();
 
     [Header("Recipe")]
     public List<MaterialRequirement> requirements = new List<MaterialRequirement>();
