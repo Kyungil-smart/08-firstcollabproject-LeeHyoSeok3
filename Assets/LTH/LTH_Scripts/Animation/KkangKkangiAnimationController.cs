@@ -7,7 +7,7 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 
     [SerializeField] private GameObject hammerHead;
 
-    private ParticleSystem currentHammerHitEffect;
+    private ParticleSystem[] currentHammerHitEffects;
 
     protected override void Start()
     {
@@ -25,9 +25,9 @@ public class KkangKkangiAnimationController : CharacterAnimationController
         if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
     }
 
-    public void SetHammerHitEffect(ParticleSystem hammerHitEffect)
+    public void SetHammerHitEffects(ParticleSystem[] hammerHitEffects)
     {
-        currentHammerHitEffect = hammerHitEffect;
+        currentHammerHitEffects = hammerHitEffects;
     }
 
     private IEnumerator BlinkRoutine()
@@ -54,11 +54,18 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 
     public void PlayHammerHitEffect()
     {
-        if (!gameObject.activeInHierarchy || currentHammerHitEffect == null)
+        if (!gameObject.activeInHierarchy || currentHammerHitEffects == null || currentHammerHitEffects.Length == 0)
             return;
 
-        currentHammerHitEffect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-        currentHammerHitEffect.Play();
+        for (int i = 0; i < currentHammerHitEffects.Length; i++)
+        {
+            ParticleSystem effect = currentHammerHitEffects[i];
+            if (effect == null)
+                continue;
+
+            effect.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            effect.Play();
+        }
     }
 
     private IEnumerator CraftRoutine()
