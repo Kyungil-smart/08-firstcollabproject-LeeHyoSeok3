@@ -48,6 +48,11 @@ public class SoundManager : Singleton<SoundManager>
         _oneShot.PlayOneShot(result.clip); // 소스파일 찾으면 호출
     }
 
+    public void PlayClick()
+    {
+        OneShot("Click");
+    }
+
     // 반복 재생하는 음원소스 호출용
     public void LoopShot(string name)
     {
@@ -61,6 +66,9 @@ public class SoundManager : Singleton<SoundManager>
     {
         SoundData result = OpenClip(name);
         if (result == null) return;
+
+        if (_bgmShot.clip == result.clip && _bgmShot.isPlaying) return;
+
         _bgmShot.clip = result.clip;
         _bgmShot.Play();
     }
