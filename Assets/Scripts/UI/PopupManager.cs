@@ -28,16 +28,25 @@ public class PopupManager : Singleton<PopupManager>
 
     public void OpenQuestBoard()
     {
+        if (questBoardPopup == null || questBoardPopup.gameObject.activeSelf)
+            return;
+
         OpenPopup(questBoardPopup);
         SoundManager.Instance?.OneShot("QuestBoardOpen");
     }
     public void OpenBlacksmith()
     {
+        if (blacksmithPopup == null || blacksmithPopup.gameObject.activeSelf)
+            return;
+
         OpenPopup(blacksmithPopup);
         SoundManager.Instance?.OneShot("BlacksmithOpen");
     }
     public void OpenPartyEquip()
     {
+        if (partyEquipPopup == null || partyEquipPopup.gameObject.activeSelf)
+            return;
+
         OpenPopup(partyEquipPopup);
         SoundManager.Instance?.OneShot("PartyEquipOpen");
     }
@@ -45,6 +54,9 @@ public class PopupManager : Singleton<PopupManager>
     public void OpenOfflineRewardPopup() => OpenPopup(offlineRewardPopup);
     public void OpenRewardPopup()
     {
+        if (rewardPopup == null || rewardPopup.gameObject.activeSelf)
+            return;
+
         OpenPopup(rewardPopup);
         SoundManager.Instance?.OneShot("RewardSack");
     }
@@ -54,6 +66,9 @@ public class PopupManager : Singleton<PopupManager>
     {
         if (popup == null || popupCanvas == null)
             return;
+
+        // 추가 : 이미 열려있는 팝업이면 다시 열지 않음 (사운드 겹침 현상 방지)
+        if (popup.gameObject.activeSelf) return;
 
         popup.gameObject.SetActive(true);
 
