@@ -73,6 +73,21 @@ public class ScreenStateManager : MonoBehaviour
         if (previousState == newState)
             return;
 
+        bool isMinimizedTransition = IsMinimizedState(previousState) || IsMinimizedState(newState);
+        if (!isMinimizedTransition)
+        {
+            SoundManager.Instance?.OneShot("WorldMapTransition");
+        }
+
+        if (newState == ScreenState.Main)
+        {
+            SoundManager.Instance?.BGMShot("MainBGM");
+        }
+        else if (newState == ScreenState.WorldMap)
+        {
+            SoundManager.Instance?.BGMShot("AdventureBGM");
+        }
+
         CurrentState = newState;
 
         UpdateScreenVisibility();
@@ -90,6 +105,11 @@ public class ScreenStateManager : MonoBehaviour
     {
         ScreenState previousState = CurrentState;
         CurrentState = newState;
+
+        if (newState == ScreenState.Main)
+        {
+            SoundManager.Instance?.BGMShot("MainBGM");
+        }
 
         UpdateScreenVisibility();
         _uiScaler?.ApplyScale();
