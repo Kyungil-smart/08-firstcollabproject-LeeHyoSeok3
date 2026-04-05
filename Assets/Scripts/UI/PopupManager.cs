@@ -26,12 +26,28 @@ public class PopupManager : Singleton<PopupManager>
             Debug.LogError("[PopupManager] popupCanvas가 할당되지 않았습니다.");
     }
 
-    public void OpenQuestBoard() => OpenPopup(questBoardPopup);
-    public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
-    public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
+    public void OpenQuestBoard()
+    {
+        OpenPopup(questBoardPopup);
+        SoundManager.Instance?.OneShot("QuestBoardOpen");
+    }
+    public void OpenBlacksmith()
+    {
+        OpenPopup(blacksmithPopup);
+        SoundManager.Instance?.OneShot("BlacksmithOpen");
+    }
+    public void OpenPartyEquip()
+    {
+        OpenPopup(partyEquipPopup);
+        SoundManager.Instance?.OneShot("PartyEquipOpen");
+    }
     public void OpenSettings() => OpenPopup(settingsPopup);
     public void OpenOfflineRewardPopup() => OpenPopup(offlineRewardPopup);
-    public void OpenRewardPopup() => OpenPopup(rewardPopup);
+    public void OpenRewardPopup()
+    {
+        OpenPopup(rewardPopup);
+        SoundManager.Instance?.OneShot("RewardSack");
+    }
     public void OpenWarningPopup() => OpenPopup(WarningPopup);
 
     public void OpenPopup(RectTransform popup)
@@ -49,8 +65,6 @@ public class PopupManager : Singleton<PopupManager>
 
         if (!_activePopups.Contains(popup))
             _activePopups.Add(popup);
-
-        SoundManager.Instance?.OneShot("PopupOpen");
     }
 
     public void ClosePopup(RectTransform popup)
@@ -59,8 +73,6 @@ public class PopupManager : Singleton<PopupManager>
 
         popup.gameObject.SetActive(false);
         _activePopups.Remove(popup);
-
-        SoundManager.Instance?.OneShot("PopupClose");
     }
 
     public void CloseAllPopups()
