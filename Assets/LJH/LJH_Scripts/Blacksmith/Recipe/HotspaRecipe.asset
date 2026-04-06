@@ -22,13 +22,17 @@ MonoBehaviour:
   traitIcon: {fileID: 21300000, guid: 3f16f98fd72804841b82aaa92052cbde, type: 3}
   characterWeaponSprites:
   - characterId: 0
-    weaponSprite: {fileID: 21300000, guid: 8f68fa3d59041ef45956add7313e2573, type: 3}
+    primaryWeaponSprite: {fileID: 21300000, guid: 8f68fa3d59041ef45956add7313e2573, type: 3}
+    secondaryWeaponSprite: {fileID: 0}
   - characterId: 1
-    weaponSprite: {fileID: 21300000, guid: ace18a747205d2143964ef15c32e49ba, type: 3}
+    primaryWeaponSprite: {fileID: 21300000, guid: 254c9277252e38c4bae3d21039c19fe2, type: 3}
+    secondaryWeaponSprite: {fileID: 21300000, guid: ace18a747205d2143964ef15c32e49ba, type: 3}
   - characterId: 2
-    weaponSprite: {fileID: 21300000, guid: d8133b398cc616040b063c52b08e69c2, type: 3}
+    primaryWeaponSprite: {fileID: 21300000, guid: d8133b398cc616040b063c52b08e69c2, type: 3}
+    secondaryWeaponSprite: {fileID: 0}
   - characterId: 3
-    weaponSprite: {fileID: 21300000, guid: d34f9255cd5ea224696a6df006a69499, type: 3}
+    primaryWeaponSprite: {fileID: 21300000, guid: d34f9255cd5ea224696a6df006a69499, type: 3}
+    secondaryWeaponSprite: {fileID: 0}
   requirements:
   - material: {fileID: 11400000, guid: 263753a46dd3cfa4cb301361b5e1631c, type: 2}
     requiredCount: 1
