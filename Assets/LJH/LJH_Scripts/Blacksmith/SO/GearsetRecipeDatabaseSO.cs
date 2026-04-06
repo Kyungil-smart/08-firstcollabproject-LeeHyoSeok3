@@ -10,7 +10,7 @@ public class GearsetRecipeDatabaseSO : ScriptableObject
     {
         for (int i = 0; i < recipes.Count; i++)
         {
-            if (recipes[i] != null && recipes[i].gearsetName == gearsetName)
+            if (recipes[i] != null && recipes[i].GetGearsetName() == gearsetName)
                 return recipes[i];
         }
 

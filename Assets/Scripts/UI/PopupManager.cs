@@ -34,6 +34,7 @@ public class PopupManager : Singleton<PopupManager>
         OpenPopup(questBoardPopup);
         SoundManager.Instance?.OneShot("QuestBoardOpen");
     }
+
     public void OpenBlacksmith()
     {
         if (blacksmithPopup == null || blacksmithPopup.gameObject.activeSelf)
@@ -42,6 +43,7 @@ public class PopupManager : Singleton<PopupManager>
         OpenPopup(blacksmithPopup);
         SoundManager.Instance?.OneShot("BlacksmithOpen");
     }
+
     public void OpenPartyEquip()
     {
         if (partyEquipPopup == null || partyEquipPopup.gameObject.activeSelf)
@@ -50,8 +52,10 @@ public class PopupManager : Singleton<PopupManager>
         OpenPopup(partyEquipPopup);
         SoundManager.Instance?.OneShot("PartyEquipOpen");
     }
+
     public void OpenSettings() => OpenPopup(settingsPopup);
     public void OpenOfflineRewardPopup() => OpenPopup(offlineRewardPopup);
+
     public void OpenRewardPopup()
     {
         if (rewardPopup == null || rewardPopup.gameObject.activeSelf)
@@ -60,6 +64,7 @@ public class PopupManager : Singleton<PopupManager>
         OpenPopup(rewardPopup);
         SoundManager.Instance?.OneShot("RewardSack");
     }
+
     public void OpenWarningPopup() => OpenPopup(WarningPopup);
 
     public void OpenPopup(RectTransform popup)
@@ -70,6 +75,7 @@ public class PopupManager : Singleton<PopupManager>
         // 추가 : 이미 열려있는 팝업이면 다시 열지 않음 (사운드 겹침 현상 방지)
         if (popup.gameObject.activeSelf) return;
 
+        RefreshPopupLocalizedUI(popup);
         popup.gameObject.SetActive(true);
 
         // 먼저 중앙 배치
@@ -99,6 +105,29 @@ public class PopupManager : Singleton<PopupManager>
         }
 
         _activePopups.Clear();
+    }
+
+    /// <summary>
+    /// 팝업 열릴 때 로컬라이징 관련 UI를 강제로 다시 갱신
+    /// </summary>
+    private void RefreshPopupLocalizedUI(RectTransform popup)
+    {
+        if (popup == null) return;
+
+        // 1. LocalizedText 붙은 일반 텍스트 갱신
+        LocalizedText[] localizedTexts = popup.GetComponentsInChildren<LocalizedText>(true);
+        foreach (var localizedText in localizedTexts)
+        {
+            localizedText.SendMessage("UpdateText", SendMessageOptions.DontRequireReceiver);
+        }
+
+        // 2. 장비 슬롯 텍스트/아이콘 갱신
+        GearsetSlotUI[] gearSlots = popup.GetComponentsInChildren<GearsetSlotUI>(true);
+        foreach (var slot in gearSlots)
+        {
+            slot.RefreshSlotInfo();
+            slot.RefreshState();
+        }
     }
 
     /// <summary>

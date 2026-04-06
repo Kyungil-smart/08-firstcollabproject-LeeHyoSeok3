@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: The mark of the hero
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Themarkofthehero
-  materialName: The mark of the hero
+  materialNameKey: 'MAT_HERO_NAME '
   icon: {fileID: 21300000, guid: c81a62cff47c5d740881360a63726341, type: 3}

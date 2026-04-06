@@ -186,7 +186,7 @@ public class MaterialInventory : Singleton<MaterialInventory>
         else
             materialDict.Add(id, amount);
 
-        Debug.Log($"{material.materialName} {amount}개 획득, 현재 보유: {materialDict[id]}");
+        Debug.Log($"{material.GetMaterialName()} {amount}개 획득, 현재 보유: {materialDict[id]}");
 
         RefreshUI();
         GameDataController.Instance?.SaveGame();
@@ -241,6 +241,23 @@ public class MaterialInventory : Singleton<MaterialInventory>
         return result;
     }
 
+    private void OnEnable()
+    {
+        // TryBindInventory();
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+
+        if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
+            RefreshUI();
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+    }
+    
     public void RefreshUI()
     {
         MaterialInventoryUI[] uiList = FindObjectsByType<MaterialInventoryUI>(

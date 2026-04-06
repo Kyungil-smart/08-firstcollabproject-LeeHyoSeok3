@@ -1,33 +1,18 @@
-﻿// ============================================
-// 파일명: LocalizationManager.cs
-// 붙일 오브젝트: 빈 오브젝트 (씬에 하나만 존재)
-// 역할: Localization_Data.csv를 읽어서 언어별 텍스트를 관리하고,
-//       언어 변경 시 모든 UI에 알려주는 중앙 관리자
-// ============================================
-
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
 using DesignPattern;
 
 public class LocalizationManager : Singleton<LocalizationManager>
 {
-    // Resources/Data 폴더에 있는 CSV 파일
-    // Inspector에서 드래그해서 연결
     [SerializeField] private TextAsset csvFile;
 
-    // 현재 선택된 언어 (기본값: 한국어)
     private Language _currentLanguage = Language.Korean;
-
-    // 현재 언어를 외부에서 읽을 수 있는 프로퍼티
     public Language CurrentLanguage => _currentLanguage;
 
-    // CSV에서 읽어온 데이터를 저장하는 딕셔너리
-    // 키(한국어 텍스트) → [한국어, 영어] 배열
+    // KEY -> [KOREAN, ENGLISH]
     private Dictionary<string, string[]> _textData = new Dictionary<string, string[]>();
 
-    // 언어가 변경될 때 발생하는 이벤트
-    // 다른 스크립트에서 이 이벤트에 등록해두면 언어 변경 시 자동으로 호출됨
     public event Action OnLanguageChanged;
 
     protected override void OnAwake()
@@ -35,53 +20,61 @@ public class LocalizationManager : Singleton<LocalizationManager>
         LoadCSV();
     }
 
-    // CSV 파일을 읽어서 딕셔너리에 저장하는 메서드
     private void LoadCSV()
     {
+        _textData.Clear();
+
         if (csvFile == null)
         {
             Debug.LogError("LocalizationManager: CSV 파일이 연결되지 않았습니다.");
             return;
         }
 
-        // CSV 텍스트를 줄 단위로 분리
         string[] lines = csvFile.text.Split('\n');
 
-        // 첫 줄(,,,)과 둘째 줄(헤더)은 건너뛰고, 셋째 줄부터 데이터 읽기
-        for (int i = 2; i < lines.Length; i++)
+        for (int i = 1; i < lines.Length; i++)
         {
-            string line = lines[i].Trim();
+            string line = lines[i];
 
-            // 빈 줄이면 건너뛰기
-            if (string.IsNullOrEmpty(line)) continue;
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
 
-            // 큰따옴표 안의 쉼표를 무시하고 올바르게 파싱
+            line = line.Trim();
+
+            // ,,
+            if (line == ",," || line == ",")
+                continue;
+
             List<string> values = ParseCSVLine(line);
 
-            // 최소 3개 컬럼이 있어야 함 (빈칸, KOREAN, ENGLISH)
-            if (values.Count < 3) continue;
+            // 최소 KEY, KOREAN, ENGLISH 3칸 필요
+            if (values.Count < 3)
+                continue;
 
-            // 컬럼 1 = 한국어 텍스트 (이게 키 역할도 함)
-            string korean = values[1].Trim();
-            // 컬럼 2 = 영어 텍스트
-            string english = values[2].Trim();
+            string key = CleanCSVValue(values[0]);
+            string korean = CleanCSVValue(values[1]);
+            string english = CleanCSVValue(values[2]);
 
-            // 키가 비어있으면 건너뛰기
-            if (string.IsNullOrEmpty(korean)) continue;
+            // 헤더 스킵
+            if (string.Equals(key, "KEY", StringComparison.OrdinalIgnoreCase))
+                continue;
 
-            // 딕셔너리에 저장 (중복 키 방지)
-            if (!_textData.ContainsKey(korean))
+            // key 없으면 스킵
+            if (string.IsNullOrWhiteSpace(key))
+                continue;
+
+            if (_textData.ContainsKey(key))
             {
-                // 인덱스 0 = 한국어, 인덱스 1 = 영어
-                _textData[korean] = new string[] { korean, english };
+                Debug.LogWarning($"LocalizationManager: 중복 key 발견 -> {key}");
+                continue;
             }
+
+            _textData.Add(key, new string[] { korean, english });
         }
 
         Debug.Log($"LocalizationManager: {_textData.Count}개 텍스트 로드 완료");
     }
 
-    // 큰따옴표 안의 쉼표를 무시하고 올바르게 파싱하는 메서드
-    // CSV에서 "오르막길을 올라야 하니, 짐을..." 같은 텍스트를 정확히 분리
     private List<string> ParseCSVLine(string line)
     {
         List<string> result = new List<string>();
@@ -91,61 +84,76 @@ public class LocalizationManager : Singleton<LocalizationManager>
         for (int i = 0; i < line.Length; i++)
         {
             char c = line[i];
+
             if (c == '"')
             {
                 insideQuotes = !insideQuotes;
             }
-            else if (c == ',')
+            else if (c == ',' && !insideQuotes)
             {
-                if (insideQuotes)
-                {
-                    currentValue += c;
-                }
-                else
-                {
-                    result.Add(currentValue);
-                    currentValue = "";
-                }
+                result.Add(currentValue);
+                currentValue = "";
             }
             else
             {
                 currentValue += c;
             }
         }
+
         result.Add(currentValue);
         return result;
     }
 
-    // 한국어 키를 넣으면 현재 언어에 맞는 텍스트를 돌려주는 메서드
-    public string GetText(string koreanKey)
+    private string CleanCSVValue(string value)
     {
-        if (_textData.ContainsKey(koreanKey))
-        {
-            // Korean = 인덱스 0, English = 인덱스 1
-            int index = _currentLanguage == Language.Korean ? 0 : 1;
-            return _textData[koreanKey][index];
-        }
+        if (string.IsNullOrEmpty(value))
+            return string.Empty;
 
-        // 키를 못 찾으면 키 자체를 그대로 반환
-        return koreanKey;
+        return value
+            .Replace("\"", "")
+            .Replace("\r", "")
+            .Replace("\uFEFF", "") // BOM 제거
+            .Trim();
     }
 
-    // 언어를 변경하는 메서드
+    public string GetText(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            Debug.LogWarning("Localization key is empty");
+            return string.Empty;
+        }
+
+        key = key.Trim();
+
+        if (_textData.TryGetValue(key, out var values))
+        {
+            int index = _currentLanguage == Language.Korean ? 0 : 1;
+            return values[index];
+        }
+
+        Debug.LogWarning($"Localization key not found: {key}");
+        return key;
+    }
+
     public void SetLanguage(Language newLanguage)
     {
-        // 이미 같은 언어면 아무것도 안 함
-        if (_currentLanguage == newLanguage) return;
+        if (_currentLanguage == newLanguage)
+            return;
 
         _currentLanguage = newLanguage;
-
-        // 등록된 모든 리스너에게 언어 변경 알림
         OnLanguageChanged?.Invoke();
 
         Debug.Log($"언어 변경: {newLanguage}");
     }
+
+    public void Reload()
+    {
+        LoadCSV();
+        OnLanguageChanged?.Invoke();
+    }
 }
 
-// 언어 종류를 나타내는 enum
 public enum Language
 {
     Korean,

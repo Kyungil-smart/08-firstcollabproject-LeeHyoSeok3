@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: DragonRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
   saveId: Dragon
-  gearsetName: Dragon
-  gearDescription: 'Upgraded iron weapons with the dragon''s bodyparts. This is unutterly
-    the best gears possible. '
+  gearsetNameKey: 'GEAR_DRAGON_NAME '
+  gearDescriptionKey: GEAR_DRAGON_DESC
   gearIcon: {fileID: 21300000, guid: 0eec0fa8b76749a41bfbe18239046143, type: 3}
   traitKey: trait_dragon_power
-  traitName: Dragonmight
-  traitDescription: Dragon has granted these weapons with the might, making it possible
-    to wound the strong beings.
+  traitNameKey: TRAIT_DRAGON_NAME
+  traitDescriptionKey: TRAIT_DRAGON_DESC
   traitIcon: {fileID: 21300000, guid: a13f686d330b0034db61a045862bdeb9, type: 3}
   characterWeaponSprites:
   - characterId: 0

@@ -38,6 +38,24 @@ public class GearsetSlotUI : MonoBehaviour
     {
         RefreshSlotInfo();
         RefreshState();
+
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshSlotInfo;
+            LocalizationManager.Instance.OnLanguageChanged += RefreshSlotInfo;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshSlotInfo;
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshSlotInfo;
     }
 
     public void OnClickSlot()
@@ -107,14 +125,14 @@ public class GearsetSlotUI : MonoBehaviour
             return;
 
         if (nameText != null)
-            nameText.text = recipe.gearsetName;
+            nameText.text = recipe.GetGearsetName();
 
         if (iconImage != null && recipe.gearIcon != null)
             iconImage.sprite = recipe.gearIcon;
 
         // ⭐ 여기서 바로 세팅
         if (tooltipHoverUI != null)
-            tooltipHoverUI.SetTooltip(recipe.gearDescription);
+            tooltipHoverUI.SetTooltip(recipe.GetGearDescription());
     }
 
     public GearsetRecipeSO GetRecipe()

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Slime core
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Slimecore
-  materialName: Slime core
+  materialNameKey: 'MAT_SLIME_NAME '
   icon: {fileID: 21300000, guid: 29231c87c20603c429f2793d064df712, type: 3}

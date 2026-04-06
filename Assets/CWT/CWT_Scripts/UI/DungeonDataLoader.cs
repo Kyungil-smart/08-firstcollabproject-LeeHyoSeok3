@@ -88,7 +88,7 @@ public class DungeonDataLoader : MonoBehaviour
                     {
                         if (mat != null && mat.material != null)
                         {
-                            Debug.Log($"[Reward] 재료: {mat.material.materialName} x {mat.count}");
+                            Debug.Log($"[Reward] 재료: {mat.material.GetMaterialName()} x {mat.count}");
                         }
                     }
                 }

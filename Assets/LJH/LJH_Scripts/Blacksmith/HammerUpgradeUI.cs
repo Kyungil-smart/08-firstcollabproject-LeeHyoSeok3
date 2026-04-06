@@ -9,9 +9,10 @@ public class UpgradeUI : MonoBehaviour
     [SerializeField] private UpgradeSystem upgradeSystem;
 
     [Header("Labels")]
-    [SerializeField] private string levelLabel = "Level";
-    [SerializeField] private string valueLabel = "Power";
-    [SerializeField] private string stageLabel = "Stage";
+    [SerializeField] private string levelLabelKey = "레벨";
+    [SerializeField] private string valueLabelKey = "생산량";
+    [SerializeField] private string stageLabelKey = "강화 단계";
+    [SerializeField] private string maxLabelKey = "최대";
 
     [Header("UI")]
     [SerializeField] private TMP_Text levelText;
@@ -23,7 +24,7 @@ public class UpgradeUI : MonoBehaviour
     [Header("Icon")]
     [SerializeField] private Image iconImage;
     [SerializeField] private Sprite defaultIcon;
-    [SerializeField] private List<Sprite> iconList; // imports 폴더에서 끌어다 넣기
+    [SerializeField] private List<Sprite> iconList;
 
     private Dictionary<string, Sprite> iconDict;
 
@@ -50,6 +51,9 @@ public class UpgradeUI : MonoBehaviour
         else
             bindCoroutine = StartCoroutine(BindGoldManager());
 
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+
         if (GameDataController.Instance != null && GameDataController.Instance.IsLoaded)
         {
             RefreshUI();
@@ -69,6 +73,10 @@ public class UpgradeUI : MonoBehaviour
         }
 
         UnsubscribeGoldEvent();
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+
         GameDataController.OnGameLoaded -= OnGameLoaded_Handler;
     }
 
@@ -116,12 +124,28 @@ public class UpgradeUI : MonoBehaviour
         RefreshUI();
     }
 
+    private string GetLabel(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return string.Empty;
+
+        if (LocalizationManager.Instance == null)
+            return key;
+
+        return LocalizationManager.Instance.GetText(key);
+    }
+
     public void RefreshUI()
     {
         if (upgradeSystem == null)
             return;
 
         EnsureIconDict();
+
+        string levelLabel = GetLabel(levelLabelKey);
+        string valueLabel = GetLabel(valueLabelKey);
+        string stageLabel = GetLabel(stageLabelKey);
+        string maxLabel = GetLabel(maxLabelKey);
 
         UpgradeRow current = upgradeSystem.CurrentRow;
         UpgradeRow next = upgradeSystem.NextRow;
@@ -145,21 +169,21 @@ public class UpgradeUI : MonoBehaviour
 
             levelText.text = next != null
                 ? $"{levelLabel} : {level} → {nextLevel}"
-                : $"{levelLabel} : {level} (MAX)";
+                : $"{levelLabel} : {level} ({maxLabel})";
         }
 
         if (valueText != null)
         {
             valueText.text = next != null
                 ? $"{valueLabel} : {upgradeSystem.CurrentValue} → {next.value}"
-                : $"{valueLabel} : {upgradeSystem.CurrentValue} (MAX)";
+                : $"{valueLabel} : {upgradeSystem.CurrentValue} ({maxLabel})";
         }
 
         if (stageText != null)
         {
             stageText.text = next != null
                 ? $"{stageLabel} : {current.stageDisplay} → {next.stageDisplay}"
-                : $"{stageLabel} : {current.stageDisplay} (MAX)";
+                : $"{stageLabel} : {current.stageDisplay} ({maxLabel})";
         }
 
         UpdateIcon(current);
@@ -171,7 +195,7 @@ public class UpgradeUI : MonoBehaviour
         {
             if (goldText != null)
             {
-                goldText.text = $"{GoldManager.FormatGold(gold)} / MAX";
+                goldText.text = $"{GoldManager.FormatGold(gold)} / {maxLabel}";
                 goldText.color = Color.white;
             }
 

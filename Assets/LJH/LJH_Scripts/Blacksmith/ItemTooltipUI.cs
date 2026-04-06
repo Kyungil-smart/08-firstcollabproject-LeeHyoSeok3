@@ -45,12 +45,18 @@ public class GearsetTooltipUI : MonoBehaviour
 
         if (materialInventory != null)
             materialInventory.OnInventoryChanged += RefreshTooltip;
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshTooltip;
     }
 
     private void OnDisable()
     {
         if (materialInventory != null)
-            materialInventory.OnInventoryChanged -= RefreshTooltip;
+            materialInventory.OnInventoryChanged += RefreshTooltip;
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshTooltip;
     }
 
     private void TryBindInventory()
@@ -76,7 +82,7 @@ public class GearsetTooltipUI : MonoBehaviour
         ResizeBgByRecipe(recipe);
 
         if (titleText != null)
-            titleText.text = recipe.gearsetName;
+            titleText.text = recipe.GetGearsetName();
 
         for (int i = 0; i < recipe.requirements.Count; i++)
         {
@@ -88,7 +94,7 @@ public class GearsetTooltipUI : MonoBehaviour
             int ownedCount = GetOwnedMaterialCount(requirement.material);
 
             lineUI.SetData(
-                requirement.material.materialName,
+                requirement.material.GetMaterialName(),
                 requirement.material.icon,
                 ownedCount,
                 requirement.requiredCount
