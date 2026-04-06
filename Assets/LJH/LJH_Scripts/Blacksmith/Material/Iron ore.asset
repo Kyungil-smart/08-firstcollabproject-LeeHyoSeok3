@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Iron ore
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Ironore
-  materialName: Iron ore
+  materialNameKey: 'MAT_IRON_NAME '
   icon: {fileID: 21300000, guid: 8f63cac0290909b458363ef79326b86b, type: 3}

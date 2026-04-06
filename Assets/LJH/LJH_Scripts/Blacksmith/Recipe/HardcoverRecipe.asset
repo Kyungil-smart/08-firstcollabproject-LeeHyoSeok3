@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: HardcoverRecipe
   m_EditorClassIdentifier: Assembly-CSharp::GearsetRecipeSO
   saveId: Hardcover
-  gearsetName: Hardcover
-  gearDescription: Books are tied to a wooden weapons. Enchantment on the books keep
-    the owner from the lethal damage.
+  gearsetNameKey: 'GEAR_HARDCOVER_NAME '
+  gearDescriptionKey: GEAR_HARDCOVER_DESC
   gearIcon: {fileID: 21300000, guid: d3ad9f8da57b5a540bc245e600f276b1, type: 3}
   traitKey: trait_magic
-  traitName: Enchanted
-  traitDescription: The enchantment casted on the weapon keeps its users safe from
-    fire damage.
+  traitNameKey: 'TRAIT_ENCHANT_NAME '
+  traitDescriptionKey: TRAIT_ENCHANT_DESC
   traitIcon: {fileID: 21300000, guid: 782b7934f49e6ee46a3be15c31661da7, type: 3}
   characterWeaponSprites:
   - characterId: 0

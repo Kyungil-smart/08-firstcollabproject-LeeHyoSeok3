@@ -33,6 +33,32 @@ public class GearsetCraftPopupUI : MonoBehaviour
         if (dataManager == null) dataManager = FindFirstObjectByType<DataManager>();
     }
 
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+    }
+
+    private void RefreshUI()
+    {
+        if (currentRecipe == null) return;
+
+        gearsetNameText.text = currentRecipe.GetGearsetName();
+        traitNameText.text = currentRecipe.GetTraitName();
+
+        if (gearIconHover != null)
+            gearIconHover.SetTooltip(currentRecipe.GetGearDescription());
+
+        if (traitIconHover != null)
+            traitIconHover.SetTooltip(currentRecipe.GetTraitDescription());
+    }
+    
     public void Show(GearsetRecipeSO recipe, MaterialInventory inventory, GearsetSlotUI slot)
     {
         if (recipe == null)
@@ -46,22 +72,22 @@ public class GearsetCraftPopupUI : MonoBehaviour
         currentSlot = slot;
 
         if (gearsetNameText != null)
-            gearsetNameText.text = recipe.gearsetName;
+            gearsetNameText.text = recipe.GetGearsetName();
 
         if (gearIconImage != null)
             gearIconImage.sprite = recipe.gearIcon;
 
         if (traitNameText != null)
-            traitNameText.text = recipe.traitName;
+            traitNameText.text = recipe.GetTraitName();
 
         if (traitIconImage != null)
             traitIconImage.sprite = recipe.traitIcon;
         
         if (gearIconHover != null)
-            gearIconHover.SetTooltip(recipe.gearDescription);
+            gearIconHover.SetTooltip(recipe.GetGearDescription());
 
         if (traitIconHover != null)
-            traitIconHover.SetTooltip(recipe.traitDescription);
+            traitIconHover.SetTooltip(recipe.GetTraitDescription());
 
         gameObject.SetActive(true);
 
