@@ -1,56 +1,55 @@
-using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class RewardPopupUI : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private RectTransform popupRect;
-    [SerializeField] private TMP_Text rewardText;
     [SerializeField] private Button claimButton;
+
+    [Header("Gold Reward UI")]
+    [SerializeField] private GameObject goldRewardRoot;
+    [SerializeField] private Image goldIconImage;
+    [SerializeField] private TMP_Text goldAmountText;
+    [SerializeField] private Sprite goldIconOverride;
+
+    [Header("Material Reward UI")]
+    [SerializeField] private GameObject materialRewardRoot;
+    [SerializeField] private Image materialIconImage;
+    [SerializeField] private TMP_Text materialAmountText;
+    [SerializeField] private TMP_Text materialNameText;
 
     [Header("Reward Data")]
     [SerializeField] private QuestRewardSo[] questRewards;
 
     private QuestRewardSo currentReward;
 
-
     private void Awake()
     {
-        if (claimButton != null) claimButton.onClick.AddListener(OnClickClaim);
+        if (claimButton != null)
+            claimButton.onClick.AddListener(OnClickClaim);
     }
 
     private void OnDestroy()
     {
-        if (claimButton != null) claimButton.onClick.RemoveListener(OnClickClaim);
+        if (claimButton != null)
+            claimButton.onClick.RemoveListener(OnClickClaim);
     }
 
-    /// <summary>
-    /// 메인 보상 버튼에서 호출
-    /// </summary>
     public void Open()
     {
-        if (QuestManager.Instance == null) return;
-
-        var quest = QuestManager.Instance.CompletedQuest;
-
-        if (quest == null)
-        {
-            Debug.LogWarning("[RewardPopupUI] 완료된 퀘스트 없음");
+        if (QuestManager.Instance == null)
             return;
-        }
+
+        DungeonData quest = QuestManager.Instance.CompletedQuest;
+        if (quest == null) return;
 
         currentReward = FindRewardByDungeonName(quest.dungeonName);
 
-        if (currentReward == null)
-        {
-            Debug.LogWarning($"[RewardPopupUI] 보상 데이터 없음: {quest.dungeonName}");
-            return;
-        }
+        if (currentReward == null) return;
 
-        RefreshUI(quest, currentReward);
-
+        RefreshUI(currentReward);
         PopupManager.Instance?.OpenRewardPopup();
     }
 
@@ -58,7 +57,7 @@ public class RewardPopupUI : MonoBehaviour
     {
         if (questRewards == null) return null;
 
-        foreach (var reward in questRewards)
+        foreach (QuestRewardSo reward in questRewards)
         {
             if (reward != null && reward.dungeonName == dungeonName)
                 return reward;
@@ -67,28 +66,66 @@ public class RewardPopupUI : MonoBehaviour
         return null;
     }
 
-    private void RefreshUI(DungeonData quest, QuestRewardSo reward)
+    private void RefreshUI(QuestRewardSo reward)
     {
-        if (rewardText == null) return;
+        RefreshGoldUI(reward);
+        RefreshMaterialUI(reward);
+    }
 
-        StringBuilder sb = new StringBuilder();
+    private void RefreshGoldUI(QuestRewardSo reward)
+    {
+        bool hasGold = reward != null && reward.gold > 0;
 
-        sb.AppendLine($"퀘스트: {quest.dungeonName}");
-        sb.AppendLine();
-        sb.AppendLine($"골드: {reward.gold}");
+        if (goldRewardRoot != null)
+            goldRewardRoot.SetActive(hasGold);
 
-        if (reward.materials != null && reward.materials.Count > 0)
+        if (!hasGold) return;
+
+        if (goldIconImage != null)
         {
-            sb.AppendLine("재료:");
-
-            foreach (var mat in reward.materials)
-            {
-                if (mat == null || mat.material == null) continue;
-                sb.AppendLine($"- {mat.material.materialName} x {mat.count}");
-            }
+            goldIconImage.sprite = goldIconOverride;
+            goldIconImage.enabled = goldIconOverride != null;
         }
 
-        rewardText.text = sb.ToString();
+        if (goldAmountText != null)
+            goldAmountText.text = GoldManager.FormatGold(reward.gold);
+    }
+
+    private void RefreshMaterialUI(QuestRewardSo reward)
+    {
+        MaterialEntry materialReward = GetPrimaryMaterialReward(reward);
+        bool hasMaterial = materialReward != null && materialReward.material != null;
+
+        if (materialRewardRoot != null)
+            materialRewardRoot.SetActive(hasMaterial);
+
+        if (!hasMaterial) return;
+
+        if (materialIconImage != null)
+        {
+            materialIconImage.sprite = materialReward.material.icon;
+            materialIconImage.enabled = materialReward.material.icon != null;
+        }
+
+        if (materialAmountText != null)
+            materialAmountText.text = $"x {materialReward.count}";
+
+        if (materialNameText != null)
+            materialNameText.text = materialReward.material.materialName;
+    }
+
+    private static MaterialEntry GetPrimaryMaterialReward(QuestRewardSo reward)
+    {
+        if (reward == null || reward.materials == null)
+            return null;
+
+        foreach (MaterialEntry material in reward.materials)
+        {
+            if (material != null && material.material != null && material.count > 0)
+                return material;
+        }
+
+        return null;
     }
 
     private void OnClickClaim()
@@ -96,38 +133,19 @@ public class RewardPopupUI : MonoBehaviour
         if (QuestManager.Instance == null)
             return;
 
-        var quest = QuestManager.Instance.CompletedQuest;
+        DungeonData quest = QuestManager.Instance.CompletedQuest;
+        if (quest == null) return;
 
-        if (quest == null)
-        {
-            Debug.LogWarning("[RewardPopupUI] 완료된 퀘스트 없음");
-            return;
-        }
+        if (currentReward == null) return;
 
-        if (currentReward == null)
-        {
-            Debug.LogWarning("[RewardPopupUI] 현재 보상 데이터가 비어 있음");
-            return;
-        }
-
-        // 골드 지급
         if (currentReward.gold > 0)
-        {
             GoldManager.Instance?.AddGold(currentReward.gold);
-        }
 
-        // 재료 지급
         if (currentReward.materials != null && currentReward.materials.Count > 0)
-        {
             MaterialInventory.Instance?.AddMaterials(currentReward.materials);
-        }
 
-        Debug.Log("[RewardPopupUI] 보상 지급 완료");
-
-        // 완료 퀘스트 초기화
         QuestManager.Instance.ClearCompletedQuest();
 
-        // 팝업 닫기
         if (popupRect != null)
             PopupManager.Instance?.ClosePopup(popupRect);
 

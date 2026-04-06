@@ -76,7 +76,6 @@ public class SettingsPopupUI : MonoBehaviour
         {
             bgmSlider.value = SoundManager.Instance.BGMVolume;
             sfxSlider.value = SoundManager.Instance.SFXVolume;
-            SoundManager.Instance.BGMShot("blacksmith");
         }
 
         // 단축키 InputField 동기화

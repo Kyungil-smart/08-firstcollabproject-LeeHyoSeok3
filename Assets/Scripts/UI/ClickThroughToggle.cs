@@ -64,6 +64,7 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
     {
         if (_buttonClickedThisFrame) return; // 같은 프레임 내 중복 클릭 무시
         _buttonClickedThisFrame = true;
+        SoundManager.Instance?.PlayClick();
 
         bool currentlyClickThrough = WindowSystemManager.Instance.IsClickThrough;
 

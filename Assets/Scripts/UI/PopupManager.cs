@@ -26,18 +26,49 @@ public class PopupManager : Singleton<PopupManager>
             Debug.LogError("[PopupManager] popupCanvas가 할당되지 않았습니다.");
     }
 
-    public void OpenQuestBoard() => OpenPopup(questBoardPopup);
-    public void OpenBlacksmith() => OpenPopup(blacksmithPopup);
-    public void OpenPartyEquip() => OpenPopup(partyEquipPopup);
+    public void OpenQuestBoard()
+    {
+        if (questBoardPopup == null || questBoardPopup.gameObject.activeSelf)
+            return;
+
+        OpenPopup(questBoardPopup);
+        SoundManager.Instance?.OneShot("QuestBoardOpen");
+    }
+    public void OpenBlacksmith()
+    {
+        if (blacksmithPopup == null || blacksmithPopup.gameObject.activeSelf)
+            return;
+
+        OpenPopup(blacksmithPopup);
+        SoundManager.Instance?.OneShot("BlacksmithOpen");
+    }
+    public void OpenPartyEquip()
+    {
+        if (partyEquipPopup == null || partyEquipPopup.gameObject.activeSelf)
+            return;
+
+        OpenPopup(partyEquipPopup);
+        SoundManager.Instance?.OneShot("PartyEquipOpen");
+    }
     public void OpenSettings() => OpenPopup(settingsPopup);
     public void OpenOfflineRewardPopup() => OpenPopup(offlineRewardPopup);
-    public void OpenRewardPopup() => OpenPopup(rewardPopup);
+    public void OpenRewardPopup()
+    {
+        if (rewardPopup == null || rewardPopup.gameObject.activeSelf)
+            return;
+
+        OpenPopup(rewardPopup);
+        SoundManager.Instance?.OneShot("RewardSack");
+    }
     public void OpenWarningPopup() => OpenPopup(WarningPopup);
 
     public void OpenPopup(RectTransform popup)
     {
         if (popup == null || popupCanvas == null)
             return;
+
+        // 추가 : 이미 열려있는 팝업이면 다시 열지 않음 (사운드 겹침 현상 방지)
+        if (popup.gameObject.activeSelf) return;
 
         popup.gameObject.SetActive(true);
 
@@ -49,8 +80,6 @@ public class PopupManager : Singleton<PopupManager>
 
         if (!_activePopups.Contains(popup))
             _activePopups.Add(popup);
-
-        SoundManager.Instance?.OneShot("PopupOpen");
     }
 
     public void ClosePopup(RectTransform popup)
@@ -59,8 +88,6 @@ public class PopupManager : Singleton<PopupManager>
 
         popup.gameObject.SetActive(false);
         _activePopups.Remove(popup);
-
-        SoundManager.Instance?.OneShot("PopupClose");
     }
 
     public void CloseAllPopups()

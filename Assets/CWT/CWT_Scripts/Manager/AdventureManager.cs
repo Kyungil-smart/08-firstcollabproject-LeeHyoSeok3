@@ -489,6 +489,7 @@ public class AdventureManager : Singleton<AdventureManager>
         if (_isCompleting || CurrentState == AdventureState.None) return;
 
         _isCompleting = true;
+        SoundManager.Instance?.OneShot("AdventureComplete");
 
         CurrentState = AdventureState.Completed;
 

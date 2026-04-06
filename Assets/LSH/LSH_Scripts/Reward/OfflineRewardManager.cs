@@ -91,6 +91,14 @@ public class OfflineRewardManager : MonoBehaviour
         m_pendingAutoRewardGold = CalculateAutoProductionOfflineReward(offlineSeconds);
         Debug.Log($"[OfflineReward] 지급 예정 골드: {m_pendingAutoRewardGold}");
 
+        if (m_pendingAutoRewardGold <= 0)
+        {
+            Debug.Log("[OfflineReward] 자동 생산 보상 없음 -> 팝업 생략");
+            ResumeGame();
+            CompleteProcess();
+            return;
+        }
+
         // 5. 퀘스트 남은 시간 계산 및 완료 처리
         //if (m_questTimer != null) m_questTimer.ApplyOfflineTime(offlineSeconds);
 

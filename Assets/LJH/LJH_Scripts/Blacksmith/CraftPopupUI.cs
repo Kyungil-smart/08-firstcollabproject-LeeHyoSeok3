@@ -102,6 +102,8 @@ public class GearsetCraftPopupUI : MonoBehaviour
         currentInventory.Consume(currentRecipe);
         currentSlot.MarkCrafted();
 
+        SoundManager.Instance?.OneShot("CraftExecute");
+
         if (dataManager != null)
             dataManager.MarkItemCraftedBySaveId(currentRecipe.saveId);
 
