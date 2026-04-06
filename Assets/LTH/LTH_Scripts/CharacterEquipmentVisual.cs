@@ -1,12 +1,20 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class CharacterEquipmentVisual : MonoBehaviour
 {
     [SerializeField] private DataManager dataManager;
     [SerializeField] private CharacterId characterId;
-    [SerializeField] private Image weaponImage;
-    [SerializeField] private Sprite defaultWeaponSprite;
+    [Header("Primary Weapon")]
+    [FormerlySerializedAs("weaponImage")]
+    [SerializeField] private Image primaryWeaponImage;
+    [FormerlySerializedAs("defaultWeaponSprite")]
+    [SerializeField] private Sprite defaultPrimaryWeaponSprite;
+
+    [Header("Secondary Weapon")]
+    [SerializeField] private Image secondaryWeaponImage;
+    [SerializeField] private Sprite defaultSecondaryWeaponSprite;
 
     private void OnEnable()
     {
@@ -46,7 +54,7 @@ public class CharacterEquipmentVisual : MonoBehaviour
 
     private void ApplyEquipmentVisual(GearsetRecipeSO equippedRecipe)
     {
-        if (weaponImage == null)
+        if (primaryWeaponImage == null && secondaryWeaponImage == null)
             return;
 
         if (equippedRecipe == null || equippedRecipe.characterWeaponSprites == null)
@@ -61,18 +69,40 @@ public class CharacterEquipmentVisual : MonoBehaviour
             if (weaponData == null || weaponData.characterId != characterId)
                 continue;
 
-            weaponImage.sprite = weaponData.weaponSprite != null ? weaponData.weaponSprite : defaultWeaponSprite;
+            ApplyWeaponSprites(weaponData);
             return;
         }
 
         ApplyDefaultVisual();
     }
 
+    private void ApplyWeaponSprites(CharacterWeaponSpriteData weaponData)
+    {
+        if (primaryWeaponImage != null)
+        {
+            primaryWeaponImage.sprite = weaponData.primaryWeaponSprite != null
+                ? weaponData.primaryWeaponSprite
+                : defaultPrimaryWeaponSprite;
+        }
+
+        if (secondaryWeaponImage != null)
+        {
+            secondaryWeaponImage.sprite = weaponData.secondaryWeaponSprite != null
+                ? weaponData.secondaryWeaponSprite
+                : defaultSecondaryWeaponSprite;
+        }
+    }
+
     private void ApplyDefaultVisual()
     {
-        if (weaponImage != null)
+        if (primaryWeaponImage != null)
         {
-            weaponImage.sprite = defaultWeaponSprite;
+            primaryWeaponImage.sprite = defaultPrimaryWeaponSprite;
+        }
+
+        if (secondaryWeaponImage != null)
+        {
+            secondaryWeaponImage.sprite = defaultSecondaryWeaponSprite;
         }
     }
 

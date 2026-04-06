@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum CharacterId
 {
@@ -13,7 +14,9 @@ public enum CharacterId
 public class CharacterWeaponSpriteData
 {
     public CharacterId characterId;
-    public Sprite weaponSprite;
+    [FormerlySerializedAs("weaponSprite")]
+    public Sprite primaryWeaponSprite;
+    public Sprite secondaryWeaponSprite;
 }
 
 [CreateAssetMenu(menuName = "Game/Gearset Recipe")]
