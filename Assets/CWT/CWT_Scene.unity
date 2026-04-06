@@ -614,7 +614,7 @@ RectTransform:
   m_Father: {fileID: 1623304683}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -690,7 +690,9 @@ MonoBehaviour:
   blacksmithPopup: {fileID: 0}
   partyEquipPopup: {fileID: 0}
   settingsPopup: {fileID: 580058080}
+  offlineRewardPopup: {fileID: 0}
   rewardPopup: {fileID: 0}
+  WarningPopup: {fileID: 0}
   popupCanvas: {fileID: 381652483}
 --- !u!4 &163035754
 Transform:
@@ -1781,9 +1783,9 @@ RectTransform:
   m_Father: {fileID: 889608082}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &347159477
 MonoBehaviour:
@@ -1855,7 +1857,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &381652481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2457,6 +2459,7 @@ MonoBehaviour:
   _dungeonPoint: {fileID: 403241906}
   _leftEndPoint: {fileID: 1951973832}
   _returnEndPoint: {fileID: 38653262}
+  _dungeonPointIcon: {fileID: 0}
   _partyGroup: {fileID: 1418575969}
   _partyDefault: {fileID: 606456418}
   _partyBattle: {fileID: 2088653791}
@@ -2464,6 +2467,7 @@ MonoBehaviour:
   _partyTent: {fileID: 116315856}
   _bubbleQuestion: {fileID: 203225191}
   _bubbleExclamation: {fileID: 467799487}
+  _dungeonBackgroundImage: {fileID: 0}
   _eventRange: 40
   _celebrateDuration: 2
 --- !u!4 &569146783
@@ -2825,7 +2829,7 @@ RectTransform:
   m_Father: {fileID: 1356705370}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3107,7 +3111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyEquipManager
   isPersistent: 1
-  _currentAttribute: "\uAC00\uBCBC\uC6C0"
+  dataManager: {fileID: 0}
+  defaultAttribute: None
+  defaultAttributeKey: 
 --- !u!4 &825977142
 Transform:
   m_ObjectHideFlags: 0
@@ -3285,7 +3291,10 @@ MonoBehaviour:
   - name: "\uB4DC\uB798\uACE4\uC758 \uC720\uD574"
     sprite: {fileID: 5548209062045534172, guid: 79be8d017c31a334da8f0a6a9f4f5e0b, type: 3}
   - name: "\uC6A9\uC0AC\uC758 \uC9D5\uD45C"
-    sprite: {fileID: 4931531543202900484, guid: 48e231951090ffd41a45430e7a54426f, type: 3}
+    sprite: {fileID: 21300000, guid: c81a62cff47c5d740881360a63726341, type: 3}
+  _dungeonBackgrounds: []
+  _dungeonBattleBackgrounds: []
+  _questRewards: []
 --- !u!4 &880611981
 Transform:
   m_ObjectHideFlags: 0
@@ -4130,7 +4139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1056774631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5218,7 +5227,7 @@ RectTransform:
   m_Father: {fileID: 2113875612}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5579,7 +5588,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -455}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1392456091
 MonoBehaviour:
@@ -6587,7 +6596,7 @@ RectTransform:
   m_Father: {fileID: 1415608678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7794,7 +7803,7 @@ RectTransform:
   m_Father: {fileID: 1352975046}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
