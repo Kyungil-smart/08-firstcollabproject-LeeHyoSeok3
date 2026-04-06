@@ -7,6 +7,8 @@ public class GameSaveData
     public double gold;
     public List<MaterialSaveData> materials = new();
     public List<string> craftedGearIds = new();
+    public List<string> unlockedGearIds = new();
+    public string equippedGearId;
     public List<UpgradeSaveData> upgrades = new();
 
       // 퀘스트 오프라인 보상을 위한 저장 데이터

@@ -9,7 +9,7 @@ using Kirurobo;
 /// 사용법: DragMoveHandle 프리팹의 동일 GameObject에 이 컴포넌트를 추가하세요.
 /// </summary>
 [RequireComponent(typeof(UniWindowMoveHandle))]
-public class DragMoveHandleBridge : MonoBehaviour, IEndDragHandler, IPointerUpHandler
+public class DragMoveHandleBridge : MonoBehaviour, IEndDragHandler
 {
     private ScreenBoundsHandler _boundsHandler;
 
@@ -23,8 +23,8 @@ public class DragMoveHandleBridge : MonoBehaviour, IEndDragHandler, IPointerUpHa
         _boundsHandler?.CheckAndCorrectBounds();
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
-        _boundsHandler?.CheckAndCorrectBounds();
-    }
+    // public void OnPointerUp(PointerEventData eventData)
+    // {
+    //     _boundsHandler?.CheckAndCorrectBounds();
+    // }
 }

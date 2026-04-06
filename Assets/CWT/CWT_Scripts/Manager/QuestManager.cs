@@ -86,7 +86,7 @@ public class QuestManager : Singleton<QuestManager>
         // 4. 출발 효과음 재생
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.OneShot("mouseClick");
+            SoundManager.Instance.OneShot("AdventureStart");
         }
 
         // 5. 모험 화면(WorldMap)으로 전환

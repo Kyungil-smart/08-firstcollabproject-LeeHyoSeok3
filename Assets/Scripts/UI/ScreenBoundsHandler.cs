@@ -63,43 +63,68 @@ public class ScreenBoundsHandler : MonoBehaviour
         Vector2 windowPos = WindowSystemManager.Instance.GetWindowPosition();
         Vector2 windowSize = WindowSystemManager.Instance.GetWindowSize();
 
-        float escapeThreshold = GetEscapeThreshold();
+        float threshold = GetEscapeThreshold();
         Resolution screen = Screen.currentResolution;
 
-        float correctedX = windowPos.x;
-        float correctedY = windowPos.y;
-        bool needsCorrection = false;
+        // 좌상단 기준에서
+        // 창이 완전히 밖으로 나가지 않고 threshold 만큼은 남게 허용
+        float minX = -(windowSize.x - threshold);
+        float maxX = screen.width - threshold;
 
-        // 좌측 이탈
-        if (windowPos.x + escapeThreshold < 0)
-        {
-            correctedX = 0;
-            needsCorrection = true;
-        }
-        // 우측 이탈
-        else if (windowPos.x + windowSize.x - escapeThreshold > screen.width)
-        {
-            correctedX = screen.width - windowSize.x;
-            needsCorrection = true;
-        }
+        float minY = 0f;
+        float maxY = screen.height - threshold;
 
-        // 상단 이탈
-        if (windowPos.y + escapeThreshold < 0)
+        float correctedX = Mathf.Clamp(windowPos.x, minX, maxX);
+        float correctedY = Mathf.Clamp(windowPos.y, minY, maxY);
+
+        Vector2 corrected = new Vector2(correctedX, correctedY);
+
+        if (corrected != windowPos)
         {
-            correctedY = 0;
-            needsCorrection = true;
-        }
-        // 하단 이탈
-        else if (windowPos.y + windowSize.y - escapeThreshold > screen.height)
-        {
-            correctedY = screen.height - windowSize.y;
-            needsCorrection = true;
+            WindowSystemManager.Instance.SetWindowPosition(corrected);
         }
 
-        if (needsCorrection)
-        {
-            WindowSystemManager.Instance.SetWindowPosition(new Vector2(correctedX, correctedY));
-        }
+        Debug.Log($"[Bounds] pos={windowPos}, size={windowSize}, screen={screen.width}x{screen.height}");
+
+        #region 레거시 코드
+        // float escapeThreshold = GetEscapeThreshold();
+        // Resolution screen = Screen.currentResolution;
+
+        // float correctedX = windowPos.x;
+        // float correctedY = windowPos.y;
+        // bool needsCorrection = false;
+
+        // // 좌측 이탈
+        // if (windowPos.x + escapeThreshold < 0)
+        // {
+        //     correctedX = 0;
+        //     needsCorrection = true;
+        // }
+        // // 우측 이탈
+        // else if (windowPos.x + windowSize.x - escapeThreshold > screen.width)
+        // {
+        //     correctedX = screen.width - windowSize.x;
+        //     needsCorrection = true;
+        // }
+
+        // // 상단 이탈
+        // if (windowPos.y + escapeThreshold < 0)
+        // {
+        //     correctedY = 0;
+        //     needsCorrection = true;
+        // }
+        // // 하단 이탈
+        // else if (windowPos.y + windowSize.y - escapeThreshold > screen.height)
+        // {
+        //     correctedY = screen.height - windowSize.y;
+        //     needsCorrection = true;
+        // }
+
+        // if (needsCorrection)
+        // {
+        //     WindowSystemManager.Instance.SetWindowPosition(new Vector2(correctedX, correctedY));
+        // }
+        #endregion
     }
 
     /// <summary>
@@ -125,13 +150,25 @@ public class ScreenBoundsHandler : MonoBehaviour
 
         Vector2 windowPos = WindowSystemManager.Instance.GetWindowPosition();
         Vector2 windowSize = WindowSystemManager.Instance.GetWindowSize();
-        float escapeThreshold = GetEscapeThreshold();
+        //float escapeThreshold = GetEscapeThreshold();
+        float threshold = GetEscapeThreshold();
         Resolution screen = Screen.currentResolution;
 
-        return windowPos.x + escapeThreshold < 0
-            || windowPos.x + windowSize.x - escapeThreshold > screen.width
-            || windowPos.y + escapeThreshold < 0
-            || windowPos.y + windowSize.y - escapeThreshold > screen.height;
+        float minX = -(windowSize.x - threshold);
+        float maxX = screen.width - threshold;
+
+        float minY = 0f;
+        float maxY = screen.height - threshold;
+
+        return windowPos.x < minX
+            || windowPos.x > maxX
+            || windowPos.y < minY
+            || windowPos.y > maxY;
+
+        // return windowPos.x + escapeThreshold < 0
+        //     || windowPos.x + windowSize.x - escapeThreshold > screen.width
+        //     || windowPos.y + escapeThreshold < 0
+        //     || windowPos.y + windowSize.y - escapeThreshold > screen.height;
     }
 
     private float GetEscapeThreshold()

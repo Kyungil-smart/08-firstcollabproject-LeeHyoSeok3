@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class UpgradeSystem : MonoBehaviour
     
     private List<UpgradeRow> rows;
     private int pendingLevel = -1;
+
+    public event Action<int> OnLevelChanged;
     
     public string SaveId => saveId;
     public int CurrentLevel => currentLevel;
@@ -59,6 +62,7 @@ public class UpgradeSystem : MonoBehaviour
         {
             currentLevel = Mathf.Clamp(pendingLevel, 0, rows.Count - 1);
             pendingLevel = -1;
+            OnLevelChanged?.Invoke(currentLevel);
         }
     }
 
@@ -110,6 +114,7 @@ public class UpgradeSystem : MonoBehaviour
             return false;
 
         currentLevel++;
+        OnLevelChanged?.Invoke(currentLevel);
         GameDataController.Instance?.SaveGame();
         return true;
     }
@@ -121,7 +126,12 @@ public class UpgradeSystem : MonoBehaviour
             pendingLevel = level;  // 아직 로드 안됐으면 보관
             return;
         }
-        currentLevel = Mathf.Clamp(level, 0, rows.Count - 1);
+        int clampedLevel = Mathf.Clamp(level, 0, rows.Count - 1);
+        if (currentLevel == clampedLevel)
+            return;
+
+        currentLevel = clampedLevel;
+        OnLevelChanged?.Invoke(currentLevel);
     }
 
     public UpgradeSaveData GetSaveData()

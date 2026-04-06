@@ -113,12 +113,11 @@ public class InventoryEquipmentPopup : MonoBehaviour
 
     public void RefreshSlots()
     {
-        // ... (기존과 동일)
         List<ItemData> inventoryItems = dummyDataManager.GetInventoryItems();
         for (int i = 0; i < TOTAL_SLOTS; i++)
         {
             if (i < inventoryItems.Count)
-                slots[i].SetSlot(inventoryItems[i].id, inventoryItems[i].icon, inventoryItems[i].isUnlocked, (itemID) => SelectSlot(itemID));
+                slots[i].SetSlot(inventoryItems[i].id, inventoryItems[i].icon, inventoryItems[i].isCrafted || inventoryItems[i].isUnlocked, (itemID) => SelectSlot(itemID));
             else
                 slots[i].SetEmpty(emptySlotSprite);
         }
@@ -139,8 +138,10 @@ public class InventoryEquipmentPopup : MonoBehaviour
 
         if (detailPanel != null) detailPanel.SetActive(true);
 
-        // 📝 미해금 장비 처리 
-        if (!selectedItem.isUnlocked)
+        bool canUnlock = selectedItem.isCrafted && !selectedItem.isUnlocked;
+
+        // 제작 전 장비 처리 
+        if (!selectedItem.isCrafted)
         {
             if (detailBackgroundImage != null) detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
 
@@ -153,14 +154,33 @@ public class InventoryEquipmentPopup : MonoBehaviour
             if (detailTraitName != null)
             {
                 detailTraitName.gameObject.SetActive(true);
-                detailTraitName.text = "<align=center><color=#55FF55>던전 해금 시\n착용 가능</color></align>";
+                detailTraitName.text = "<align=center><color=#55FF55>제작 후\n해금 가능</color></align>";
+            }
+
+            if (equipButton != null) equipButton.gameObject.SetActive(false);
+            if (unlockButton != null) unlockButton.gameObject.SetActive(false);
+            if (tooltipPanel != null) tooltipPanel.SetActive(false);
+        }
+        // 제작은 완료됐지만 아직 해금 전인 장비 처리
+        else if (canUnlock)
+        {
+            if (detailBackgroundImage != null) detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+
+            if (detailName != null) detailName.gameObject.SetActive(false);
+            if (detailIcon != null) detailIcon.gameObject.SetActive(false);
+            if (detailTraitIcon != null) detailTraitIcon.gameObject.SetActive(false);
+
+            if (detailTraitName != null)
+            {
+                detailTraitName.gameObject.SetActive(true);
+                detailTraitName.text = "<align=center><color=#55FF55>해금 후\n착용 가능</color></align>";
             }
 
             if (equipButton != null) equipButton.gameObject.SetActive(false);
             if (unlockButton != null) unlockButton.gameObject.SetActive(true);
             if (tooltipPanel != null) tooltipPanel.SetActive(false);
         }
-        // 📝 해금된 장비 처리
+        // 해금된 장비 처리
         else
         {
             if (detailBackgroundImage != null) detailBackgroundImage.color = originalDetailBgColor;

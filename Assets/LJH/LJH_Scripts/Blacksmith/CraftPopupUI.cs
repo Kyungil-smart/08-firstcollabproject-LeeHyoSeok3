@@ -18,6 +18,7 @@ public class GearsetCraftPopupUI : MonoBehaviour
     [SerializeField] private TooltipHoverUI traitIconHover;
 
     [SerializeField] private MaterialInventoryUI inventoryUI;
+    [SerializeField] private DataManager dataManager; // 제작된 아이템이 파티 장착 시스템과 연동
 
     private GearsetRecipeSO currentRecipe;
     private MaterialInventory currentInventory;
@@ -28,6 +29,8 @@ public class GearsetCraftPopupUI : MonoBehaviour
     private void Start()
     {
         gameObject.SetActive(false);
+
+        if (dataManager == null) dataManager = FindFirstObjectByType<DataManager>();
     }
 
     public void Show(GearsetRecipeSO recipe, MaterialInventory inventory, GearsetSlotUI slot)
@@ -98,6 +101,11 @@ public class GearsetCraftPopupUI : MonoBehaviour
 
         currentInventory.Consume(currentRecipe);
         currentSlot.MarkCrafted();
+
+        SoundManager.Instance?.OneShot("CraftExecute");
+
+        if (dataManager != null)
+            dataManager.MarkItemCraftedBySaveId(currentRecipe.saveId);
 
         if (inventoryUI != null)
             inventoryUI.RefreshUI();

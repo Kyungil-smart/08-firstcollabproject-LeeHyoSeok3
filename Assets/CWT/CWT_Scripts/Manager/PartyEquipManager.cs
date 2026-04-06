@@ -1,45 +1,105 @@
-﻿// ============================================
-// 파일명: PartyEquipManager.cs
-// 붙일 오브젝트: 빈 오브젝트 (씬에 하나만 존재)
-// 역할: 파티가 현재 장착 중인 장비의 특성을 관리
-//       ★ 임시 스크립트 - 나중에 다른 팀원의 장비 시스템과 교체 예정
-// ============================================
-
-using UnityEngine;
+using System;
 using DesignPattern;
+using UnityEngine;
 
 public class PartyEquipManager : Singleton<PartyEquipManager>
 {
-    // ─── 현재 장착 중인 장비 특성 ───
-    // Inspector에서 테스트용으로 직접 입력 가능
-    // 예: "가벼움", "견고함", "끈적거림", "따뜻함" 등
-    [Header("현재 장착 특성 (테스트용, Inspector에서 변경)")]
-    [SerializeField] private string _currentAttribute = "가벼움";
+    [Header("Equipment Data Reference")]
+    [SerializeField] private DataManager dataManager;
 
-    // 외부에서 현재 특성을 읽을 수 있는 프로퍼티
-    public string CurrentAttribute => _currentAttribute;
+    [Header("Fallback Attribute")]
+    [SerializeField] private string defaultAttribute = "None";
+    [SerializeField] private string defaultAttributeKey = "";
 
-    /// <summary>
-    /// 장비 특성 변경 (나중에 장비 시스템 연동 시 호출)
-    /// </summary>
-    public void SetAttribute(string newAttribute)
+    public event Action<string> OnAttributeChanged;
+
+    public string CurrentAttribute
     {
-        _currentAttribute = newAttribute;
-        Debug.Log($"[PartyEquipManager] 장비 특성 변경: {_currentAttribute}");
+        get
+        {
+            if (dataManager != null && !string.IsNullOrWhiteSpace(dataManager.CurrentPartyTrait))
+                return dataManager.CurrentPartyTrait;
+
+            return defaultAttribute;
+        }
     }
 
-    /// <summary>
-    /// 퀘스트의 요구 특성과 현재 장착 특성이 일치하는지 확인
-    /// </summary>
-    /// <param name="requiredAttribute">던전이 요구하는 특성</param>
-    /// <returns>true면 입장 가능, false면 입장 불가</returns>
-    public bool CanEnterDungeon(string requiredAttribute)
+    public string CurrentAttributeKey
     {
-        // 요구 특성이 비어있으면 (예: 평원) → 항상 입장 가능
-        if (string.IsNullOrEmpty(requiredAttribute))
-            return true;
+        get
+        {
+            if (dataManager != null && !string.IsNullOrWhiteSpace(dataManager.CurrentPartyTraitKey))
+                return dataManager.CurrentPartyTraitKey;
 
-        // 현재 장착 특성과 요구 특성이 같으면 입장 가능
-        return _currentAttribute == requiredAttribute;
+            return defaultAttributeKey;
+        }
+    }
+
+    protected override void OnAwake()
+    {
+        BindDataManagerIfNeeded();
+    }
+
+    private void OnEnable()
+    {
+        BindDataManagerIfNeeded();
+
+        if (dataManager != null)
+        {
+            dataManager.OnPartyTraitChanged += HandlePartyTraitChanged;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (dataManager != null)
+        {
+            dataManager.OnPartyTraitChanged -= HandlePartyTraitChanged;
+        }
+    }
+
+    public void SetAttribute(string newAttribute)
+    {
+        defaultAttribute = string.IsNullOrWhiteSpace(newAttribute) ? "None" : newAttribute.Trim();
+        OnAttributeChanged?.Invoke(CurrentAttribute);
+        Debug.Log($"[PartyEquipManager] fallback attribute changed: {CurrentAttribute}");
+    }
+
+    public bool CanEnterDungeon(string requiredTraitKey)
+    {
+        Debug.Log("[PartyEquipManager] CanEnterDungeon called");
+        Debug.Log($"[PartyEquipManager] CurrentAttribute = '{CurrentAttribute}'");
+        Debug.Log($"[PartyEquipManager] CurrentAttributeKey = '{CurrentAttributeKey}'");
+        Debug.Log($"[PartyEquipManager] requiredTraitKey = '{requiredTraitKey}'");
+
+        if (string.IsNullOrWhiteSpace(requiredTraitKey))
+        {
+            Debug.Log("[PartyEquipManager] requiredTraitKey is empty, allowing entry");
+            return true;
+        }
+
+        bool result = string.Equals(
+            CurrentAttributeKey?.Trim(),
+            requiredTraitKey.Trim(),
+            StringComparison.Ordinal);
+
+        Debug.Log($"[PartyEquipManager] compare result = {result}");
+        return result;
+    }
+
+    private void BindDataManagerIfNeeded()
+    {
+        if (dataManager == null)
+        {
+            dataManager = FindFirstObjectByType<DataManager>();
+        }
+    }
+
+    private void HandlePartyTraitChanged(string newAttributeKey)
+    {
+        Debug.Log($"[PartyEquipManager] trait sync event received / newAttributeKey = '{newAttributeKey}'");
+        Debug.Log($"[PartyEquipManager] CurrentAttribute = '{CurrentAttribute}'");
+        Debug.Log($"[PartyEquipManager] CurrentAttributeKey = '{CurrentAttributeKey}'");
+        OnAttributeChanged?.Invoke(CurrentAttribute);
     }
 }
