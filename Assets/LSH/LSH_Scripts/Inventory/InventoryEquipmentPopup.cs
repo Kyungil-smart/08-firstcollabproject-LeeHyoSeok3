@@ -53,6 +53,17 @@ public class InventoryEquipmentPopup : MonoBehaviour
         if (detailPanel != null) detailPanel.SetActive(false);
         if (tooltipPanel != null) tooltipPanel.SetActive(false);
     }
+    
+    private string GetLocalized(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return string.Empty;
+
+        if (LocalizationManager.Instance == null)
+            return key;
+
+        return LocalizationManager.Instance.GetText(key);
+    }
 
     // 💡 툴팁 이벤트 동적 생성 (장비인지 특성인지 구분해서 띄워줍니다)
     private void SetupTooltipTrigger(GameObject targetObj, bool isEquipment)
@@ -73,13 +84,13 @@ public class InventoryEquipmentPopup : MonoBehaviour
             // 💡 마우스가 올라간 대상에 따라 툴팁 내용을 다르게 세팅!
             if (isEquipment)
             {
-                if (tooltipName != null) tooltipName.text = item.name;
-                if (tooltipDesc != null) tooltipDesc.text = item.description;
+                if (tooltipName != null) tooltipName.text = GetLocalized(item.nameKey);
+                if (tooltipDesc != null) tooltipDesc.text = GetLocalized(item.descriptionKey);
             }
             else
             {
-                if (tooltipName != null) tooltipName.text = item.traitName;
-                if (tooltipDesc != null) tooltipDesc.text = item.traitDescription;
+                if (tooltipName != null) tooltipName.text = GetLocalized(item.traitNameKey);
+                if (tooltipDesc != null) tooltipDesc.text = GetLocalized(item.traitDescriptionKey);
             }
 
             tooltipPanel.SetActive(true);
@@ -154,7 +165,8 @@ public class InventoryEquipmentPopup : MonoBehaviour
             if (detailTraitName != null)
             {
                 detailTraitName.gameObject.SetActive(true);
-                detailTraitName.text = "<align=center><color=#55FF55>제작 후\n해금 가능</color></align>";
+                detailTraitName.text = GetLocalized("제작 후 해금 가능");
+
             }
 
             if (equipButton != null) equipButton.gameObject.SetActive(false);
@@ -173,7 +185,7 @@ public class InventoryEquipmentPopup : MonoBehaviour
             if (detailTraitName != null)
             {
                 detailTraitName.gameObject.SetActive(true);
-                detailTraitName.text = "<align=center><color=#55FF55>해금 후\n착용 가능</color></align>";
+                detailTraitName.text = GetLocalized("해금 후 착용 가능");
             }
 
             if (equipButton != null) equipButton.gameObject.SetActive(false);
@@ -185,7 +197,7 @@ public class InventoryEquipmentPopup : MonoBehaviour
         {
             if (detailBackgroundImage != null) detailBackgroundImage.color = originalDetailBgColor;
 
-            if (detailName != null) { detailName.gameObject.SetActive(true); detailName.text = selectedItem.name; }
+            if (detailName != null) { detailName.gameObject.SetActive(true); detailName.text = GetLocalized(selectedItem.nameKey); }
             if (detailIcon != null) { detailIcon.gameObject.SetActive(true); detailIcon.sprite = selectedItem.icon; }
 
             if (detailTraitIcon != null)
@@ -196,7 +208,7 @@ public class InventoryEquipmentPopup : MonoBehaviour
             if (detailTraitName != null)
             {
                 detailTraitName.gameObject.SetActive(true);
-                detailTraitName.text = selectedItem.traitName;
+                detailTraitName.text = GetLocalized(selectedItem.traitNameKey);
             }
 
             if (equipButton != null) equipButton.gameObject.SetActive(true);

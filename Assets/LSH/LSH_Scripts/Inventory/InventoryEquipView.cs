@@ -73,7 +73,26 @@ public class InventoryEquipView : MonoBehaviour
         if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
         HideDetail();
     }
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshCurrentDetail;
+    }
 
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshCurrentDetail;
+    }
+
+    private void RefreshCurrentDetail()
+    {
+        if (m_currentDetailItem == null)
+            return;
+
+        bool isEquipped = false;
+        ShowDetail(m_currentDetailItem, isEquipped);
+    }
     private void SetupTooltipTrigger(GameObject targetObj, bool isEquipment)
     {
         if (targetObj.GetComponent<EventTrigger>() == null) targetObj.AddComponent<EventTrigger>();
@@ -87,13 +106,13 @@ public class InventoryEquipView : MonoBehaviour
 
             if (isEquipment)
             {
-                if (m_tooltipName != null) m_tooltipName.text = m_currentDetailItem.name;
-                if (m_tooltipDesc != null) m_tooltipDesc.text = m_currentDetailItem.description;
+                if (m_tooltipName != null) m_tooltipName.text = GetLocalized(m_currentDetailItem.nameKey);
+                if (m_tooltipDesc != null) m_tooltipDesc.text = GetLocalized(m_currentDetailItem.descriptionKey);
             }
             else
             {
-                if (m_tooltipName != null) m_tooltipName.text = m_currentDetailItem.traitName;
-                if (m_tooltipDesc != null) m_tooltipDesc.text = m_currentDetailItem.traitDescription;
+                if (m_tooltipName != null) m_tooltipName.text = GetLocalized(m_currentDetailItem.traitNameKey);
+                if (m_tooltipDesc != null) m_tooltipDesc.text = GetLocalized(m_currentDetailItem.traitDescriptionKey);
             }
             m_tooltipPanel.SetActive(true);
         });
@@ -119,7 +138,17 @@ public class InventoryEquipView : MonoBehaviour
                 slot.SetEmpty(m_emptySlotSprite);
         }
     }
+    private string GetLocalized(string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+            return string.Empty;
 
+        if (LocalizationManager.Instance == null)
+            return key;
+
+        return LocalizationManager.Instance.GetText(key);
+    }
+    
     public void ShowDetail(ItemData item, bool isEquipped)
     {
         m_currentViewedItemID = item.id;
@@ -147,7 +176,7 @@ public class InventoryEquipView : MonoBehaviour
 
             if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
             if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(true);
-            if (m_detailTraitName != null) m_detailTraitName.text = "해금 후 착용 가능";
+            if (m_detailTraitName != null) m_detailTraitName.text = GetLocalized("해금 후 착용 가능");
             if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
         }
         else
@@ -157,10 +186,10 @@ public class InventoryEquipView : MonoBehaviour
             if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(true);
             if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(false);
 
-            if (m_detailName != null) m_detailName.text = item.name;
+            if (m_detailName != null) m_detailName.text = GetLocalized(item.nameKey);
             if (m_detailIcon != null) m_detailIcon.sprite = item.icon;
             if (m_detailTraitIcon != null) m_detailTraitIcon.sprite = item.traitIcon;
-            if (m_detailTraitName != null) m_detailTraitName.text = item.traitName;
+            if (m_detailTraitName != null) m_detailTraitName.text = GetLocalized(item.traitNameKey);
 
             if (m_equipButton != null) m_equipButton.gameObject.SetActive(true);
             if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(false);

@@ -62,7 +62,7 @@ public class MaterialInventoryUI : MonoBehaviour
             if (entry.Key == null)
                 continue;
 
-            sb.AppendLine($"{entry.Key.materialName} : {entry.Value}");
+            sb.AppendLine($"{entry.Key.GetMaterialName()} : {entry.Value}");
         }
 
         inventoryText.text = sb.ToString();

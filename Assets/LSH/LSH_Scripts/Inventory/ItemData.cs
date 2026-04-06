@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 
 [System.Serializable]
-public class ItemData // 💡 struct를 class로 변경합니다!
+public class ItemData
 {
     public int id;
-    public string name;
-    public string description;
+
+    // 장비
+    public string nameKey;
+    public string descriptionKey;
     public Sprite icon;
+
+    // 상태
     public bool isCrafted;
     public bool isUnlocked;
 
-    // 💡 SO 구조에 맞춘 특성 데이터 추가
+    // 특성
     public string traitKey;
-    public string traitName;
-    public string traitDescription;
+    public string traitNameKey;
+    public string traitDescriptionKey;
     public Sprite traitIcon;
 }

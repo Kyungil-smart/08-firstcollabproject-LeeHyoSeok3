@@ -111,7 +111,7 @@ public class RewardPopupUI : MonoBehaviour
             materialAmountText.text = $"x {materialReward.count}";
 
         if (materialNameText != null)
-            materialNameText.text = materialReward.material.materialName;
+            materialNameText.text = materialReward.material.GetMaterialName();
     }
 
     private static MaterialEntry GetPrimaryMaterialReward(QuestRewardSo reward)

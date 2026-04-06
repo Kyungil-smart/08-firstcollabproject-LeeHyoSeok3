@@ -54,19 +54,20 @@ public class DataManager : MonoBehaviour
             ItemData newItem = new ItemData
             {
                 id = i,
-                name = recipe.gearsetName,
-                description = recipe.gearDescription,
+
+                // 번역된 문장이 아니라 key 저장
+                nameKey = recipe.gearsetNameKey,
+                descriptionKey = recipe.gearDescriptionKey,
                 icon = recipe.gearIcon,
+
                 isCrafted = (recipe.saveId == "Rusty"),
                 isUnlocked = (recipe.saveId == "Rusty"),
 
-                // 특성 데이터 매핑
-                traitKey = string.IsNullOrWhiteSpace(recipe.traitKey) ? recipe.traitName : recipe.traitKey,
-                traitName = recipe.traitName,
-                traitDescription = recipe.traitDescription,
+                traitKey = string.IsNullOrWhiteSpace(recipe.traitKey) ? recipe.traitNameKey : recipe.traitKey,
+                traitNameKey = recipe.traitNameKey,
+                traitDescriptionKey = recipe.traitDescriptionKey,
                 traitIcon = recipe.traitIcon
             };
-
             m_inventory.Add(newItem);
         }
     }
@@ -285,12 +286,12 @@ public class DataManager : MonoBehaviour
             OnEquippedItemChanged?.Invoke(equippedData);
 
             // 장비 장착 시, 표시명과 비교용 키를 함께 갱신합니다.
-            string newTrait = equippedData.traitName;
+            string newTrait = equippedData.GetTraitName();
             string newTraitKey = string.IsNullOrWhiteSpace(equippedData.traitKey)
-                ? equippedData.traitName
+                ? equippedData.GetTraitName()
                 : equippedData.traitKey;
 
-            Debug.Log($"[DataManager] 장착 아이템 이름 = {equippedData.gearsetName}");
+            Debug.Log($"[DataManager] 장착 아이템 이름 = {equippedData.GetGearsetName()}");
             Debug.Log($"[DataManager] 장착 아이템 traitName = '{newTrait}'");
             Debug.Log($"[DataManager] 장착 아이템 traitKey = '{newTraitKey}'");
             Debug.Log($"[DataManager] 기존 파티 특성 = '{m_currentPartyTrait}'");

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Stick
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Stick
-  materialName: Stick
+  materialNameKey: 'MAT_STICK_NAME '
   icon: {fileID: 21300000, guid: 4aa3c02dbcca29f45ad5cb4a35164911, type: 3}

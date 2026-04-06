@@ -26,14 +26,14 @@ public class GearsetRecipeSO : ScriptableObject
     public string saveId;
 
     [Header("Gear Info")]
-    public string gearsetName;
-    [TextArea] public string gearDescription;
+    public string gearsetNameKey;
+    [TextArea] public string gearDescriptionKey;
     public Sprite gearIcon;
 
     [Header("Trait Info")]
     public string traitKey;
-    public string traitName;
-    [TextArea] public string traitDescription;
+    public string traitNameKey;
+    [TextArea] public string traitDescriptionKey;
     public Sprite traitIcon;
 
     [Header("Character Weapon Visuals")]
@@ -41,6 +41,37 @@ public class GearsetRecipeSO : ScriptableObject
 
     [Header("Recipe")]
     public List<MaterialRequirement> requirements = new List<MaterialRequirement>();
+
+    public string GetGearsetName()
+    {
+        return GetLocalizedText(gearsetNameKey);
+    }
+
+    public string GetGearDescription()
+    {
+        return GetLocalizedText(gearDescriptionKey);
+    }
+
+    public string GetTraitName()
+    {
+        return GetLocalizedText(traitNameKey);
+    }
+
+    public string GetTraitDescription()
+    {
+        return GetLocalizedText(traitDescriptionKey);
+    }
+
+    private string GetLocalizedText(string key)
+    {
+        if (string.IsNullOrEmpty(key))
+            return string.Empty;
+
+        if (LocalizationManager.Instance == null)
+            return key;
+
+        return LocalizationManager.Instance.GetText(key);
+    }
 }
 
 [System.Serializable]

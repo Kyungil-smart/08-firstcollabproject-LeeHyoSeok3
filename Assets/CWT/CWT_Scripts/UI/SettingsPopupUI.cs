@@ -241,13 +241,33 @@ public class SettingsPopupUI : MonoBehaviour
     private void OnKoreanButtonClicked()
     {
         LocalizationManager.Instance.SetLanguage(Language.Korean);
+        ForceRefreshLocalizedUI();
         UpdateLanguageButtons();
     }
 
     private void OnEnglishButtonClicked()
     {
         LocalizationManager.Instance.SetLanguage(Language.English);
+        ForceRefreshLocalizedUI();
         UpdateLanguageButtons();
+    }
+
+    private void ForceRefreshLocalizedUI()
+    {
+        // LocalizedText 붙은 텍스트들 즉시 갱신
+        LocalizedText[] localizedTexts = FindObjectsByType<LocalizedText>(FindObjectsSortMode.None);
+        foreach (var text in localizedTexts)
+        {
+            text.SendMessage("UpdateText", SendMessageOptions.DontRequireReceiver);
+        }
+
+        // 장비 슬롯 즉시 갱신
+        GearsetSlotUI[] gearSlots = FindObjectsByType<GearsetSlotUI>(FindObjectsSortMode.None);
+        foreach (var slot in gearSlots)
+        {
+            slot.RefreshSlotInfo();
+            slot.RefreshState();
+        }
     }
 
     // 현재 언어에 따라 버튼 활성화/비활성화 갱신

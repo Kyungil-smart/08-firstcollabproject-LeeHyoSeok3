@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Dragon's remain
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Dragon
-  materialName: Dragon's remain
+  materialNameKey: 'MAT_DRAGON_NAME '
   icon: {fileID: 21300000, guid: 17c9ccd1793b3894b962d581ad5e426c, type: 3}

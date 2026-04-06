@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Frozen core
   m_EditorClassIdentifier: Assembly-CSharp::MaterialDataSO
   saveId: Frozencore
-  materialName: Frozen core
+  materialNameKey: 'MAT_FROZEN_NAME '
   icon: {fileID: 21300000, guid: 8a39b99bc2c9c9c47966a759f2caed86, type: 3}
