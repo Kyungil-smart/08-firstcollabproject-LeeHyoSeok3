@@ -114,7 +114,7 @@ public class InventoryEquipView : MonoBehaviour
             int slotIndex = i;
 
             if (i < items.Count)
-                slot.SetSlot(items[i].id, items[i].icon, items[i].isCrafted || items[i].isUnlocked, (id) => OnSlotClicked?.Invoke(slotIndex));
+                slot.SetSlot(items[i].id, items[i].icon, items[i].isUnlocked, (id) => OnSlotClicked?.Invoke(slotIndex));
             else
                 slot.SetEmpty(m_emptySlotSprite);
         }
@@ -127,26 +127,18 @@ public class InventoryEquipView : MonoBehaviour
 
         if (isEquipped) { HideDetail(); return; }
 
-        m_detailPanel.SetActive(true);
-        if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(true);
-
         bool canUnlock = item.isCrafted && !item.isUnlocked;
 
-        // 제작되지 않은 장비
         if (!item.isCrafted)
         {
-            if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
-
-            if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(false);
-            if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(true);
-
-            if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
-            if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(false);
-            if (m_detailTraitName != null) m_detailTraitName.text = "제작 후 해금 가능";
-            if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
+            HideDetail();
+            return;
         }
-        // 제작은 완료됐지만 아직 해금 전인 장비
-        else if (canUnlock)
+
+        if (m_detailPanel != null) m_detailPanel.SetActive(true);
+        if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(true);
+
+        if (canUnlock)
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
 
@@ -158,7 +150,6 @@ public class InventoryEquipView : MonoBehaviour
             if (m_detailTraitName != null) m_detailTraitName.text = "해금 후 착용 가능";
             if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
         }
-        // 해금된 장비 처리
         else
         {
             if (m_detailBackgroundImage != null) m_detailBackgroundImage.color = m_originalDetailColor;
@@ -180,6 +171,10 @@ public class InventoryEquipView : MonoBehaviour
     {
         m_currentViewedItemID = -1;
         m_currentDetailItem = null;
+        if (m_unlockedUIGroup != null) m_unlockedUIGroup.SetActive(false);
+        if (m_lockedUIGroup != null) m_lockedUIGroup.SetActive(false);
+        if (m_equipButton != null) m_equipButton.gameObject.SetActive(false);
+        if (m_unlockButton != null) m_unlockButton.gameObject.SetActive(false);
         if (m_detailBlocker != null) m_detailBlocker.gameObject.SetActive(false);
         if (m_detailPanel != null) m_detailPanel.SetActive(false);
         if (m_tooltipPanel != null) m_tooltipPanel.SetActive(false);
