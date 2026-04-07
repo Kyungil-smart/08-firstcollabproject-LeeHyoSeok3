@@ -196,7 +196,7 @@ public class UpgradeUI : MonoBehaviour
             if (goldText != null)
             {
                 goldText.text = $"{GoldManager.FormatGold(gold)} / {maxLabel}";
-                goldText.color = Color.white;
+                goldText.color = Color.black;
             }
 
             if (upgradeButton != null)
@@ -207,7 +207,7 @@ public class UpgradeUI : MonoBehaviour
             if (goldText != null)
             {
                 goldText.text = $"{GoldManager.FormatGold(gold)} / {GoldManager.FormatGold(cost)}";
-                goldText.color = gold >= cost ? Color.white : Color.red;
+                goldText.color = gold >= cost ? Color.black : Color.red;
             }
 
             if (upgradeButton != null)
