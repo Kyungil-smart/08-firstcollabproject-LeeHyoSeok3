@@ -179,7 +179,7 @@ public class SettingsPopupUI : MonoBehaviour
             return;
         }
 
-        if (System.Enum.TryParse(input.ToUpper(), out KeyCode result))
+        if (TryParseHotkeyInput(input, out KeyCode result))
         {
             if (result == KeyCode.Escape)
             {
@@ -212,7 +212,7 @@ public class SettingsPopupUI : MonoBehaviour
             return;
         }
 
-        if (System.Enum.TryParse(input.ToUpper(), out KeyCode result))
+        if (TryParseHotkeyInput(input, out KeyCode result))
         {
             if (result == KeyCode.Escape)
             {
@@ -234,6 +234,18 @@ public class SettingsPopupUI : MonoBehaviour
                 ? ""
                 : HotkeyManager.Instance.ClickThroughKey.ToString();
         }
+    }
+
+    private bool TryParseHotkeyInput(string input, out KeyCode result)
+    {
+        string trimmedInput = input.Trim();
+
+        if (trimmedInput.Length == 1 && char.IsDigit(trimmedInput[0]))
+        {
+            return System.Enum.TryParse($"Alpha{trimmedInput}", true, out result);
+        }
+
+        return System.Enum.TryParse(trimmedInput, true, out result);
     }
 
     // ─── 언어 설정 ──────────────────────────────
