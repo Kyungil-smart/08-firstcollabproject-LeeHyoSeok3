@@ -4,6 +4,7 @@ using UnityEngine;
 public class KkangKkangiAnimationController : CharacterAnimationController
 {
     private Coroutine blinkCoroutine;
+    private Coroutine craftCoroutine;
 
     [SerializeField] private GameObject hammerHead;
 
@@ -16,13 +17,19 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 
     private void OnEnable()
     {
-        if (animator == null) animator = GetComponent<Animator>();
+        EnsureAnimator();
+        ResetAnimationState();
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
 
     private void OnDisable()
     {
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+        StopRunningCoroutines();
+
+        if (hammerHead != null)
+            hammerHead.SetActive(true);
+
+        ResetAnimationState();
     }
 
     public void SetHammerHitEffects(ParticleSystem[] hammerHitEffects)
@@ -44,12 +51,19 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     {
         if (!gameObject.activeInHierarchy) return;
 
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
 
         if (hammerHead != null) hammerHead.SetActive(false);
 
         animator.SetTrigger("Craft");
-        StartCoroutine(CraftRoutine());
+        if (craftCoroutine != null)
+            StopCoroutine(craftCoroutine);
+
+        craftCoroutine = StartCoroutine(CraftRoutine());
     }
 
     public void PlayHammerHitEffect()
@@ -74,6 +88,22 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 
         if (hammerHead != null) hammerHead.SetActive(true);
 
+        craftCoroutine = null;
         blinkCoroutine = StartCoroutine(BlinkRoutine());
+    }
+
+    private void StopRunningCoroutines()
+    {
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
+
+        if (craftCoroutine != null)
+        {
+            StopCoroutine(craftCoroutine);
+            craftCoroutine = null;
+        }
     }
 }

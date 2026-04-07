@@ -6,6 +6,7 @@ public class MaterialDataSO : ScriptableObject
     public string saveId;
     public string materialNameKey;
     public Sprite icon;
+    [Min(1)] public int maxCount = 99;
 
     public string GetMaterialName()
     {

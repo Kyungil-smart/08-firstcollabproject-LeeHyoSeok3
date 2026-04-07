@@ -221,6 +221,8 @@ public class GameDataController : Singleton<GameDataController>
                 }
             }
 
+            bool questStateChangedByOfflineProgress = false;
+
             if (QuestManager.Instance != null)
             {
                 QuestManager.Instance.LoadQuestState(
@@ -230,10 +232,17 @@ public class GameDataController : Singleton<GameDataController>
                     loadedCompletedQuest
                 );
 
-                QuestManager.Instance.ApplyOfflineQuestProgress();
+                questStateChangedByOfflineProgress = QuestManager.Instance.ApplyOfflineQuestProgress();
             }
 
         isLoaded = true;
+
+        if (questStateChangedByOfflineProgress)
+        {
+            Debug.Log("[LOAD] 오프라인 퀘스트 완료 상태를 세이브 파일에 즉시 반영합니다.");
+            SaveGame();
+        }
+
         OnGameLoaded?.Invoke();
         RefreshAllUIs();
     }

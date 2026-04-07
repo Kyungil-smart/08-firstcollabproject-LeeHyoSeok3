@@ -18,6 +18,8 @@ public class MainPartyVisibilityController : MonoBehaviour
             AdventureManager.Instance.OnAdventureCompleted += HandleAdventureCompleted;
         }
 
+        GameDataController.OnGameLoaded += HandleGameLoaded;
+
         RefreshVisibility();
     }
 
@@ -28,6 +30,8 @@ public class MainPartyVisibilityController : MonoBehaviour
             AdventureManager.Instance.OnAdventureStarted -= HandleAdventureStarted;
             AdventureManager.Instance.OnAdventureCompleted -= HandleAdventureCompleted;
         }
+
+        GameDataController.OnGameLoaded -= HandleGameLoaded;
     }
 
     private void HandleAdventureStarted()
@@ -38,6 +42,11 @@ public class MainPartyVisibilityController : MonoBehaviour
     private void HandleAdventureCompleted()
     {
         SetTargetsVisible(true);
+    }
+
+    private void HandleGameLoaded()
+    {
+        RefreshVisibility();
     }
 
     public void RefreshVisibility()

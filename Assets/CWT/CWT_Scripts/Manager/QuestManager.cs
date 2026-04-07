@@ -186,16 +186,19 @@ public class QuestManager : Singleton<QuestManager>
                   $"- CompletedQuest: {_completedQuest?.dungeonName}");
     }
 
-    public void ApplyOfflineQuestProgress()
+    public bool ApplyOfflineQuestProgress()
     {
-        if (!IsQuestActive) return;
-        if (_questEndTime == DateTime.MinValue) return;
+        if (!IsQuestActive) return false;
+        if (_questEndTime == DateTime.MinValue) return false;
 
         if (DateTime.Now >= _questEndTime)
         {
             Debug.Log("[QuestManager] 오프라인 복귀 시 퀘스트 완료 처리");
             CompleteQuest();
+            return true;
         }
+
+        return false;
     }
 
     private void Update()

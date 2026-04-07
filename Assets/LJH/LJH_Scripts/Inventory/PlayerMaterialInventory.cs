@@ -4,6 +4,8 @@ using DesignPattern;
 
 public class MaterialInventory : Singleton<MaterialInventory>
 {
+    private const int DefaultMaxMaterialCount = 99;
+
     [SerializeField] private List<MaterialEntry> startMaterials = new();
     [SerializeField] private List<MaterialDataSO> allMaterials = new();
     
@@ -59,11 +61,12 @@ public class MaterialInventory : Singleton<MaterialInventory>
                 continue;
 
             string id = entry.material.saveId;
+            int clampedCount = Mathf.Clamp(entry.count, 0, GetMaxCount(entry.material));
 
             if (materialDict.ContainsKey(id))
-                materialDict[id] += entry.count;
+                materialDict[id] = Mathf.Min(materialDict[id] + clampedCount, GetMaxCount(entry.material));
             else
-                materialDict.Add(id, entry.count);
+                materialDict.Add(id, clampedCount);
         }
     }
 
@@ -85,7 +88,8 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
             if (materialLookup.ContainsKey(saved.materialId))
             {
-                materialDict[saved.materialId] = saved.count;
+                MaterialDataSO material = materialLookup[saved.materialId];
+                materialDict[saved.materialId] = Mathf.Clamp(saved.count, 0, GetMaxCount(material));
             }
             else
             {
@@ -181,10 +185,9 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
         string id = material.saveId;
 
-        if (materialDict.ContainsKey(id))
-            materialDict[id] += amount;
-        else
-            materialDict.Add(id, amount);
+        int addedAmount = AddMaterialInternal(material, amount);
+
+        if (addedAmount <= 0) return;
 
         Debug.Log($"{material.GetMaterialName()} {amount}개 획득, 현재 보유: {materialDict[id]}");
 
@@ -195,11 +198,9 @@ public class MaterialInventory : Singleton<MaterialInventory>
 
     public void AddMaterials(List<MaterialEntry> rewards)
     {
-        if (rewards == null || rewards.Count == 0)
-        {
-            Debug.LogWarning("AddMaterials 실패: rewards가 비어있습니다.");
-            return;
-        }
+        if (rewards == null || rewards.Count == 0) return;
+
+        bool hasChange = false;
 
         foreach (var reward in rewards)
         {
@@ -212,13 +213,14 @@ public class MaterialInventory : Singleton<MaterialInventory>
             if (reward.count <= 0)
                 continue;
 
-            string id = reward.material.saveId;
+            int addedAmount = AddMaterialInternal(reward.material, reward.count);
 
-            if (materialDict.ContainsKey(id))
-                materialDict[id] += reward.count;
-            else
-                materialDict.Add(id, reward.count);
+            if (addedAmount > 0)
+                hasChange = true;
         }
+
+        if (!hasChange)
+            return;
 
         RefreshUI();
         GameDataController.Instance?.SaveGame();
@@ -226,6 +228,31 @@ public class MaterialInventory : Singleton<MaterialInventory>
     }
 
     // UI 출력용
+    private int GetMaxCount(MaterialDataSO material)
+    {
+        if (material == null || material.maxCount <= 0)
+            return DefaultMaxMaterialCount;
+
+        return material.maxCount;
+    }
+
+    private int AddMaterialInternal(MaterialDataSO material, int amount)
+    {
+        if (material == null || amount <= 0 || string.IsNullOrEmpty(material.saveId))
+            return 0;
+
+        string id = material.saveId;
+        int currentCount = materialDict.TryGetValue(id, out int savedCount) ? savedCount : 0;
+        int maxCount = GetMaxCount(material);
+        int addedAmount = Mathf.Clamp(amount, 0, maxCount - currentCount);
+
+        if (addedAmount <= 0)
+            return 0;
+
+        materialDict[id] = currentCount + addedAmount;
+        return addedAmount;
+    }
+
     public Dictionary<MaterialDataSO, int> GetAllMaterials()
     {
         Dictionary<MaterialDataSO, int> result = new();

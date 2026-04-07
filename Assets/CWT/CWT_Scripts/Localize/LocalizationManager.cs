@@ -5,6 +5,8 @@ using DesignPattern;
 
 public class LocalizationManager : Singleton<LocalizationManager>
 {
+    private const string LanguagePrefKey = "Language";
+
     [SerializeField] private TextAsset csvFile;
 
     private Language _currentLanguage = Language.Korean;
@@ -18,6 +20,7 @@ public class LocalizationManager : Singleton<LocalizationManager>
     protected override void OnAwake()
     {
         LoadCSV();
+        LoadSavedLanguage();
     }
 
     private void LoadCSV()
@@ -142,6 +145,7 @@ public class LocalizationManager : Singleton<LocalizationManager>
             return;
 
         _currentLanguage = newLanguage;
+        SaveLanguage();
         OnLanguageChanged?.Invoke();
 
         Debug.Log($"언어 변경: {newLanguage}");
@@ -151,6 +155,25 @@ public class LocalizationManager : Singleton<LocalizationManager>
     {
         LoadCSV();
         OnLanguageChanged?.Invoke();
+    }
+
+    private void LoadSavedLanguage()
+    {
+        if (!PlayerPrefs.HasKey(LanguagePrefKey))
+            return;
+
+        int savedLanguage = PlayerPrefs.GetInt(LanguagePrefKey, (int)Language.Korean);
+
+        if (!Enum.IsDefined(typeof(Language), savedLanguage))
+            return;
+
+        _currentLanguage = (Language)savedLanguage;
+    }
+
+    private void SaveLanguage()
+    {
+        PlayerPrefs.SetInt(LanguagePrefKey, (int)_currentLanguage);
+        PlayerPrefs.Save();
     }
 }
 
