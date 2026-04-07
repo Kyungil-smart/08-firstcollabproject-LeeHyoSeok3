@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class HammerAnimationOverrideController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class HammerAnimationOverrideController : MonoBehaviour
     {
         public int minLevel;
         public int maxLevel;
+        public AnimationClip idleClip;
+        public AnimationClip blinkClip;
         public AnimationClip craftClip;
         public Sprite idleSprite;
     }
@@ -23,10 +26,13 @@ public class HammerAnimationOverrideController : MonoBehaviour
     [SerializeField] private UpgradeSystem hammerUpgradeSystem;
     [SerializeField] private UpgradeSystem masteryUpgradeSystem;
     [SerializeField] private Animator animator;
+    [SerializeField] private AnimationClip baseIdleClip;
+    [SerializeField] private AnimationClip baseBlinkClip;
     [SerializeField] private AnimationClip baseCraftClip;
     [SerializeField] private HammerAnimSet[] hammerAnimSets;
     [SerializeField] private MasteryHitEffectSet[] masteryHitEffectSets;
-    [SerializeField] private Image hammerImage;
+    [FormerlySerializedAs("hammerImage")]
+    [SerializeField] private Image characterImage;
     [SerializeField] private KkangKkangiAnimationController kkangKkangiAnimationController;
 
     private AnimatorOverrideController runtimeOverrideController;
@@ -98,7 +104,7 @@ public class HammerAnimationOverrideController : MonoBehaviour
 
     public void ApplyHammerAnimationByLevel()
     {
-        if (hammerUpgradeSystem == null || animator == null || runtimeOverrideController == null || baseCraftClip == null)
+        if (hammerUpgradeSystem == null || animator == null || runtimeOverrideController == null)
         {
             Debug.LogWarning($"[HAMMER_ANIM] Missing reference on {gameObject.name}");
             return;
@@ -113,11 +119,12 @@ public class HammerAnimationOverrideController : MonoBehaviour
             if (level < set.minLevel || level > set.maxLevel)
                 continue;
 
-            if (set.craftClip != null)
-                runtimeOverrideController[baseCraftClip.name] = set.craftClip;
+            ApplyClipOverride(baseIdleClip, set.idleClip);
+            ApplyClipOverride(baseBlinkClip, set.blinkClip);
+            ApplyClipOverride(baseCraftClip, set.craftClip);
 
-            if (hammerImage != null && set.idleSprite != null)
-                hammerImage.sprite = set.idleSprite;
+            if (characterImage != null && set.idleSprite != null)
+                characterImage.sprite = set.idleSprite;
 
             return;
         }
@@ -173,5 +180,13 @@ public class HammerAnimationOverrideController : MonoBehaviour
             if (masteryUpgradeSystem == null && upgradeSystem.SaveId == "mastery")
                 masteryUpgradeSystem = upgradeSystem;
         }
+    }
+
+    private void ApplyClipOverride(AnimationClip baseClip, AnimationClip overrideClip)
+    {
+        if (baseClip == null || overrideClip == null)
+            return;
+
+        runtimeOverrideController[baseClip.name] = overrideClip;
     }
 }

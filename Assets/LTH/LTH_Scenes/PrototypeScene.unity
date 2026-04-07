@@ -1308,7 +1308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 78.99994, y: 0.000020981}
+  m_AnchoredPosition: {x: 78.99994, y: 0}
   m_SizeDelta: {x: -158.0001, y: -396}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &83980596
@@ -2723,81 +2723,6 @@ MonoBehaviour:
   defaultPrimaryWeaponSprite: {fileID: 21300000, guid: 7a87812636e520f4098ef1e6668e93d5, type: 3}
   secondaryWeaponImage: {fileID: 0}
   defaultSecondaryWeaponSprite: {fileID: 0}
---- !u!1 &197053413
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 197053414}
-  - component: {fileID: 197053416}
-  - component: {fileID: 197053415}
-  m_Layer: 5
-  m_Name: HammerHead
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &197053414
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197053413}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.8371199, y: 1.8371199, z: 1.8371199}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1218227401}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -42, y: -1}
-  m_SizeDelta: {x: 120, y: 105}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &197053415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197053413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0bf60999563a8d94a868c54a78ef198e, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &197053416
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197053413}
-  m_CullTransparentMesh: 1
 --- !u!1 &200245763
 GameObject:
   m_ObjectHideFlags: 0
@@ -12058,7 +11983,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1831238839}
   - {fileID: 1824492919}
   m_Father: {fileID: 354924817}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18017,13 +17941,12 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 197053414}
   - {fileID: 1946161224}
   m_Father: {fileID: 576912678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 849.8, y: -426}
+  m_AnchoredPosition: {x: 831.3, y: -411.6}
   m_SizeDelta: {x: -1733.0743, y: -882.5972}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1218227402
@@ -18587,7 +18510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1302922583
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25987,8 +25910,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00018310547, y: -0.000030517578}
-  m_SizeDelta: {x: 176, y: 196}
+  m_AnchoredPosition: {x: -11, y: 11}
+  m_SizeDelta: {x: 260, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1824492920
 MonoBehaviour:
@@ -26010,7 +25933,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8168861873980703103, guid: ee67392bd85b2d2479412b6cfaf48bc6, type: 3}
+  m_Sprite: {fileID: 1491180212977971227, guid: 3cd425177c37a5445a5fe1855e4e0658, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -26038,7 +25961,7 @@ Animator:
   m_GameObject: {fileID: 1824492918}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 638f006e2c25df64091d6bf5c5dee984, type: 2}
+  m_Controller: {fileID: 9100000, guid: 48915e73c60a54748870199994043aa2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -26062,7 +25985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09b7d755f98e0174289998afb7745703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KkangKkangiAnimationController
-  hammerHead: {fileID: 1831238838}
+  hammerHead: {fileID: 0}
 --- !u!114 &1824492924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26078,30 +26001,44 @@ MonoBehaviour:
   hammerUpgradeSystem: {fileID: 1241049268}
   masteryUpgradeSystem: {fileID: 206002137}
   animator: {fileID: 1824492922}
+  baseIdleClip: {fileID: 7400000, guid: 8024903e60e8857429060c30a44deb91, type: 2}
+  baseBlinkClip: {fileID: 7400000, guid: f3a3ffeae99476348af2654672b9d466, type: 2}
   baseCraftClip: {fileID: 7400000, guid: 44c875c8334fe724f80a3fc40b69225a, type: 2}
   hammerAnimSets:
   - minLevel: 0
     maxLevel: 5
+    idleClip: {fileID: 7400000, guid: 8024903e60e8857429060c30a44deb91, type: 2}
+    blinkClip: {fileID: 7400000, guid: f3a3ffeae99476348af2654672b9d466, type: 2}
     craftClip: {fileID: 7400000, guid: 44c875c8334fe724f80a3fc40b69225a, type: 2}
     idleSprite: {fileID: 21300000, guid: 1975465331872394887bb20a35abb0e4, type: 3}
   - minLevel: 6
     maxLevel: 11
+    idleClip: {fileID: 7400000, guid: cb414104bab655445beec4e523d7e788, type: 2}
+    blinkClip: {fileID: 7400000, guid: e8b8cb7dd011b4e4389d91d38fc4ca16, type: 2}
     craftClip: {fileID: 7400000, guid: 265befc70b02f674d80c9fafce29309e, type: 2}
     idleSprite: {fileID: 21300000, guid: c902489ecf7c9134999bf812992069ba, type: 3}
   - minLevel: 12
     maxLevel: 17
+    idleClip: {fileID: 7400000, guid: 8245302225ab03b439cc44659895d82f, type: 2}
+    blinkClip: {fileID: 7400000, guid: 0fd373f87b6b57e4681f7cc07f4dc7d9, type: 2}
     craftClip: {fileID: 7400000, guid: 2f97f875ef4d46a448dcd36076427bd0, type: 2}
     idleSprite: {fileID: 21300000, guid: 3aa83aa2801572e4a8cf03f28a98f748, type: 3}
   - minLevel: 18
     maxLevel: 23
+    idleClip: {fileID: 7400000, guid: c0c22511a9e381446b86c31a11701ed9, type: 2}
+    blinkClip: {fileID: 7400000, guid: da92e0749cf91c64c9ee9a510ef5b77c, type: 2}
     craftClip: {fileID: 7400000, guid: 9ac08c135639f3d41ac09dd5acb7e1b8, type: 2}
     idleSprite: {fileID: 21300000, guid: 0bf60999563a8d94a868c54a78ef198e, type: 3}
   - minLevel: 24
     maxLevel: 29
+    idleClip: {fileID: 7400000, guid: 17ebe8f36cb97ea45a7d807541a44598, type: 2}
+    blinkClip: {fileID: 7400000, guid: 95ac0381dff615f4588c2be92a2f69d2, type: 2}
     craftClip: {fileID: 7400000, guid: b292809b05dd95a46a89b89473865cbd, type: 2}
     idleSprite: {fileID: 21300000, guid: 1f12d88a6ef52284191a553dca11a28f, type: 3}
   - minLevel: 30
     maxLevel: 10000
+    idleClip: {fileID: 7400000, guid: 5128d368caf90ff43b82ac8d18582ddb, type: 2}
+    blinkClip: {fileID: 7400000, guid: 3ab3f57b174ccad44820c161ee748198, type: 2}
     craftClip: {fileID: 7400000, guid: 20827bb5fcc060c4aa9a4b468194e2a1, type: 2}
     idleSprite: {fileID: 21300000, guid: 0d90fb8801dfcf24392439f0dbfa9097, type: 3}
   masteryHitEffectSets:
@@ -26138,7 +26075,7 @@ MonoBehaviour:
     - {fileID: 106569452}
     - {fileID: 106569451}
     - {fileID: 106569450}
-  hammerImage: {fileID: 1831238840}
+  characterImage: {fileID: 1824492920}
   kkangKkangiAnimationController: {fileID: 1824492923}
 --- !u!1 &1830227137
 GameObject:
@@ -26175,81 +26112,6 @@ RectTransform:
   m_AnchoredPosition: {x: -857, y: -75}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1831238838
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1831238839}
-  - component: {fileID: 1831238841}
-  - component: {fileID: 1831238840}
-  m_Layer: 5
-  m_Name: HammerHead
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1831238839
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831238838}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.8371173, y: 1.8371173, z: 1.8371173}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 851280089}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40.6, y: -2.3}
-  m_SizeDelta: {x: 120, y: 105}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1831238840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831238838}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0bf60999563a8d94a868c54a78ef198e, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &1831238841
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831238838}
-  m_CullTransparentMesh: 1
 --- !u!1 &1832973610
 GameObject:
   m_ObjectHideFlags: 0
@@ -28188,8 +28050,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 186, y: 198}
+  m_AnchoredPosition: {x: -6, y: -11}
+  m_SizeDelta: {x: 260, y: 230}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1946161225
 MonoBehaviour:
@@ -28211,7 +28073,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8168861873980703103, guid: ee67392bd85b2d2479412b6cfaf48bc6, type: 3}
+  m_Sprite: {fileID: 1491180212977971227, guid: 3cd425177c37a5445a5fe1855e4e0658, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -28241,7 +28103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09b7d755f98e0174289998afb7745703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KkangKkangiAnimationController
-  hammerHead: {fileID: 197053413}
+  hammerHead: {fileID: 0}
 --- !u!95 &1946161228
 Animator:
   serializedVersion: 7
@@ -28252,7 +28114,7 @@ Animator:
   m_GameObject: {fileID: 1946161223}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 638f006e2c25df64091d6bf5c5dee984, type: 2}
+  m_Controller: {fileID: 9100000, guid: 48915e73c60a54748870199994043aa2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -28279,30 +28141,44 @@ MonoBehaviour:
   hammerUpgradeSystem: {fileID: 1241049268}
   masteryUpgradeSystem: {fileID: 206002137}
   animator: {fileID: 1946161228}
+  baseIdleClip: {fileID: 7400000, guid: 8024903e60e8857429060c30a44deb91, type: 2}
+  baseBlinkClip: {fileID: 7400000, guid: f3a3ffeae99476348af2654672b9d466, type: 2}
   baseCraftClip: {fileID: 7400000, guid: 44c875c8334fe724f80a3fc40b69225a, type: 2}
   hammerAnimSets:
   - minLevel: 0
     maxLevel: 5
+    idleClip: {fileID: 7400000, guid: 8024903e60e8857429060c30a44deb91, type: 2}
+    blinkClip: {fileID: 7400000, guid: f3a3ffeae99476348af2654672b9d466, type: 2}
     craftClip: {fileID: 7400000, guid: 44c875c8334fe724f80a3fc40b69225a, type: 2}
     idleSprite: {fileID: 21300000, guid: 1975465331872394887bb20a35abb0e4, type: 3}
   - minLevel: 6
     maxLevel: 11
+    idleClip: {fileID: 7400000, guid: cb414104bab655445beec4e523d7e788, type: 2}
+    blinkClip: {fileID: 7400000, guid: e8b8cb7dd011b4e4389d91d38fc4ca16, type: 2}
     craftClip: {fileID: 7400000, guid: 265befc70b02f674d80c9fafce29309e, type: 2}
     idleSprite: {fileID: 21300000, guid: c902489ecf7c9134999bf812992069ba, type: 3}
   - minLevel: 12
     maxLevel: 17
+    idleClip: {fileID: 7400000, guid: 8245302225ab03b439cc44659895d82f, type: 2}
+    blinkClip: {fileID: 7400000, guid: 0fd373f87b6b57e4681f7cc07f4dc7d9, type: 2}
     craftClip: {fileID: 7400000, guid: 2f97f875ef4d46a448dcd36076427bd0, type: 2}
     idleSprite: {fileID: 21300000, guid: 3aa83aa2801572e4a8cf03f28a98f748, type: 3}
   - minLevel: 18
     maxLevel: 23
+    idleClip: {fileID: 7400000, guid: c0c22511a9e381446b86c31a11701ed9, type: 2}
+    blinkClip: {fileID: 7400000, guid: da92e0749cf91c64c9ee9a510ef5b77c, type: 2}
     craftClip: {fileID: 7400000, guid: 9ac08c135639f3d41ac09dd5acb7e1b8, type: 2}
     idleSprite: {fileID: 21300000, guid: 0bf60999563a8d94a868c54a78ef198e, type: 3}
   - minLevel: 24
     maxLevel: 29
+    idleClip: {fileID: 7400000, guid: 17ebe8f36cb97ea45a7d807541a44598, type: 2}
+    blinkClip: {fileID: 7400000, guid: 95ac0381dff615f4588c2be92a2f69d2, type: 2}
     craftClip: {fileID: 7400000, guid: b292809b05dd95a46a89b89473865cbd, type: 2}
     idleSprite: {fileID: 21300000, guid: 1f12d88a6ef52284191a553dca11a28f, type: 3}
   - minLevel: 30
     maxLevel: 10000
+    idleClip: {fileID: 7400000, guid: 5128d368caf90ff43b82ac8d18582ddb, type: 2}
+    blinkClip: {fileID: 7400000, guid: 3ab3f57b174ccad44820c161ee748198, type: 2}
     craftClip: {fileID: 7400000, guid: 20827bb5fcc060c4aa9a4b468194e2a1, type: 2}
     idleSprite: {fileID: 21300000, guid: 0d90fb8801dfcf24392439f0dbfa9097, type: 3}
   masteryHitEffectSets:
@@ -28339,7 +28215,7 @@ MonoBehaviour:
     - {fileID: 2011398121}
     - {fileID: 2011398120}
     - {fileID: 2011398119}
-  hammerImage: {fileID: 197053415}
+  characterImage: {fileID: 1946161225}
   kkangKkangiAnimationController: {fileID: 1946161227}
 --- !u!1 &1953952571
 GameObject:
