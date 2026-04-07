@@ -1,3 +1,4 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Kirurobo;
@@ -10,6 +11,7 @@ using Kirurobo;
 public class WindowSystemManager : MonoBehaviour
 {
     public static WindowSystemManager Instance { get; private set; }
+    public event Action<bool> OnClickThroughChanged;
 
     [Header("UniWindowController 참조")]
     [SerializeField] private UniWindowController uniWinController;
@@ -52,15 +54,18 @@ public class WindowSystemManager : MonoBehaviour
         // 항상 최상위
         uniWinController.isTopmost = true;
         // 초기 클릭 통과 모드: 비활성화 (인터랙션 모드로 시작)
-       // SetClickThrough(false);
+        // SetClickThrough(false);
     }
 
     /// <summary>클릭 통과 모드 전환</summary>
     public void SetClickThrough(bool enable)
     {
-        if (uniWinController == null) return;
+        if (_isClickThrough == enable)
+            return;
+
         _isClickThrough = enable;
         //uniWinController.isClickThrough = enable;
+        OnClickThroughChanged?.Invoke(_isClickThrough);
     }
 
     /// <summary>창 위치 반환 (스크린 좌표)</summary>
