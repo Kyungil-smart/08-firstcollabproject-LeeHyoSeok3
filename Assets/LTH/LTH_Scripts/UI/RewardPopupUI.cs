@@ -31,10 +31,25 @@ public class RewardPopupUI : MonoBehaviour
             claimButton.onClick.AddListener(OnClickClaim);
     }
 
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshCurrentRewardUI;
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshCurrentRewardUI;
+    }
+
     private void OnDestroy()
     {
         if (claimButton != null)
             claimButton.onClick.RemoveListener(OnClickClaim);
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshCurrentRewardUI;
     }
 
     public void Open()
@@ -70,6 +85,14 @@ public class RewardPopupUI : MonoBehaviour
     {
         RefreshGoldUI(reward);
         RefreshMaterialUI(reward);
+    }
+
+    private void RefreshCurrentRewardUI()
+    {
+        if (currentReward == null)
+            return;
+
+        RefreshUI(currentReward);
     }
 
     private void RefreshGoldUI(QuestRewardSo reward)

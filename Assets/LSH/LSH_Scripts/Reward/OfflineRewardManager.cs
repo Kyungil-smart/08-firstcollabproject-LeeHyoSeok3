@@ -160,8 +160,6 @@ public class OfflineRewardManager : MonoBehaviour
 
         Debug.Log("[OfflineReward] ShowTotalRewardPopup 진입");
 
-        string message = BuildRewardMessage(earnedGold, offlineSeconds);
-
         Debug.Log($"[OfflineReward] PopupManager.Instance null 여부: {PopupManager.Instance == null}");
         Debug.Log($"[OfflineReward] m_offlineRewardPopupUI null 여부: {m_offlineRewardPopupUI == null}");
         Debug.Log($"[OfflineReward] m_rewardPopup null 여부: {m_rewardPopup == null}");
@@ -174,46 +172,57 @@ public class OfflineRewardManager : MonoBehaviour
         }
 
         PopupManager.Instance.OpenOfflineRewardPopup();
-        m_offlineRewardPopupUI.Setup(message, OnClickConfirmPopup);
+        m_offlineRewardPopupUI.Setup(BuildPendingRewardMessage, OnClickConfirmPopup);
 
         Debug.Log("[OfflineReward] 팝업 표시 완료");
     }
 
-    private string BuildRewardMessage(int earnedGold, float offlineSeconds)
+    private string BuildPendingRewardMessage()
     {
-        string message = $"{FormatTimeKorean(offlineSeconds)}동안\n";
-        message += $"{GoldManager.FormatGold(earnedGold)}원을 벌었어요!";
-
-        return message;
+        return BuildRewardMessage(m_pendingAutoRewardGold, m_pendingOfflineSeconds);
     }
 
-    // ✨ 초(Seconds)를 "시간 분 초" 포맷의 문자열로 변환해주는 헬퍼 함수 ✨
-    private string FormatTimeKorean(float totalSeconds)
+    private string BuildRewardMessage(int earnedGold, float offlineSeconds)
     {
-        // 1시간은 3600초. 전체 초를 3600으로 나누어 시간을 구합니다.
+        string formattedTime = FormatOfflineTime(offlineSeconds);
+        string formattedGold = GoldManager.FormatGold(earnedGold);
+
+        string awayTemplate = GetLocalizedText("OFFLINE_REWARD_AWAY_FOR", "{0}동안");
+        string earnedTemplate = GetLocalizedText("OFFLINE_REWARD_EARNED_GOLD", "{0}원을 벌었어요!");
+
+        return string.Format(awayTemplate, formattedTime) + "\n" + string.Format(earnedTemplate, formattedGold);
+    }
+
+    private string FormatOfflineTime(float totalSeconds)
+    {
         int hours = Mathf.FloorToInt(totalSeconds / 3600f);
-
-        // 전체 초에서 3600으로 나눈 나머지(시간을 빼고 남은 초)를 60으로 나누어 분을 구합니다.
         int minutes = Mathf.FloorToInt((totalSeconds % 3600f) / 60f);
-
-        // 전체 초에서 60으로 나눈 나머지(분을 빼고 남은 초)가 순수한 초가 됩니다.
         int seconds = Mathf.FloorToInt(totalSeconds % 60f);
 
-        // 시간이 있으면 "시간 분 초" 모두 출력
+        string hourUnit = GetLocalizedText("TIME_HOUR_UNIT", "시간");
+        string minuteUnit = GetLocalizedText("TIME_MINUTE_UNIT", "분");
+        string secondUnit = GetLocalizedText("TIME_SECOND_UNIT", "초");
+
         if (hours > 0)
         {
-            return $"{hours}시간 {minutes}분 {seconds}초";
+            return $"{hours}{hourUnit} {minutes}{minuteUnit} {seconds}{secondUnit}";
         }
-        // 시간이 없고 분만 있으면 "분 초" 출력
-        else if (minutes > 0)
+
+        if (minutes > 0)
         {
-            return $"{minutes}분 {seconds}초";
+            return $"{minutes}{minuteUnit} {seconds}{secondUnit}";
         }
-        // 1분 미만이면 "초"만 출력
-        else
-        {
-            return $"{seconds}초";
-        }
+
+        return $"{seconds}{secondUnit}";
+    }
+
+    private string GetLocalizedText(string key, string fallback)
+    {
+        if (LocalizationManager.Instance == null)
+            return fallback;
+
+        string localized = LocalizationManager.Instance.GetText(key);
+        return string.IsNullOrEmpty(localized) || localized == key ? fallback : localized;
     }
 
     // 팝업의 '확인' 버튼을 누르면 호출될 함수

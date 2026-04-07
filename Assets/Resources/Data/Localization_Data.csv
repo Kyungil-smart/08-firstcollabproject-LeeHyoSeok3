@@ -178,7 +178,18 @@ GEAR_DRAGON_DESC, 하드커버 장비에 추가적으로 용의 부위를 엮어
 클릭당 골드, 클릭당 골드, Click Power
 제작 후 해금 가능,제작 후 해금 가능,Unlock after crafting
 해금 후 착용 가능,해금 후 착용 가능,Equip after unlocking
+해금버튼, 해금하기, Unlock
+장착버튼, 장착하기, Equip
+장비 해금, 장비를 해금\n하시겠습니까?, Unlock\nequipment?
 장비 특성, 장비 특성, Gearset Trait
 오프라인 보상 획득!,오프라인 보상 획득!,Offline Rewards
 자리비운동안 NN, NNN, NNN원을 벌었어요!,자리비운동안 NN, NNN, NNN원을 벌었어요!,You earned NN,NNN,NNN gold while away
+OFFLINE_REWARD_AWAY_FOR,{0}동안,Away for {0}
+OFFLINE_REWARD_EARNED_GOLD,{0}원을 벌었어요!,You earned {0} gold!
+TIME_HOUR_UNIT,시간,h
+TIME_MINUTE_UNIT,분,min
+TIME_SECOND_UNIT,초,s
 아직 이전 퀘스트 보상을 획득하지 않았습니다,아직 이전 퀘스트 보상을 획득하지 않았습니다,You must claim the previous quest reward first
+최대 레벨,최대 레벨,Max Level
+보상버튼, 보상받기, Claim
+확인버튼, 확인, Confirm
