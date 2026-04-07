@@ -13,6 +13,12 @@ public class SettingsPopupUI : MonoBehaviour
 {
     [SerializeField] private Button _closeButton;
     private RectTransform _rectTransform;
+    private Canvas _parentCanvas;
+
+    [Header("Popup Size")]
+    [SerializeField] private Vector2 _referencePopupSize = new Vector2(500f, 800f);
+    [SerializeField, Range(0.5f, 1f)] private float _maxWidthRatio = 0.45f;
+    [SerializeField, Range(0.5f, 1f)] private float _maxHeightRatio = 0.92f;
 
     // ─── 볼륨 관련 ─────────────────────────────
     [SerializeField] private Slider bgmSlider;
@@ -52,6 +58,7 @@ public class SettingsPopupUI : MonoBehaviour
         _sfxMuteButton.onClick.AddListener(ToggleSFXMute);
 
         _rectTransform = GetComponent<RectTransform>();
+        _parentCanvas = GetComponentInParent<Canvas>();
 
         // 볼륨 슬라이더 연결
         bgmSlider.onValueChanged.AddListener(OnChangedBGM);
@@ -99,9 +106,39 @@ public class SettingsPopupUI : MonoBehaviour
     private IEnumerator FixSizeAndPosition()
     {
         yield return null;
-        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 650f);
-        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 1072f);
+        ApplyResponsiveSize();
         _rectTransform.anchoredPosition = Vector2.zero;
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (!isActiveAndEnabled || _rectTransform == null)
+            return;
+
+        ApplyResponsiveSize();
+    }
+
+    private void ApplyResponsiveSize()
+    {
+        RectTransform canvasRect = _parentCanvas != null
+            ? _parentCanvas.GetComponent<RectTransform>()
+            : null;
+
+        if (canvasRect == null)
+            return;
+
+        float maxWidth = canvasRect.rect.width * _maxWidthRatio;
+        float maxHeight = canvasRect.rect.height * _maxHeightRatio;
+        float widthScale = maxWidth / Mathf.Max(_referencePopupSize.x, 1f);
+        float heightScale = maxHeight / Mathf.Max(_referencePopupSize.y, 1f);
+
+        // Keep the popup's original aspect ratio and avoid scaling up on wide screens.
+        float uniformScale = Mathf.Min(widthScale, heightScale, 1f);
+        float finalWidth = _referencePopupSize.x * uniformScale;
+        float finalHeight = _referencePopupSize.y * uniformScale;
+
+        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, finalWidth);
+        _rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, finalHeight);
     }
 
     // ─── 볼륨 조절 ─────────────────────────────
