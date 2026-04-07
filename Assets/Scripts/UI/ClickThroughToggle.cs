@@ -8,12 +8,11 @@ using System.Collections.Generic;
 ///
 /// 동작 규칙:
 /// - 초기 상태: 클릭 통과 ON (배경 투명, 바탕화면 작업 가능)
-/// - 토글 버튼 클릭 → 클릭 통과 OFF (배경 불투명, 게임 조작 가능)
-/// - 토글 버튼 다시 클릭 → 클릭 통과 ON (배경 투명)
-/// - 마우스가 위젯 영역 밖으로 나가면 → 클릭 통과 ON (배경 투명)
+/// - 토글 버튼 클릭 -> 클릭 통과 OFF (배경 불투명, 게임 조작 가능)
+/// - 토글 버튼 다시 클릭 -> 클릭 통과 ON (배경 투명)
+/// - 마우스가 위젯 영역 밖으로 나가면 -> 클릭 통과 ON (배경 투명)
 /// - 2회 이상 연속 클릭해도 1회로 판정
 /// </summary>
-
 public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
 {
     [Header("위젯 영역 RectTransform (마우스 이탈 감지용)")]
@@ -31,9 +30,6 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
 
     [Header("클릭 통과 시 Raycast Target 끌 대상들")]
     [SerializeField] private List<Graphic> raycastTargets;
-    //
-
-
 
     private bool _pendingReactivate = false; // 클릭 통과 재활성화 대기 상태
     private bool _buttonClickedThisFrame = false;
@@ -42,13 +38,30 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         _uiCamera = Camera.main;
-        UpdateButtonVisual();
-        UpdateBackgroundVisual();
+        RefreshVisualState();
+    }
+
+    private void OnEnable()
+    {
+        if (WindowSystemManager.Instance != null)
+        {
+            WindowSystemManager.Instance.OnClickThroughChanged += HandleClickThroughChanged;
+        }
+
+        RefreshVisualState();
+    }
+
+    private void OnDisable()
+    {
+        if (WindowSystemManager.Instance != null)
+        {
+            WindowSystemManager.Instance.OnClickThroughChanged -= HandleClickThroughChanged;
+        }
     }
 
     private void Update()
     {
-        // // 클릭 통과 재활성화 대기 중 → 마우스가 위젯 영역 밖으로 나갔는지 확인
+        // // 클릭 통과 재활성화 대기 중 -> 마우스가 위젯 영역 밖으로 나갔는지 확인
         // if (_pendingReactivate && !IsMouseOverWidgetArea())
         // {
         //     WindowSystemManager.Instance.SetClickThrough(true);
@@ -66,23 +79,15 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
         _buttonClickedThisFrame = true;
         SoundManager.Instance?.PlayClick();
 
+        if (WindowSystemManager.Instance == null)
+            return;
+
         bool currentlyClickThrough = WindowSystemManager.Instance.IsClickThrough;
 
-        if (currentlyClickThrough)
-        {
-            // 클릭 통과 ON → OFF (게임 조작 모드)
-            WindowSystemManager.Instance.SetClickThrough(false);
-            // _pendingReactivate = true;
-        }
-        else
-        {
-            // 클릭 통과 OFF → ON (바탕화면 모드)
-            WindowSystemManager.Instance.SetClickThrough(true);
-            // _pendingReactivate = false;
-        }
-
-        UpdateButtonVisual();
-        UpdateBackgroundVisual();
+        // 클릭 통과 ON -> OFF (게임 조작 모드)
+        // 클릭 통과 OFF -> ON (바탕화면 모드)
+        WindowSystemManager.Instance.SetClickThrough(!currentlyClickThrough);
+        // _pendingReactivate = !currentlyClickThrough ? false : true;
     }
 
     private bool IsMouseOverWidgetArea()
@@ -93,6 +98,17 @@ public class ClickThroughToggle : MonoBehaviour, IPointerClickHandler
             Input.mousePosition,
             _uiCamera
         );
+    }
+
+    private void HandleClickThroughChanged(bool isClickThrough)
+    {
+        RefreshVisualState();
+    }
+
+    private void RefreshVisualState()
+    {
+        UpdateButtonVisual();
+        UpdateBackgroundVisual();
     }
 
     private void UpdateButtonVisual()
