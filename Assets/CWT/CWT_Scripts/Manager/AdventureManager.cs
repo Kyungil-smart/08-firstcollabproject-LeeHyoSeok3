@@ -652,6 +652,13 @@ public class AdventureManager : Singleton<AdventureManager>
         float elapsedSinceStart = (float)(DateTime.Now - questStartTime).TotalSeconds;
         elapsedSinceStart = Mathf.Clamp(elapsedSinceStart, 0f, _questDuration);
 
+        if (elapsedSinceStart >= _questDuration)
+        {
+            CompleteAdventureFromSync();
+            Debug.Log($"[AdventureManager] Sync 완료 시점에 이미 모험이 종료됨 / elapsed = {elapsedSinceStart:F1}s");
+            return;
+        }
+
         ApplyCurrentDungeonVisuals(false);
         ApplyProgressByElapsedTime(elapsedSinceStart);
 
@@ -776,6 +783,28 @@ public class AdventureManager : Singleton<AdventureManager>
             _dungeonBackgroundImage.sprite = background;
             _dungeonBackgroundImage.enabled = background != null;
         }
+    }
+
+    private void CompleteAdventureFromSync()
+    {
+        MovePartyTo(_startX);
+        HideAllPartySprites();
+        HideAllBubbles();
+
+        Vector3 resetScale = _partyGroup.localScale;
+        resetScale.x = Mathf.Abs(resetScale.x);
+        _partyGroup.localScale = resetScale;
+
+        CurrentState = AdventureState.Completed;
+
+        bool wasQuestActive = QuestManager.Instance != null && QuestManager.Instance.IsQuestActive;
+        if (wasQuestActive)
+        {
+            QuestManager.Instance.CompleteQuest();
+        }
+
+        OnAdventureCompleted?.Invoke();
+        CurrentState = AdventureState.None;
     }
 #endregion
 }
