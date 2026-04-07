@@ -181,6 +181,8 @@ public class AdventureManager : Singleton<AdventureManager>
             _dungeonBackgroundImage.sprite = QuestManager.Instance.CurrentQuest.dungeonBackground;
         }
 
+        ApplyCurrentDungeonVisuals(false);
+
         // 6) 비주얼 초기화 (기본 스프라이트만 켜기)
         SetPartySprite(PartyVisual.Default);
         HideAllBubbles();
@@ -443,17 +445,7 @@ public class AdventureManager : Singleton<AdventureManager>
         CurrentState = AdventureState.Battle;
         SetPartySprite(PartyVisual.Battle);
 
-        // ★ 추가: 전투 진입 시 던전 배경을 전투 버전으로 교체
-        // 전투 배경이 있으면 교체, 없으면 기존 배경 유지
-        if (_dungeonBackgroundImage != null && QuestManager.Instance.CurrentQuest != null)
-        {
-            Sprite battleBG = QuestManager.Instance.CurrentQuest.dungeonBattleBackground;
-            if (battleBG != null)
-            {
-                _dungeonBackgroundImage.sprite = battleBG;
-            }
-            // battleBG가 null이면 아무것도 안 함 → 기존 던전 배경 그대로 유지
-        }
+        ApplyCurrentDungeonVisuals(true);
 
         Debug.Log("[AdventureManager] 던전 진입! 전투 시작!");
     }
@@ -660,6 +652,7 @@ public class AdventureManager : Singleton<AdventureManager>
         float elapsedSinceStart = (float)(DateTime.Now - questStartTime).TotalSeconds;
         elapsedSinceStart = Mathf.Clamp(elapsedSinceStart, 0f, _questDuration);
 
+        ApplyCurrentDungeonVisuals(false);
         ApplyProgressByElapsedTime(elapsedSinceStart);
 
         Debug.Log($"[AdventureManager] Sync 완료 / elapsed = {elapsedSinceStart:F1}s / total = {_questDuration:F1}s / state = {CurrentState}");
@@ -701,6 +694,7 @@ public class AdventureManager : Singleton<AdventureManager>
             {
                 CurrentState = AdventureState.Battle;
                 SetPartySprite(PartyVisual.Battle);
+                ApplyCurrentDungeonVisuals(true);
             }
 
             // 진행 방향: 출발 → 좌측
@@ -757,6 +751,31 @@ public class AdventureManager : Singleton<AdventureManager>
         Vector3 resetScale = _partyGroup.localScale;
         resetScale.x = Mathf.Abs(resetScale.x);
         _partyGroup.localScale = resetScale;
+    }
+
+    private void ApplyCurrentDungeonVisuals(bool useBattleBackground)
+    {
+        if (QuestManager.Instance == null || QuestManager.Instance.CurrentQuest == null)
+            return;
+
+        DungeonData currentQuest = QuestManager.Instance.CurrentQuest;
+
+        if (_dungeonPointIcon != null)
+        {
+            _dungeonPointIcon.sprite = currentQuest.dungeonIcon;
+            _dungeonPointIcon.enabled = currentQuest.dungeonIcon != null;
+        }
+
+        if (_dungeonBackgroundImage != null)
+        {
+            Sprite background = currentQuest.dungeonBackground;
+
+            if (useBattleBackground && currentQuest.dungeonBattleBackground != null)
+                background = currentQuest.dungeonBattleBackground;
+
+            _dungeonBackgroundImage.sprite = background;
+            _dungeonBackgroundImage.enabled = background != null;
+        }
     }
 #endregion
 }

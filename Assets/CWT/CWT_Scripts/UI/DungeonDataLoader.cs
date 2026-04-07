@@ -28,6 +28,9 @@ public class DungeonDataLoader : MonoBehaviour
     [Header("퀘스트 보상 데이터")]
     [SerializeField] private QuestRewardSo[] _questRewards;
 
+    private bool _hasLoadedDungeonData;
+    private bool _hasBuiltQuestUI;
+
     private void Start()
     {
         LoadDungeonData();
@@ -35,10 +38,22 @@ public class DungeonDataLoader : MonoBehaviour
 
     void LoadDungeonData()
     {
-        // Content 안에 이미 패널이 있으면 실행하지 않음
-        if (_content.childCount > 0) return;
+        EnsureDungeonDataLoaded();
+        EnsureQuestPanelsBuilt();
+    }
+
+    public void EnsureDungeonDataLoaded()
+    {
+        if (_hasLoadedDungeonData)
+            return;
 
         TextAsset csvFile = Resources.Load<TextAsset>("Data/Dungeon_Data");
+        if (csvFile == null)
+        {
+            Debug.LogError("[DungeonDataLoader] Data/Dungeon_Data CSV를 찾을 수 없습니다.");
+            return;
+        }
+
         string[] lines = csvFile.text.Split('\n');
 
         int dungeonIndex = 0;
@@ -96,11 +111,38 @@ public class DungeonDataLoader : MonoBehaviour
 
             dungeonIndex++;
             _dungeonDatalist.Add(data);
-
-            GameObject _questItem = Instantiate(_questPanel, _content);
-            QuestItemUI _ui = _questItem.GetComponent<QuestItemUI>();
-            _ui.SetData(data);
         }
+
+        _hasLoadedDungeonData = true;
+    }
+
+    private void EnsureQuestPanelsBuilt()
+    {
+        if (_hasBuiltQuestUI)
+            return;
+
+        if (_content == null || _questPanel == null)
+            return;
+
+        // 이미 패널이 있으면 중복 생성하지 않음
+        if (_content.childCount > 0)
+        {
+            _hasBuiltQuestUI = true;
+            return;
+        }
+
+        for (int i = 0; i < _dungeonDatalist.Count; i++)
+        {
+            DungeonData data = _dungeonDatalist[i];
+            if (data == null)
+                continue;
+
+            GameObject questItem = Instantiate(_questPanel, _content);
+            QuestItemUI ui = questItem.GetComponent<QuestItemUI>();
+            ui.SetData(data);
+        }
+
+        _hasBuiltQuestUI = true;
     }
 
     private Sprite FindIcon(IconEntry[] icons, string name)
@@ -165,6 +207,8 @@ public class DungeonDataLoader : MonoBehaviour
     public DungeonData FindDungeonByName(string dungeonName)
     {
         if (string.IsNullOrEmpty(dungeonName)) return null;
+
+        EnsureDungeonDataLoaded();
 
         foreach (var data in _dungeonDatalist)
         {
