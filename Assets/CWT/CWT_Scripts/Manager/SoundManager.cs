@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SoundManager : Singleton<SoundManager>
 {
+    private const string BgmVolumePrefKey = "Sound.BGMVolume";
+    private const string SfxVolumePrefKey = "Sound.SFXVolume";
+
     [SerializeField] List<SoundData> data = new List<SoundData>();
 
     AudioSource _oneShot; // 한번 재생할 변수
@@ -24,6 +27,8 @@ public class SoundManager : Singleton<SoundManager>
         // 반복재생 해야하는 클립은 반복해준다.
         _loopShot.loop = true;
         _bgmShot.loop = true;
+
+        LoadVolumes();
     }
 
     // 소리 이름으로 해당 SoundData를 찾아서 돌려주는 함수
@@ -90,11 +95,25 @@ public class SoundManager : Singleton<SoundManager>
     {
         _oneShot.volume = vol;
         _loopShot.volume = vol;
+        PlayerPrefs.SetFloat(SfxVolumePrefKey, vol);
+        PlayerPrefs.Save();
     }
 
     // BGM 볼륨 조절하는 함수
     public void ControlBGMVolume(float vol)
     {
         _bgmShot.volume = vol;
+        PlayerPrefs.SetFloat(BgmVolumePrefKey, vol);
+        PlayerPrefs.Save();
+    }
+
+    private void LoadVolumes()
+    {
+        float bgmVolume = PlayerPrefs.GetFloat(BgmVolumePrefKey, 1f);
+        float sfxVolume = PlayerPrefs.GetFloat(SfxVolumePrefKey, 1f);
+
+        _bgmShot.volume = bgmVolume;
+        _oneShot.volume = sfxVolume;
+        _loopShot.volume = sfxVolume;
     }
 }
