@@ -4,6 +4,9 @@ using UnityEngine.UI;
 public class WorldMapDoorButton : MonoBehaviour
 {
     [SerializeField] private Button doorButton;
+    [SerializeField] private Image doorButtonImage;
+    [SerializeField] private Sprite defaultSprite;
+    [SerializeField] private Sprite openedSprite;
 
     private void Start()
     {
@@ -18,7 +21,14 @@ public class WorldMapDoorButton : MonoBehaviour
     private void RefreshDoorState()
     {
         if (doorButton == null) return;
-        if (QuestManager.Instance == null) return;
+
+        doorButton.interactable = true;
+
+        if (QuestManager.Instance == null)
+        {
+            ApplyDoorSprite(defaultSprite);
+            return;
+        }
 
         bool canOpenWorldMap = QuestManager.Instance.IsQuestActive;
 
@@ -26,16 +36,21 @@ public class WorldMapDoorButton : MonoBehaviour
             ? ScreenStateManager.Instance.CurrentState
             : ScreenStateManager.ScreenState.Main;
 
-        // Main / Minimized 상태일 때만 퀘스트 진행 여부에 따라 월드맵 진입 가능
-        // WorldMap / WorldMapMinimized 상태에서는 "되돌아가기" 버튼 역할이라 항상 허용
-        if (state == ScreenStateManager.ScreenState.Main || state == ScreenStateManager.ScreenState.Minimized)
+        if (state == ScreenStateManager.ScreenState.Main ||
+            state == ScreenStateManager.ScreenState.Minimized)
         {
-            doorButton.interactable = canOpenWorldMap;
+            ApplyDoorSprite(canOpenWorldMap ? openedSprite : defaultSprite);
+            return;
         }
-        else
-        {
-            doorButton.interactable = true;
-        }
+
+        ApplyDoorSprite(defaultSprite);
+    }
+
+    private void ApplyDoorSprite(Sprite nextSprite)
+    {
+        if (doorButtonImage == null || nextSprite == null) return;
+
+        doorButtonImage.sprite = nextSprite;
     }
 
     public void OnClickDoor()
