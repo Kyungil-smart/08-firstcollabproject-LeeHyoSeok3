@@ -1,20 +1,31 @@
 using UnityEngine;
 using System.Collections.Generic;
 using DesignPattern;
+using UnityEngine.UI;
 
 public class PopupManager : Singleton<PopupManager>
 {
-    [Header("팝업 프리팹 또는 씬 내 오브젝트")]
+    [Header("Popup RectTransforms")]
     [SerializeField] private RectTransform questBoardPopup;
     [SerializeField] private RectTransform blacksmithPopup;
     [SerializeField] private RectTransform partyEquipPopup;
     [SerializeField] private RectTransform settingsPopup;
     [SerializeField] private RectTransform offlineRewardPopup;
-    [SerializeField] private RectTransform rewardPopup; 
+    [SerializeField] private RectTransform rewardPopup;
     [SerializeField] private RectTransform WarningPopup;
 
-    [Header("팝업을 배치할 Canvas")]
+    [Header("Popup Canvas")]
     [SerializeField] private Canvas popupCanvas;
+
+    [Header("Quest Board Button Visual")]
+    [SerializeField] private Image questBoardButtonImage;
+    [SerializeField] private Sprite questBoardDefaultSprite;
+    [SerializeField] private Sprite questBoardOpenedSprite;
+
+    [Header("Blacksmith Button Visual")]
+    [SerializeField] private Image blacksmithButtonImage;
+    [SerializeField] private Sprite blacksmithDefaultSprite;
+    [SerializeField] private Sprite blacksmithOpenedSprite;
 
     private readonly List<RectTransform> _activePopups = new List<RectTransform>();
 
@@ -23,7 +34,7 @@ public class PopupManager : Singleton<PopupManager>
         base.OnAwake();
 
         if (popupCanvas == null)
-            Debug.LogError("[PopupManager] popupCanvas가 할당되지 않았습니다.");
+            Debug.LogError("[PopupManager] popupCanvas is not assigned.");
     }
 
     public void OpenQuestBoard()
@@ -32,6 +43,7 @@ public class PopupManager : Singleton<PopupManager>
             return;
 
         OpenPopup(questBoardPopup);
+        UpdatePopupButtonVisual(questBoardPopup, true);
         SoundManager.Instance?.OneShot("QuestBoardOpen");
     }
 
@@ -41,6 +53,7 @@ public class PopupManager : Singleton<PopupManager>
             return;
 
         OpenPopup(blacksmithPopup);
+        UpdatePopupButtonVisual(blacksmithPopup, true);
         SoundManager.Instance?.OneShot("BlacksmithOpen");
     }
 
@@ -72,16 +85,13 @@ public class PopupManager : Singleton<PopupManager>
         if (popup == null || popupCanvas == null)
             return;
 
-        // 추가 : 이미 열려있는 팝업이면 다시 열지 않음 (사운드 겹침 현상 방지)
-        if (popup.gameObject.activeSelf) return;
+        if (popup.gameObject.activeSelf)
+            return;
 
         RefreshPopupLocalizedUI(popup);
         popup.gameObject.SetActive(true);
 
-        // 먼저 중앙 배치
         CenterInCanvas(popup);
-
-        // 그 다음 화면 밖으로 안 나가게 보정
         ClampToCanvas(popup);
 
         if (!_activePopups.Contains(popup))
@@ -90,38 +100,39 @@ public class PopupManager : Singleton<PopupManager>
 
     public void ClosePopup(RectTransform popup)
     {
-        if (popup == null) return;
+        if (popup == null)
+            return;
 
         popup.gameObject.SetActive(false);
         _activePopups.Remove(popup);
+        UpdatePopupButtonVisual(popup, false);
     }
 
     public void CloseAllPopups()
     {
         foreach (var popup in _activePopups)
         {
-            if (popup != null)
-                popup.gameObject.SetActive(false);
+            if (popup == null)
+                continue;
+
+            popup.gameObject.SetActive(false);
+            UpdatePopupButtonVisual(popup, false);
         }
 
         _activePopups.Clear();
     }
 
-    /// <summary>
-    /// 팝업 열릴 때 로컬라이징 관련 UI를 강제로 다시 갱신
-    /// </summary>
     private void RefreshPopupLocalizedUI(RectTransform popup)
     {
-        if (popup == null) return;
+        if (popup == null)
+            return;
 
-        // 1. LocalizedText 붙은 일반 텍스트 갱신
         LocalizedText[] localizedTexts = popup.GetComponentsInChildren<LocalizedText>(true);
         foreach (var localizedText in localizedTexts)
         {
             localizedText.SendMessage("UpdateText", SendMessageOptions.DontRequireReceiver);
         }
 
-        // 2. 장비 슬롯 텍스트/아이콘 갱신
         GearsetSlotUI[] gearSlots = popup.GetComponentsInChildren<GearsetSlotUI>(true);
         foreach (var slot in gearSlots)
         {
@@ -130,9 +141,6 @@ public class PopupManager : Singleton<PopupManager>
         }
     }
 
-    /// <summary>
-    /// Canvas 중앙에 배치
-    /// </summary>
     private void CenterInCanvas(RectTransform popup)
     {
         popup.anchorMin = new Vector2(0.5f, 0.5f);
@@ -141,9 +149,6 @@ public class PopupManager : Singleton<PopupManager>
         popup.anchoredPosition = Vector2.zero;
     }
 
-    /// <summary>
-    /// 팝업이 Canvas 바깥으로 나가지 않도록 보정
-    /// </summary>
     private void ClampToCanvas(RectTransform popup)
     {
         RectTransform canvasRect = popupCanvas.GetComponent<RectTransform>();
@@ -151,7 +156,6 @@ public class PopupManager : Singleton<PopupManager>
         Vector2 canvasSize = canvasRect.rect.size;
         Vector2 popupSize = popup.rect.size;
 
-        // Canvas보다 팝업이 더 크면 일단 크기부터 줄임
         float clampedWidth = Mathf.Min(popupSize.x, canvasSize.x);
         float clampedHeight = Mathf.Min(popupSize.y, canvasSize.y);
 
@@ -173,9 +177,6 @@ public class PopupManager : Singleton<PopupManager>
         popup.anchoredPosition = pos;
     }
 
-    /// <summary>
-    /// 현재 게임 화면 기준으로 팝업 크기 조절
-    /// </summary>
     public void ScalePopupToScreen(RectTransform popup, float widthRatio, float heightRatio)
     {
         if (popup == null || popupCanvas == null)
@@ -195,13 +196,30 @@ public class PopupManager : Singleton<PopupManager>
         popup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, h);
     }
 
+    private void UpdatePopupButtonVisual(RectTransform popup, bool isOpen)
+    {
+        if (popup == questBoardPopup)
+        {
+            ApplyButtonSprite(questBoardButtonImage, isOpen ? questBoardOpenedSprite : questBoardDefaultSprite);
+            return;
+        }
+
+        if (popup == blacksmithPopup)
+        {
+            ApplyButtonSprite(blacksmithButtonImage, isOpen ? blacksmithOpenedSprite : blacksmithDefaultSprite);
+        }
+    }
+
+    private static void ApplyButtonSprite(Image targetImage, Sprite sprite)
+    {
+        if (targetImage == null || sprite == null)
+            return;
+
+        targetImage.sprite = sprite;
+    }
+
     private void Start()
     {
-        //if (questBoardPopup) ScalePopupToScreen(questBoardPopup, 0.38f, 0.46f);
-        //if (blacksmithPopup) ScalePopupToScreen(blacksmithPopup, 0.677f, 0.694f);
-        //if (partyEquipPopup) ScalePopupToScreen(partyEquipPopup, 0.401f, 0.2963f);
-        //if (settingsPopup) ScalePopupToScreen(settingsPopup, 0.208f, 0.37f);
-
         if (questBoardPopup) questBoardPopup.gameObject.SetActive(false);
         if (blacksmithPopup) blacksmithPopup.gameObject.SetActive(false);
         if (partyEquipPopup) partyEquipPopup.gameObject.SetActive(false);
@@ -211,5 +229,7 @@ public class PopupManager : Singleton<PopupManager>
         if (WarningPopup) WarningPopup.gameObject.SetActive(false);
 
         _activePopups.Clear();
+        UpdatePopupButtonVisual(questBoardPopup, false);
+        UpdatePopupButtonVisual(blacksmithPopup, false);
     }
 }
