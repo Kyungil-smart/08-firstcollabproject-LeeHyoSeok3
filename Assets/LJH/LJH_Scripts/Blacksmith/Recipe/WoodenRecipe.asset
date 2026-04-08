@@ -35,4 +35,4 @@ MonoBehaviour:
     secondaryWeaponSprite: {fileID: 0}
   requirements:
   - material: {fileID: 11400000, guid: 953c276720e229744bfb78f321ffa7fa, type: 2}
-    requiredCount: 1
+    requiredCount: 4
