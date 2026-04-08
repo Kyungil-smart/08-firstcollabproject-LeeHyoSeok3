@@ -41,6 +41,9 @@ public class CharacterAnimationController : MonoBehaviour
         hasCachedTransformState = true;
     }
 
+    /// <summary>
+    /// 애니메이터의 상태를 초기값으로 리셋하는 메서드
+    /// </summary>
     protected virtual void ResetAnimationState()
     {
         EnsureAnimator();
@@ -52,10 +55,8 @@ public class CharacterAnimationController : MonoBehaviour
         if (cachedRectTransform != null)
             cachedRectTransform.anchoredPosition = initialAnchoredPosition;
 
-        if (animator == null)
-            return;
+        if (!CanSafelyResetAnimator()) return;
 
-        // 화면 전환 도중 비활성화되더라도 애니메이션이 남긴 Transform 값을 기본 상태로 되돌린다.
         animator.Rebind();
         animator.Update(0f);
 
@@ -64,5 +65,18 @@ public class CharacterAnimationController : MonoBehaviour
 
         if (cachedRectTransform != null)
             cachedRectTransform.anchoredPosition = initialAnchoredPosition;
+    }
+
+    /// <summary>
+    /// 애니메이터를 안전하게 리셋할 수 있는지 여부를 판단
+    /// </summary>
+    /// <returns></returns>
+    protected bool CanSafelyResetAnimator()
+    {
+        return animator != null
+            && gameObject.activeInHierarchy
+            && isActiveAndEnabled
+            && animator.isActiveAndEnabled
+            && animator.isInitialized;
     }
 }

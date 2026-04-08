@@ -5,6 +5,7 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 {
     private Coroutine blinkCoroutine;
     private Coroutine craftCoroutine;
+    private Coroutine resetCoroutine;
 
     [SerializeField] private GameObject hammerHead;
 
@@ -18,7 +19,15 @@ public class KkangKkangiAnimationController : CharacterAnimationController
     private void OnEnable()
     {
         EnsureAnimator();
-        ResetAnimationState();
+        if (CanSafelyResetAnimator())
+        {
+            ResetAnimationState();
+        }
+        else
+        {
+            resetCoroutine = StartCoroutine(ResetAnimationStateNextFrame());
+        }
+
         blinkCoroutine = StartCoroutine(BlinkRoutine());
     }
 
@@ -94,6 +103,12 @@ public class KkangKkangiAnimationController : CharacterAnimationController
 
     private void StopRunningCoroutines()
     {
+        if (resetCoroutine != null)
+        {
+            StopCoroutine(resetCoroutine);
+            resetCoroutine = null;
+        }
+
         if (blinkCoroutine != null)
         {
             StopCoroutine(blinkCoroutine);
@@ -105,5 +120,15 @@ public class KkangKkangiAnimationController : CharacterAnimationController
             StopCoroutine(craftCoroutine);
             craftCoroutine = null;
         }
+    }
+
+    private IEnumerator ResetAnimationStateNextFrame()
+    {
+        yield return null;
+
+        if (CanSafelyResetAnimator())
+            ResetAnimationState();
+
+        resetCoroutine = null;
     }
 }
