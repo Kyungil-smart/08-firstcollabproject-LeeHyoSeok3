@@ -540,6 +540,24 @@ public class AdventureManager : Singleton<AdventureManager>
         return Mathf.Abs(partyX - pointX) <= _eventRange;
     }
 
+    /// <summary>
+    /// Going 상태에서 특정 지점을 이미 지나쳤는지 확인
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="currentX"></param>
+    /// <returns></returns>
+    private bool HasPassedPointOnGoingPath(RectTransform point, float currentX)
+    {
+        if (point == null) return false;
+
+        float pointX = point.anchoredPosition.x;
+        bool movesRightToLeft = _startX >= _leftEndX;
+
+        return movesRightToLeft
+            ? currentX <= pointX + _eventRange
+            : currentX >= pointX - _eventRange;
+    }
+
     // ============================================
     // 10. 비주얼 (스프라이트) 관리
     // ============================================
@@ -668,7 +686,8 @@ public class AdventureManager : Singleton<AdventureManager>
 
     private void ApplyProgressByElapsedTime(float elapsedSinceStart)
     {
-        HideAllBubbles();
+        HideAllBubbles();  
+        if (_partyTent != null) _partyTent.SetActive(false);
 
         // 1) Going 구간
         if (elapsedSinceStart < _goingDuration)
@@ -697,7 +716,7 @@ public class AdventureManager : Singleton<AdventureManager>
                 HideAllPartySprites();
                 _partyTent.SetActive(true);
             }
-            else if (IsNearPoint(_dungeonPoint))
+            else if (HasPassedPointOnGoingPath(_dungeonPoint, currentX))
             {
                 CurrentState = AdventureState.Battle;
                 SetPartySprite(PartyVisual.Battle);
@@ -719,6 +738,7 @@ public class AdventureManager : Singleton<AdventureManager>
 
             CurrentState = AdventureState.Celebrate;
             SetPartySprite(PartyVisual.Celebrate);
+            ApplyCurrentDungeonVisuals(true);
 
             _celebrateTimer = elapsedSinceStart - _goingDuration;
 
@@ -740,6 +760,7 @@ public class AdventureManager : Singleton<AdventureManager>
 
             CurrentState = AdventureState.Returning;
             SetPartySprite(PartyVisual.Celebrate);
+            ApplyCurrentDungeonVisuals(true);
             _elapsedTime = returningElapsed;
 
             Vector3 scale = _partyGroup.localScale;
