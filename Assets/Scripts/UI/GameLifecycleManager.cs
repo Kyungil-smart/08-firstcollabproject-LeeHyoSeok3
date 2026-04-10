@@ -29,6 +29,7 @@ public class GameLifecycleManager : Singleton<GameLifecycleManager>
 
     [Header("Managers")]
     [SerializeField] private OfflineRewardManager offlineRewardManager;
+    private bool m_hasCompletedStartupFlow;
 
     protected override void Awake()
     {
@@ -76,6 +77,7 @@ public class GameLifecycleManager : Singleton<GameLifecycleManager>
     /// <summary>오프라인 보상 처리 완료 후 호출 (타이머 시스템에서 호출)</summary>
     public void OnOfflineRewardProcessComplete()
     {
+        m_hasCompletedStartupFlow = true;
         if (mainScreenUIGroup) mainScreenUIGroup.SetActive(true);
     }
 
@@ -103,6 +105,14 @@ public class GameLifecycleManager : Singleton<GameLifecycleManager>
         }
     }
 
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveInactiveTime();
+        }
+    }
+
     /// <summary>
     /// 게임이 완전히 종료되는 경우 호출
     /// </summary>
@@ -117,6 +127,12 @@ public class GameLifecycleManager : Singleton<GameLifecycleManager>
     /// </summary>
     private void SaveInactiveTime()
     {
+        if (!m_hasCompletedStartupFlow)
+        {
+            Debug.Log("[OfflineReward] 시작 처리 완료 전 비활성 시각 저장 생략");
+            return;
+        }
+
         OfflineRewardManager.SaveLastInactiveTimeUtc();
     }
 
